@@ -1,3 +1,5 @@
+echo      Launch this script by pasting this command into a black terminal window.  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
+echo .
 Echo     Set environment variables
 LOOP_BUILD=$(date +'%y%m%d-%H%M')
 LOOP_DIR=~/Downloads/BuildLoop/FreeAPS-$LOOP_BUILD
