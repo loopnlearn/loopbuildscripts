@@ -1,3 +1,7 @@
+echo      Launch this script by pasting this command into a black terminal window.  
+echo .
+echo .     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopDev.sh)"
+echo .
 Echo     Set environment variables
 LOOP_BUILD=$(date +'%y%m%d-%H%M')
 LOOP_DIR=~/Downloads/BuildLoop/Loop-Dev-$LOOP_BUILD
@@ -11,4 +15,6 @@ git clone --branch=dev --recurse-submodules https://github.com/LoopKit/LoopWorks
 cd LoopWorkspace
 Echo Open xcode
 xed .
+echo YOU SHOULD CLOSE THIS WINDOW NOW AND FINISH IN xCode.
 exit
+
