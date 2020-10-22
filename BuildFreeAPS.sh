@@ -1,4 +1,6 @@
-echo      Launch this script by pasting this command into a black terminal window.  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
+echo      Launch this script by pasting this command into a black terminal window.  
+echo .
+echo .     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
 echo .
 Echo     Set environment variables
 LOOP_BUILD=$(date +'%y%m%d-%H%M')
