@@ -8,7 +8,7 @@ The latest FreeAPS or Loop workspace files will download to Downloads/BuildLoop/
 #### To Build FreeAPS
 1. Open terminal. Tip: press command-space to open spotlight search. Start typing term... and you will see the terminal application icon in the box. Hit enter to open.
 2. Copy/Paste this code into terminal: 
-*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/markjoldham/LoopBuildScripts/main/BuildFreeAPS.sh)"`*
+*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"`*
 3. Hit Enter
 
 #### To Build Loop
@@ -16,12 +16,12 @@ The latest FreeAPS or Loop workspace files will download to Downloads/BuildLoop/
 2. Copy/Paste this code into terminal: 
 
 Master Branch
-*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/markjoldham/LoopBuildScripts/main/BuildLoopMaster.sh)"`*
+*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopMaster.sh)"`*
 
 Dev Branch
-*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/markjoldham/LoopBuildScripts/main/BuildLoopDev.sh)"`*
+*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopDev.sh)"`*
 
 Automatic Bolus Branch
-*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/markjoldham/LoopBuildScripts/main/BuildLoopAutomaticBolus.sh)"`*
+*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopAutomaticBolus.sh)"`*
 
 3. Hit Enter
