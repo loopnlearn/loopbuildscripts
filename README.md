@@ -25,9 +25,3 @@ Automatic Bolus Branch
 *`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopAutomaticBolus.sh)"`*
 
 3. Hit Enter
-
-
-```diff
- this text is highlighted in green
-- this text is highlighted in red
-```
