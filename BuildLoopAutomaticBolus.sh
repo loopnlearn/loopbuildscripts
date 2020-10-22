@@ -1,3 +1,7 @@
+echo      Launch this script by pasting this command into a black terminal window.  
+echo .
+echo .     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopAutomaticBolus.sh)"
+echo .
 Echo     Set environment variables
 LOOP_BUILD=$(date +'%y%m%d-%H%M')
 LOOP_DIR=~/Downloads/BuildLoop/Loop-AutomaticBolus-$LOOP_BUILD
@@ -11,4 +15,6 @@ git clone --branch=automatic-bolus --recurse-submodules https://github.com/LoopK
 cd LoopWorkspace
 Echo Open xcode
 xed .
+echo YOU SHOULD CLOSE THIS WINDOW NOW AND FINISH IN xCode.
 exit
+
