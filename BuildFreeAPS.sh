@@ -15,4 +15,7 @@ git clone --branch=freeaps --recurse-submodules https://github.com/ivalkou/LoopW
 cd LoopWorkspace
 Echo Open xcode
 xed .
+echo YOU SHOULD CLOSE THIS WINDOW NOW AND FINISH IN xCode.
 exit
+
+
