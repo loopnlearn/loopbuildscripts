@@ -18,7 +18,7 @@ The latest FreeAPS workspace files will download to your downloads folder /Build
 2. Copy/Paste this code into terminal: 
 
 Master Branch
-```/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopMaster.sh)"```
+`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopMaster.sh)"`
 
 Dev Branch
 `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopDev.sh)"`
