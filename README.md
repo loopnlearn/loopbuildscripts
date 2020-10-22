@@ -3,7 +3,7 @@
 These scripts simplify some tasks for building Loop and FreeAPS.
 
 
-# To Build FreeAPS
+### To Build FreeAPS
 1. Open terminal
 2. Copy/Paste this code: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildFreeAPS.sh)"`
 3. Hit Enter
