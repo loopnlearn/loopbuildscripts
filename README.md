@@ -21,7 +21,7 @@ Master Branch
 *`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopMaster.sh)"`*
 
 Dev Branch
-*/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopDev.sh)"`*
+*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopDev.sh)"`*
 
 Automatic Bolus Branch
 *`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopAutomaticBolus.sh)"`*
