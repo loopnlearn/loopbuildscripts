@@ -26,3 +26,15 @@ Automatic Bolus Branch
 *`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopAutomaticBolus.sh)"`*
 
 3. Hit Enter
+
+
+#### To clean Carthage files and Derived Data files
+1. Open terminal
+2. Copy/Paste this code into terminal: 
+
+CleanCartDerived
+*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/cleancartderived.sh)"`*
+
+
+
+
