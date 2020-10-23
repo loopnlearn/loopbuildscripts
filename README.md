@@ -36,5 +36,12 @@ CleanCartDerived
 *`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanCartDerived.sh)"`*
 
 
+#### Don't use this, it is a test script for selecting the branch when you run the script.   #### DON'T USE IT
+
+1. Open terminal
+2. Copy/Paste this code into terminal: 
+
+CleanCartDerived
+*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/LoopMain.sh)"`*
 
 
