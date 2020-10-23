@@ -1,15 +1,9 @@
 clear
 echo -e "\nPlease select which version of Loop you would like to download and build. Type the number 1, 2, or 3 and hit enter."
-options=("FreeAPS" "Loop Master Branch" "Loop Auto Bolus Branch")
+options=("Loop Master Branch" "Loop Auto Bolus Branch" "FreeAPS")
 select opt in "${options[@]}"
 do
     case $opt in
-        "FreeAPS")
-            FOLDERNAME=FreeAPS
-            BRANCH=freeaps
-            REPO=https://github.com/ivalkou/LoopWorkspace
-            break
-            ;;
         "Loop Master Branch")
             FOLDERNAME=Loop-Master
             BRANCH=master
@@ -20,6 +14,12 @@ do
             FOLDERNAME=Loop-AutoBolus
             BRANCH=automatic-bolus
             REPO=https://github.com/LoopKit/LoopWorkspace
+            break
+            ;;
+         "FreeAPS")
+            FOLDERNAME=FreeAPS
+            BRANCH=freeaps
+            REPO=https://github.com/ivalkou/LoopWorkspace
             break
             ;;
         *) 
