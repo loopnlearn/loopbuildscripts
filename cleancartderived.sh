@@ -1,5 +1,5 @@
-echo Clean carthage files
+echo Cleaning carthage files
 rm -rf ~/Library/Caches/org.carthage.CarthageKit
-echo Clean Derived Data files
+echo Cleaning Derived Data files
 rm -rf ~/Library/Developer/Xcode/DerivedData
-echo Done
+echo Done cleaning.    If xCode is open, Quit it and open it again.
