@@ -6,3 +6,12 @@ Copy/Paste this code into terminal:
 
 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopMaster.sh)"
+
+
+Once it opens in xCode, wait for indexing to finish (top line).
+Indexing could take 30 seconds, it might take an hour.   Wait it out.
+
+then follow the "Using Workspace" section of LoopDocs.
+
+https://loopkit.github.io/loopdocs/build/loopworkspace/#using-loopworkspace
+
