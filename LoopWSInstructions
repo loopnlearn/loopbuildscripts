@@ -1,0 +1,8 @@
+To download Loop Master Workspace and open it in xCode, run this script.
+
+Note, everything from the /bin to the )" must be on one line, all together, no extra spaces or returns.
+Open terminal
+Copy/Paste this code into terminal:
+
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopMaster.sh)"
