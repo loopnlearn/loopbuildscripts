@@ -33,7 +33,7 @@ Automatic Bolus Branch
 2. Copy/Paste this code into terminal: 
 
 CleanCartDerived
-*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/cleancartderived.sh)"`*
+*`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanCartDerived.sh)"`*
 
 
 
