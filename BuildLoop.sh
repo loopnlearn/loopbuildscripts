@@ -1,5 +1,5 @@
 clear
-echo -e "\nPlease select which version of Loop you would like to download and build"
+echo -e "\nPlease select which version of Loop you would like to download and build. Type the number 1, 2, or 3 and hit enter."
 options=("FreeAPS" "Loop Master Branch" "Loop Auto Bolus Branch")
 select opt in "${options[@]}"
 do
