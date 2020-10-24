@@ -37,6 +37,7 @@ pwd
 Echo download software from github
 git clone --branch=$BRANCH --recurse-submodules $REPO
 cd LoopWorkspace
+git remote -v
 Echo Open xcode
 xed .
 exit
