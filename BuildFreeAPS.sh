@@ -13,6 +13,7 @@ pwd
 Echo download software from github
 git clone --branch=freeaps --recurse-submodules https://github.com/ivalkou/LoopWorkspace
 cd LoopWorkspace
+git remote -v
 Echo Open xcode
 xed .
 echo YOU SHOULD CLOSE THIS WINDOW NOW AND FINISH IN xCode.
