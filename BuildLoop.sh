@@ -186,6 +186,7 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Continue")
+            cd LoopWorkspace
             xed ./Loop.xcworkspace
             exit 0
             break
