@@ -152,45 +152,7 @@ then
     done
 
     clear
-    echo -e "Would you like to delete prior downloads of Loop before proceeding?\n\n"
-    echo -e "Type 1 and hit enter to delete.\nType 2 and hit enter to continue without deleting.\n\n"
-    options=("Delete old downloads" "Do not delete old downloads")
-    select opt in "${options[@]}"
-    do
-        case $opt in
-            "Delete old downloads")
-                rm -rf ~/Downloads/BuildLoop/*
-                break
-                ;;
-            "Do not delete old downloads")
-                break
-                ;;
-            *)
-        esac
-    done
-
-    clear
-    echo -e "The code will now begin downloading. The files will be saved in your Downloads folder and Xcode will automatically open when the download is complete.\n\n"
-    echo -e "Type 1 and hit enter to begin downloading.\nType 2 and hit enter to cancel.\n\n"
-    options=("Continue" "Cancel")
-    select opt in "${options[@]}"
-    do
-        case $opt in
-            "Continue")
-                break
-                ;;
-            "Cancel")
-                clear
-                echo -e "\n${RED}User cancelled!${NC}\n\n⬆️  You can press the up arrow on the keyboard followed by the Enter key to start the script from the beginning.\n\n";
-                exit 0
-                break
-                ;;
-            *)
-        esac
-    done
-
-    clear
-
+    LOOP_DIR=~/Downloads/BuildLoop/$FOLDERNAME-$LOOP_BUILD
     mkdir $LOOP_DIR
     cd $LOOP_DIR
     pwd
