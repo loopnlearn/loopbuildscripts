@@ -9,10 +9,14 @@ SKIPCARTHAGE=false
 WHICH=Loop
 LOOP_BUILD=$(date +'%y%m%d-%H%M')
 LOOP_DIR=~/Downloads/BuildLoop/
-mkdir ~/Downloads/BuildLoop/Scripts
-cd $LOOP_DIR/Scripts
+SCRIPT_DIR=~/Downloads/BuildLoop/Scripts
+
+
+mkdir $LOOP_DIR
+mkdir $SCRIPT_DIR
 
 clear
+
 echo -e "\n\n--------------------------------\n\nWelcome to Loop and Learn Scripts.\n\n This script will assist you in preparing your computer as well as downloading and building Loop and Loop Follow. Before you begin, please ensure that you have Xcode installed and your phone is plugged into your computer\n\n--------------------------------\n\n"
 echo -e "Type the number from below and hit enter to proceed."
 options=("Build Loop" "Build Loop Follow" "Utility Scripts" "Cancel")
@@ -219,12 +223,14 @@ then
 
 elif [ "$WHICH" = "LoopFollow" ]
 then
+    cd $LOOP_DIR/Scripts
     echo -e "\n\n--------------------------------\n\nDownloading Loop Follow Script\n\n--------------------------------\n\n"
     rm ./BuildLoopFollow.sh
     curl -fsSLo ./BuildLoopFollow.sh https://git.io/JTKEt
     clear
     source ./BuildLoopFollow.sh
 else
+    cd $LOOP_DIR/Scripts
     clear
     echo -e "\n\n--------------------------------\n\nThese scripts will automate several cleanup options for you.\n\n--------------------------------\n\n➡️  Clean Carthage and Derived Data:\nThis script is used to clean up data from old builds from Xcode. Xcode should be closed when running this script.\n\n➡️  Xcode Cleanup (The Big One):\nThis script is used to clean up “stuff” from Xcode. It is typically used after uninstalling Xcode and before installing a new version of Xcode. It can free up a substantial amount of space. Sometimes you might be directed to use this script to resolve a problem, ‼️  beware that you might be required to fully uninstall and reinstall Xcode after running this script.‼️  Usually, Xcode will recover the simulator and other files it needs without needing to be reinstalled.\n\n"
     echo -e "Type the number from below and hit enter to proceed."
