@@ -186,7 +186,8 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Continue")
-            xed .
+            xed ./Loop.xcworkspace
+            exit 0
             break
             ;;
         "Cancel")
