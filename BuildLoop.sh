@@ -186,6 +186,7 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Continue")
+            xed .
             break
             ;;
         "Cancel")
