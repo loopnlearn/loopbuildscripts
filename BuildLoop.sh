@@ -108,7 +108,7 @@ then
     then
         if [ -f /usr/local/bin/carthage ]
         then
-            echo -e "Carthage installation may have failed. Please hold install manually. Hold the Option key while right clicking on /Downloads/Carthage.pkg and select open from the menu. If presented with the option to trust or allow the installer to run, you must allow it."
+            echo -e "Carthage installation may have failed. Please install manually. Hold the Option key while right clicking on /Downloads/Carthage.pkg and select open from the menu. If presented with the option to trust or allow the installer to run, you must allow it."
         else
             CARTHAGEEXISTS=true
             echo -e "Carthage installation successful. Proceeding to download Loop.\n\n"
