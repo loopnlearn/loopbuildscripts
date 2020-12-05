@@ -1,11 +1,11 @@
-echo      Launch this script by pasting this command into a black terminal window.  
-echo .
-echo .     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanCartDerived.sh)"
-echo .
-echo Cleaning carthage files
+# !/bin/bash
+
+clear
+
+echo -e "\n\n✅ Cleaning Carthage Files.\n"
 rm -rf ~/Library/Caches/org.carthage.CarthageKit
-echo Cleaning Derived Data files
+echo -e "✅ Cleaning Derived Data files.\n"
 rm -rf ~/Library/Developer/Xcode/DerivedData
-echo Done cleaning.    If xCode is open, Quit it and open it again.
-
-
+echo -e "✅ Done Cleaning.\n\n⚠️  If Xcode is open, Quit it and open it again.\n"
+echo -e "⬆️  You can press the up arrow on the keyboard followed by the Enter key to start the script from the beginning.\n\n";
+exit 0
