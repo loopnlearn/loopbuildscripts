@@ -205,7 +205,7 @@ else
                 rm ./CleanCartDerived.sh
                 curl -fsSLo ./CleanCartDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanCartDerived.sh
                 clear
-                #source ./CleanCartDerived.sh
+                source ./CleanCartDerived.sh
                 break
                 ;;
             "Xcode Cleanup (The Big One)")
@@ -213,7 +213,7 @@ else
                 rm ./XcodeClean.sh
                 curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/XcodeClean.sh
                 clear
-                #source ./XcodeClean.sh
+                source ./XcodeClean.sh
                 break
                 ;;
             "Cancel")
