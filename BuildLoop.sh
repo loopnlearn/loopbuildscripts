@@ -170,6 +170,7 @@ then
             "Continue")
                 cd LoopWorkspace
                 xed ./Loop.xcworkspace
+                open https://www.loopandlearn.org/workspace-build-loop/?fromscript
                 exit 0
                 break
                 ;;
