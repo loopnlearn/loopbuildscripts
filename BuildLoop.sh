@@ -17,6 +17,26 @@ mkdir $SCRIPT_DIR
 
 clear
 
+echo -e "${RED}\n\n--------------------------------\n\nImportant\n\nPlease understand that this project:\n-Is highly experimental\n-Is not approved for therapy\n-You take full responsibility for building and running this system and do so at your own risk.\n\nYou may only proceed if you agree.\n\n--------------------------------\n\n${NC}"
+echo -e "Type the number from below and hit enter to proceed."
+options=("Agree" "Disagree")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Agree")
+            break
+            ;;
+        "Disagree")
+            echo -e "\n${RED}Did not agree to terms of use.${NC}\n\n";
+            exit 0
+            break
+            ;;
+        *)
+    esac
+done
+
+clear
+
 echo -e "\n\n--------------------------------\n\nWelcome to Loop and Learn Scripts.\n\n This script will assist you in preparing your computer as well as downloading and building Loop and Loop Follow. Before you begin, please ensure that you have Xcode installed and your phone is plugged into your computer\n\n--------------------------------\n\n"
 echo -e "Type the number from below and hit enter to proceed."
 options=("Build Loop" "Build Loop Follow" "Utility Scripts" "Cancel")
@@ -170,6 +190,7 @@ then
             "Continue")
                 cd LoopWorkspace
                 xed ./Loop.xcworkspace
+                open https://www.loopandlearn.org/workspace-build-loop/?fromscript
                 exit 0
                 break
                 ;;
