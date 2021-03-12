@@ -1,0 +1,121 @@
+﻿From 0b7ad299fc712dad233ae46d6ed287d2bffdb764 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Ole?= <bjorn.haugsgjerd@gmail.com>
+Date: Mon, 9 Nov 2020 20:27:34 +0100
+Subject: [PATCH 1/2] Revert "Show required carbs in app badge"
+
+
+git revert 21396d3965c64d3fa93cf09718d2f8635d0c4703
+---
+ Loop/Managers/LoopDataManager.swift | 46 -----------------------------
+ 1 file changed, 46 deletions(-)
+
+
+diff --git a/Loop/Managers/LoopDataManager.swift b/Loop/Managers/LoopDataManager.swift
+index ed7337e09..c19807206 100644
+--- a/Loop/Managers/LoopDataManager.swift
++++ b/Loop/Managers/LoopDataManager.swift
+@@ -234,16 +234,6 @@ final class LoopDataManager {
+ 
+     fileprivate var carbsOnBoard: CarbValue?
+ 
+-    fileprivate var requiredCarbs: HKQuantity? {
+-        didSet {
+-            let number = settings.freeAPSSettings.showRequiredCarbsOnAppBadge
+-                ? requiredCarbs?.doubleValue(for: .gram()) ?? 0 : 0
+-            DispatchQueue.main.async {
+-                UIApplication.shared.applicationIconBadgeNumber = Int(number)
+-            }
+-        }
+-    }
+-
+     var basalDeliveryState: PumpManagerStatus.BasalDeliveryState? {
+         get {
+             return lockedBasalDeliveryState.value
+@@ -435,18 +425,6 @@ extension LoopDataManager {
+         return carbStore.insulinSensitivityScheduleApplyingOverrideHistory
+     }
+ 
+-    /// The carb sensitivity schedule, applying recent overrides relative to the current moment in time.
+-    /// This is measured in <blood glucose>/gram
+-    var carbSensitivityScheduleApplyingOverrideHistory: CarbSensitivitySchedule? {
+-        guard let crSchedule = carbRatioScheduleApplyingOverrideHistory,
+-            let isfSchedule = insulinSensitivityScheduleApplyingOverrideHistory
+-        else {
+-            return nil
+-        }
+-
+-        return .carbSensitivitySchedule(insulinSensitivitySchedule: isfSchedule, carbRatioSchedule: crSchedule)
+-    }
+-
+     /// Sets a new time zone for a the schedule-based settings
+     ///
+     /// - Parameter timeZone: The time zone
+@@ -919,8 +897,6 @@ extension LoopDataManager {
+                 throw error
+             }
+         }
+-
+-        updateRequiredCarbs()
+     }
+ 
+     private func notify(forChange context: LoopUpdateContext) {
+@@ -1545,28 +1521,6 @@ extension LoopDataManager {
+             }
+         }
+     }
+-
+-    func updateRequiredCarbs() {
+-        dispatchPrecondition(condition: .onQueue(dataAccessQueue))
+-        guard
+-            let unit = glucoseStore.preferredUnit,
+-            let predictedGlucose = self.predictedGlucose?.last,
+-            let csfSchedule = carbSensitivityScheduleApplyingOverrideHistory,
+-            let glucoseTargetRange = settings.glucoseTargetRangeScheduleApplyingOverrideIfActive
+-        else {
+-            requiredCarbs = nil
+-            return
+-        }
+-        let delta = glucoseTargetRange.minQuantity(at: predictedGlucose.startDate).doubleValue(for: unit)
+-            - predictedGlucose.quantity.doubleValue(for: unit)
+-        guard delta > 0 else {
+-            requiredCarbs = nil
+-            return
+-        }
+-
+-        let now = Date()
+-        requiredCarbs = HKQuantity(unit: .gram(), doubleValue: delta / csfSchedule.value(at: now))
+-    }
+ }
+ 
+ 
+
+
+From cbd02f2b2a04567c1c26abfd49fab41bf8ea9846 Mon Sep 17 00:00:00 2001
+From: bjornoleh <63544115+bjornoleh@users.noreply.github.com>
+Date: Mon, 9 Nov 2020 20:33:00 +0100
+Subject: [PATCH 2/2] Remove toggle for "Carbs on badge" setting
+
+
+Remove settings toggle after reverting "Show required carbs in app badge"
+---
+ Loop/Views/FreeAPS/FreeAPSSettingsView.swift | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+
+diff --git a/Loop/Views/FreeAPS/FreeAPSSettingsView.swift b/Loop/Views/FreeAPS/FreeAPSSettingsView.swift
+index 2e4ecb55e..500069097 100644
+--- a/Loop/Views/FreeAPS/FreeAPSSettingsView.swift
++++ b/Loop/Views/FreeAPS/FreeAPSSettingsView.swift
+@@ -18,9 +18,9 @@ struct FreeAPSSettingsView: View {
+     var body: some View {
+         Form {
+             Section {
+-                Toggle (isOn: $viewModel.showRequiredCarbsOnAppBadge) {
+-                    Text("Show required carbs on the app badge")
+-                }
++                //Toggle (isOn: $viewModel.showRequiredCarbsOnAppBadge) {
++                //    Text("Show required carbs on the app badge")
++                //}
+                 Picker(selection: $viewModel.retrospectiveIndex, label: Text("Retrospective Correction interval")) {
+                     ForEach(0 ..< viewModel.retrospectiveValues.count) { index in
+                         Text("\(Int(self.viewModel.retrospectiveValues[index])) min").tag(index)
