@@ -17,7 +17,7 @@ mkdir $SCRIPT_DIR
 
 clear
 
-echo -e "${RED}\n\n--------------------------------\n\nImportant\n\nPlease understand that this project:\n-Is highly experimental\n-Is not approved for therapy\n-You take full responsibility for building and running this system and do so at your own risk.\n\nYou may only proceed if you agree.\n\n--------------------------------\n\n${NC}"
+echo -e "${RED}\n\n--------------------------------\n\nImportant\n\nPlease understand that this project:\n-Is highly experimental\n-Is not approved for therapy\n-You take full responsibility for building and running this system and do so at your own risk.\n\nYou may only proceed if you agree..\n\n--------------------------------\n\n${NC}"
 echo -e "Type the number from below and hit enter to proceed."
 options=("Agree" "Disagree")
 select opt in "${options[@]}"
