@@ -237,6 +237,14 @@ else
                 source ./XcodeClean.sh
                 break
                 ;;
+            "Clean Profiles, Carthage, and Derived Data")
+                echo -e "\n\n--------------------------------\n\nDownloading Profiles, Carthage and Derived Data Script\n\n--------------------------------\n\n"
+                rm ./CleanProfCartDerived.sh
+                curl -fsSLo ./CleanProfCartDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfCartDerived.sh
+                clear
+                source ./CleanProfCartDerived.sh
+                break
+                ;;
             "Cancel")
                 clear
                 echo -e "\n${RED}User cancelled!${NC}\n\n⬆️  You can press the up arrow on the keyboard followed by the Enter key to start the script from the beginning.\n\n";
