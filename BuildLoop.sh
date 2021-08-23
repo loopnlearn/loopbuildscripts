@@ -141,12 +141,12 @@ else
     clear
     echo -e "\n\n--------------------------------\n\nThese scripts will automate several cleanup options for you.\n\n--------------------------------\n\n➡️  Clean Carthage and Derived Data:\nThis script is used to clean up data from old builds from Xcode. Xcode should be closed when running this script.\n\n➡️  Xcode Cleanup (The Big One):\nThis script is used to clean up “stuff” from Xcode. It is typically used after uninstalling Xcode and before installing a new version of Xcode. It can free up a substantial amount of space. Sometimes you might be directed to use this script to resolve a problem, ‼️  beware that you might be required to fully uninstall and reinstall Xcode after running this script.‼️  Usually, Xcode will recover the simulator and other files it needs without needing to be reinstalled.\n\n"
     echo -e "Type the number from below and hit enter to proceed."
-    options=("Clean Carthage and Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles Carthage and Derived Data" "Cancel")
+    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles and Derived Data" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
-            "Clean Carthage and Derived Data")
-                echo -e "\n\n--------------------------------\n\nDownloading Carthage and Derived Data Script\n\n--------------------------------\n\n"
+            "Clean Derived Data")
+                echo -e "\n\n--------------------------------\n\nDownloading Derived Data Script\n\n--------------------------------\n\n"
                 rm ./CleanCartDerived.sh
                 curl -fsSLo ./CleanCartDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanCartDerived.sh
                 clear
@@ -161,8 +161,8 @@ else
                 source ./XcodeClean.sh
                 break
                 ;;
-            "Clean Profiles Carthage and Derived Data")
-                echo -e "\n\n--------------------------------\n\nDownloading Profiles, Carthage and Derived Data Script\n\n--------------------------------\n\n"
+            "Clean Profiles and Derived Data")
+                echo -e "\n\n--------------------------------\n\nDownloading Profiles and Derived Data Script\n\n--------------------------------\n\n"
                 rm ./CleanProfCartDerived.sh
                 curl -fsSLo ./CleanProfCartDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfCartDerived.sh
                 clear
