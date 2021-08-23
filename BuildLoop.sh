@@ -4,8 +4,6 @@ GREEN='\033[0;32m'
 PURPLE='\033[0;35m'
 BOLD='\033[1m'
 NC='\033[0m'
-CARTHAGEEXISTS=false
-SKIPCARTHAGE=false
 WHICH=Loop
 LOOP_BUILD=$(date +'%y%m%d-%H%M')
 LOOP_DIR=~/Downloads/BuildLoop/
@@ -69,74 +67,6 @@ clear
 
 if [ "$WHICH" = "Loop" ]
 then
-    if [ ! -f /usr/local/bin/carthage ]
-    then
-        CARTHAGEEXISTS=false
-    else
-        CARTHAGEEXISTS=true
-        echo -e "✅ Carthage installation found.\n\n"
-    fi
-
-    if [ "$CARTHAGEEXISTS" == "false" ]
-    then
-        echo -e "⚠️ Carthage was not found on your system and must be installed to build Loop.\n\nWhen you continue, Safari will open and attempt to download the Carthage.pkg installation file to your Downloads folder. Please enter 1) to start downloading and then confirm the file is downloaded and return here.\n\n"
-        options=("Download Carthage" "Skip Carthage Download")
-        select opt in "${options[@]}"
-        do
-            case $opt in
-                "Download Carthage")
-                    open https://github.com/Carthage/Carthage/releases/download/0.36.0/Carthage.pkg
-                    break
-                    ;;
-                "Skip Carthage Download")
-                    SKIPCARTHAGE=true
-                    break
-                    ;;
-                *)
-            esac
-        done
-    fi
-
-    clear
-
-    if [ "$SKIPCARTHAGE" = "false" ]
-    then
-        if [ "$CARTHAGEEXISTS" = "false" ]
-        then
-            echo -e "⚠️ Did you confirm Carthage.pkg was saved to your Downloads folder?  \n\nWe will now try to install Carthage for you. When prompted, type your computer password. Do not be concerned that the password will not be displayed as your type. Once you type it, hit the enter command.\n\n"
-            options=("Install Carthage" "Skip Carthage Install")
-            select opt in "${options[@]}"
-            do
-                case $opt in
-                    "Install Carthage")
-                        sudo installer -allowUntrusted -pkg ~/Downloads/Carthage.pkg -target /
-                        break
-                        ;;
-                    "Skip Carthage Install")
-                        SKIPCARTHAGE=true
-                        break
-                        ;;
-                    *)
-                esac
-            done
-        fi
-    fi
-
-    clear
-
-    if [ "$SKIPCARTHAGE" == "false" ]
-    then
-        if [ -f /usr/local/bin/carthage ]
-        then
-            echo -e "Carthage installation may have failed. Please install manually. Hold the Option key while right clicking on /Downloads/Carthage.pkg and select open from the menu. If presented with the option to trust or allow the installer to run, you must allow it."
-        else
-            CARTHAGEEXISTS=true
-            echo -e "Carthage installation successful. Proceeding to download Loop.\n\n"
-        fi
-
-    fi
-
-    clear
 
     echo -e "Please select which version of Loop you would like to download and build.\n\nType the number for the branch and hit enter to select the branch.\nType 4 and hit enter to cancel.\n\n"
     options=("Master Branch" "FreeAPS" "Cancel")
