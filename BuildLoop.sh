@@ -69,7 +69,7 @@ if [ "$WHICH" = "Loop" ]
 then
 
     echo -e "Please select which version of Loop you would like to download and build.\n\nType the number for the branch and hit enter to select the branch.\nType 4 and hit enter to cancel.\n\n"
-    options=("Master Branch" "FreeAPS" "Cancel")
+    options=("Master Branch" "FreeAPS (No Longer Maintained)" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -79,7 +79,7 @@ then
                 BRANCH=master
                 break
                 ;;
-            "FreeAPS")
+            "FreeAPS (No Longer Maintained)")
                 FOLDERNAME=FreeAPS
                 REPO=https://github.com/ivalkou/LoopWorkspace
                 BRANCH=freeaps
