@@ -79,9 +79,9 @@ then
                 BRANCH=master
                 break
                 ;;
-            "FreeAPS (No Longer Maintained)")
+            "FreeAPS")
                 FOLDERNAME=FreeAPS
-                REPO=https://github.com/ivalkou/LoopWorkspace
+                REPO=https://github.com/loopnlearn/LoopWorkspace
                 BRANCH=freeaps
                 break
                 ;;
