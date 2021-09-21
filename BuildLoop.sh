@@ -91,6 +91,7 @@ then
                 FOLDERNAME=FreeAPS
                 REPO=https://github.com/loopnlearn/LoopWorkspace
                 BRANCH=freeaps
+                COMMIT=4896f8131e126cb1c43be65a66648a531b5898ff
                 break
                 ;;
             "Cancel")
