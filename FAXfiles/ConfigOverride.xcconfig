@@ -1,3 +1,8 @@
-// Please find your developer team ID in https://developer.apple.com/account/resources/certificates/list (top right corner)
-// Enter your developer team ID below (replace XXXXXXXXXX with your developer team ID). The build targets will now be signed automatically.
-DEVELOPER_TEAM = XXXXXXXXXX
+//// --- OPTIONAL FEATURE: ---
+//// Automatically sign targets using this ConfigOverride file
+//// Please find your developer team ID by following this link:
+//// https://developer.apple.com/account/resources/certificates/list
+//// Enter your developer team ID below (replace XXXXXXXX). 
+//// The build targets will now be signed automatically.
+//// Remove the leading "//" from the line below to enable use of this file:
+// DEVELOPER_TEAM = XXXXXXXX
