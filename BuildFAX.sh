@@ -93,6 +93,8 @@ then
     clear
     echo -e "\n\n Downloading FAX to your Downloads folder.\n--------------------------------\n"
     git clone --branch=$BRANCH --recurse-submodules $REPO
+    cd freeaps
+    curl -O https://raw.githubusercontent.com/bjornoleh/loopbuildscripts/buildFAX/FAXfiles/ConfigOverride.xcconfig
 
     echo -e "--------------------------------\n\n🛑 Please check for errors listed above before proceeding. If there are no errors listed, code has successfully downloaded.\n"
     echo -e "Type 1 and hit enter to open Xcode. You may close the terminal after Xcode opens\n\n"
@@ -102,7 +104,6 @@ then
     do
         case $opt in
             "Continue")
-                cd freeaps
                 xed ./FreeAPS.xcworkspace
                 open https://www.loopandlearn.org/freeaps-x/#build
                 exit 0
