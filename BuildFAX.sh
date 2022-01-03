@@ -98,7 +98,7 @@ then
     pwd
     clear
     echo -e "\n\n Downloading FAX to your Downloads folder.\n--------------------------------\n"
-    git clone --branch=$BRANCH --recurse-submodules $REPO
+    git clone --branch=$BRANCH $REPO
     cd freeaps
     curl -O https://raw.githubusercontent.com/bjornoleh/loopbuildscripts/buildFAX/FAXfiles/ConfigOverride.xcconfig
 
