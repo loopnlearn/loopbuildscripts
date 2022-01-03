@@ -65,7 +65,7 @@ if [ "$WHICH" = "FAX" ]
 then
 
     echo -e "Please select which version of FAX you would like to download and build.\n\nType the number for the branch and hit enter to select the branch.\nType 4 and hit enter to cancel.\n\n"
-    options=("Master Branch" "Cancel")
+    options=("Master Branch" "Dev Branch" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -73,6 +73,12 @@ then
                 FOLDERNAME=FAX-Master
                 REPO=https://github.com/ivalkou/freeaps
                 BRANCH=master
+                break
+                ;;
+                "Dev Branch")
+                FOLDERNAME=FAX-dev
+                REPO=https://github.com/ivalkou/freeaps
+                BRANCH=dev
                 break
                 ;;
             "Cancel")
