@@ -1,0 +1,3 @@
+// Please find your developer team ID in https://developer.apple.com/account/resources/certificates/list (top right corner)
+// Enter your developer team ID below (replace XXXXXXXXXX with your developer team ID). The build targets will now be signed automatically.
+DEVELOPER_TEAM = XXXXXXXXXX
