@@ -103,15 +103,18 @@ then
     curl -O https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/buildFAX/FAXfiles/ConfigOverride.xcconfig
 
     echo -e "--------------------------------\n\n🛑 Please check for errors listed above before proceeding. If there are no errors listed, code has successfully downloaded.\n"
-    echo -e "Type 1 and hit enter to open Xcode. You may close the terminal after Xcode opens\n\n"
+    echo -e "Type 1 and hit enter to open Xcode."
+    echo -e "The Loop and Learn page with further instructions for "
+    echo -e "building FreeAPS X (FAX) will open in your default browser.\n"
+    echo -e "You may close the terminal after Xcode opens.\n\n"
 
-    options=("Continue" "Cancel")
+    options=("Open Xcode" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
-            "Continue")
-                xed ./FreeAPS.xcworkspace
+            "Open Xcode")
                 open https://www.loopandlearn.org/freeaps-x/#build
+                xed ./FreeAPS.xcworkspace
                 exit 0
                 break
                 ;;
