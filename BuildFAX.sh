@@ -110,8 +110,8 @@ then
     do
         case $opt in
             "Continue")
-                xed ./FreeAPS.xcworkspace
                 open https://www.loopandlearn.org/freeaps-x/#build
+                xed ./FreeAPS.xcworkspace
                 exit 0
                 break
                 ;;
