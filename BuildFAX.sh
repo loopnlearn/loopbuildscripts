@@ -68,18 +68,18 @@ clear
 if [ "$WHICH" = "FAX" ]
 then
 
-    echo -e "Please select which version of FAX you would like to download and build.\n\nType the number for the branch and hit enter to select the branch.\nType 4 and hit enter to cancel.\n\n"
-    options=("Master Branch" "Dev Branch" "Cancel")
+    echo -e "Please select which version of FAX you would like to download and build.\n\nType the number for the branch and hit enter to select the branch.\n${PURPLE}For the latest release of FAX, please select MASTER${NC}. \nType 3 and hit enter to cancel.\n\n"
+    options=("MASTER branch" "dev" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
-            "Master Branch")
+            "MASTER branch")
                 FOLDERNAME=FAX-Master
                 REPO=https://github.com/ivalkou/freeaps
                 BRANCH=master
                 break
                 ;;
-                "Dev Branch")
+                "dev")
                 FOLDERNAME=FAX-dev
                 REPO=https://github.com/ivalkou/freeaps
                 BRANCH=dev
@@ -101,18 +101,18 @@ then
     cd $FAX_DIR
     pwd
     clear
-    echo -e "\nDownloading FAX to your Downloads folder:"
+    echo -e "Downloading FAX to your Downloads folder:"
     echo -e "${YELLOW}${PWD}${NC}"
-    echo -e "\n--------------------------------\n"
+    echo -e "--------------------------------"
     git clone --branch=$BRANCH $REPO
     cd freeaps
     curl -O https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/FAXfiles/ConfigOverride.xcconfig    
 
-    echo -e "--------------------------------\n\n🛑 Please check for errors listed above before proceeding. If there are no errors listed, code has successfully downloaded.\n"
+    echo -e "--------------------------------\n🛑 Please check for errors listed above before proceeding. If there are no errors listed, code has successfully downloaded.\n"
     echo -e "${NC}Type 1 and hit enter to open Xcode.${NC}"
     echo -e "The Loop and Learn page with further instructions for "
-    echo -e "building FreeAPS X (FAX) will open in your default browser.\n"
-    echo -e "You may close the terminal after Xcode opens.\n\n"
+    echo -e "building ${PURPLE}FreeAPS X${NC} will open in your default browser.\n"
+    echo -e "You may close the terminal after Xcode opens.\n"
 
     options=("Open Xcode" "Cancel")
     select opt in "${options[@]}"
