@@ -106,7 +106,7 @@ then
     echo -e "\n--------------------------------\n"
     git clone --branch=$BRANCH $REPO
     cd freeaps
-    curl -O https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/buildFAX/FAXfiles/ConfigOverride.xcconfig
+    curl -O https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/FAXfiles/ConfigOverride.xcconfig    
 
     echo -e "--------------------------------\n\n🛑 Please check for errors listed above before proceeding. If there are no errors listed, code has successfully downloaded.\n"
     echo -e "${NC}Type 1 and hit enter to open Xcode.${NC}"
