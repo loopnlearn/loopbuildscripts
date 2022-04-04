@@ -191,7 +191,7 @@ then
                             sleep 5
                         else
                             echo -e "This project does not have a persistent override file"
-                            echo -e "You must sign the targets the individually"
+                            echo -e "You must sign the targets individually"
                             LOOPCONFIGOVERRIDE_VALID=0
                         fi
                     fi
