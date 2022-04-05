@@ -176,7 +176,7 @@ then
                         echo -e "You have a persistent override file:"
                         echo -e "   ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
                         echo -e "Check that file to confirm your Apple Developer ID is correct"
-                        echo -e "Review the browser graphic for instructions"
+                        echo -e "Opening your browser with build instructions"
                         echo -e "  to automatically sign the targets for your app"
                         sleep 5
                     else
@@ -186,7 +186,7 @@ then
                             echo -e "Copying LoopConfigOverride.xcconfig to ~/Downloads/BuildLoop"
                             echo -e "Edit this file with your Apple Developer ID"
                             echo -e "  to automatically sign the targets for your app"
-                            echo -e "Review the browser graphic for instructions"
+                            echo -e "Opening your browser with build instructions"
                             cp -p LoopWorkspace/LoopConfigOverride.xcconfig ..
                             sleep 5
                         else
@@ -203,11 +203,12 @@ then
                     # change this page to the one (not yet written) for persistent override
                     open https://www.loopandlearn.org/workspace-build-loop
                 else
-                    echo -e "Review the browser graphic for instructions"
+                    echo -e "Opening your browser with build instructions"
                     sleep 2
                     open https://www.loopandlearn.org/workspace-build-loop
                 fi
                 cd LoopWorkspace
+                sleep 2
                 echo -e "Opening your project in Xcode . . ."
                 xed .
                 echo -e "\nShell Script Completed successfully\n"
