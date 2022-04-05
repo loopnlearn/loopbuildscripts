@@ -210,6 +210,7 @@ then
                 cd LoopWorkspace
                 sleep 2
                 echo -e "Opening your project in Xcode . . ."
+                sleep 2
                 xed .
                 echo -e "\nShell Script Completed successfully\n"
                 echo -e "You may close the terminal window now if you want"
