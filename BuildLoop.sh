@@ -9,17 +9,73 @@ LOOP_BUILD=$(date +'%y%m%d-%H%M')
 LOOP_DIR=~/Downloads/BuildLoop/
 SCRIPT_DIR=~/Downloads/BuildLoop/Scripts
 
-# to test the behavior of checking and copying LoopConfigOverride file
-# download this file to your local computer and make it executable
-#    change the value of FRESH_CLONE from 1 to anything else
-# cd to a folder above LoopWorkspace for an existing clone,
-#    execute the script in that folder
+# set up default values - overwrite with flags.
+
+# FRESH_CLONE
+#   Default value is 1, which means:
+#     Download fresh clone every time script is run
+#   When testing:
+#      use -t flag
+#      run script one folder up from existing LoopWorkspace 
 FRESH_CLONE=1
+
+# BRANCH_TYPE
+BRANCH_TYPE=master
+#   Default value is master - determine branch for clone
+#   To build Loop-dev or FreeAPS-dev:
+#      use -d flag
+
+############################################################
+# Process the input options                                #
+# -h : print help                                          #
+# -t : use to test, sets FRESH_CLONE=0                     #
+# -d : use dev branches instead of master branches         #
+############################################################
+# Get the options
+while getopts 'dht' OPTION; do
+   case "${OPTION}" in
+      h) # display Help
+         echo -e "Optional Flags:"
+         echo -e "  -h : print this help message"
+         echo -e "  -t : sets FRESH_CLONE=0"
+         echo -e "  -d : use dev branches (not master)"
+         exit;;
+      t) # Do not download a fresh clone - useful for testing
+         echo -e "  -t flag, sets FRESH_CLONE=0"
+         FRESH_CLONE=0
+         sleep 1
+         ;;
+      d) # set flag to download dev branches
+         echo -e "  -d flag, sets BRANCH_TYPE=dev"
+         BRANCH_TYPE=dev
+         sleep 1
+         ;;
+      \?) # Invalid option
+         echo "Error: Invalid option"
+         exit;;
+   esac
+done
+# shift "$(($OPTIND -1))"
+# echo -e "There were ${OPTIND} options processed"
+
+if [ "$BRANCH_TYPE" = "dev" ]
+then
+    # To test prior to release, uncomment these 3 rows
+    BRANCH_LOOP=dev
+    BRANCH_FREE=freeaps_dev
+    LOOPCONFIGOVERRIDE_VALID=1
+    echo -e " -- BRANCH_LOOP set to  ${BRANCH_LOOP}  --"
+    echo -e " -- BRANCH_FREE set to  ${BRANCH_FREE}  --"
+else
+    BRANCH_LOOP=master
+    BRANCH_FREE=freeaps
+    LOOPCONFIGOVERRIDE_VALID=0
+fi
 
 mkdir $LOOP_DIR
 mkdir $SCRIPT_DIR
 
-clear
+# clear
 
 echo -e "${RED}${BOLD}\n\n--------------------------------\n\n"
 echo -e "IMPORTANT\n"
@@ -48,7 +104,7 @@ do
         *)
             echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
             echo -e "You can press the up arrow ⬆️  on the keyboard"
-            echo -e "    followed by the ENTER key to repeat script from beginning.\n\n";
+            echo -e "    and return to repeat script from beginning.\n\n";
             exit 0
             break
             ;;
@@ -67,7 +123,7 @@ echo -e "  2 Download and build LoopFollow"
 echo -e "  3 Prepare your computer using a Utility Script"
 echo -e "     when updating your computer or an app"
 echo -e "\n--------------------------------\n"
-echo -e "Type a number from the list below and hit ENTER to proceed."
+echo -e "Type a number from the list below and return to proceed."
 echo -e "${RED}${BOLD}  Any other entry cancels\n${NC}"
 options=("Build Loop" "Build LoopFollow" "Utility Scripts")
 select opt in "${options[@]}"
@@ -88,7 +144,7 @@ do
         *)
             echo -e "\n${RED}${BOLD}User cancelled - selected an invalid option${NC}\n"
             echo -e "You can press the up arrow ⬆️  on the keyboard"
-            echo -e "    followed by the ENTER key to repeat script from beginning.\n\n";
+            echo -e "    and return to repeat script from beginning.\n\n";
             exit 0
             break
             ;;
@@ -104,7 +160,7 @@ then
     echo -e "  Xcode command line tools installed, and"
     echo -e "  your phone is plugged into your computer\n"
     echo -e "Please select which version of Loop you would like to download and build.\n"
-    echo -e "Type a number from the list below and hit ENTER"
+    echo -e "Type a number from the list below and return"
     echo -e "${RED}${BOLD}  Any other entry cancels\n${NC}"
     options=("Loop Master" "FreeAPS")
     select opt in "${options[@]}"
@@ -113,23 +169,19 @@ then
             "Loop Master")
                 FOLDERNAME=Loop-Master
                 REPO=https://github.com/LoopKit/LoopWorkspace
-                BRANCH=master
-                # change LOOPCONFIGOVERRIDE_VALID to 1 when signing is enabled for this version
-                LOOPCONFIGOVERRIDE_VALID=0
+                BRANCH=$BRANCH_LOOP
                 break
                 ;;
             "FreeAPS")
                 FOLDERNAME=FreeAPS
                 REPO=https://github.com/loopnlearn/LoopWorkspace
-                BRANCH=freeaps
-                # change LOOPCONFIGOVERRIDE_VALID to 1 when signing is enabled for this version
-                LOOPCONFIGOVERRIDE_VALID=0
+                BRANCH=$BRANCH_FREE
                 break
                 ;;
             *)
                 echo -e "\n${RED}${BOLD}User cancelled - selected an invalid option${NC}\n"
                 echo -e "You can press the up arrow ⬆️  on the keyboard"
-                echo -e "    followed by the ENTER key to repeat script from beginning.\n\n";
+                echo -e "    and return to repeat script from beginning.\n\n";
                 exit 0
                 break
                 ;;
@@ -145,19 +197,23 @@ then
     fi
     echo -e "\n\n\n\n"
     echo -e "\n--------------------------------\n"
-    echo -e " -- Downloading ${FOLDERNAME} to your Downloads folder --\n"
-    pwd
     if [ ${FRESH_CLONE} == 1 ]
     then
+        echo -e " -- Downloading ${FOLDERNAME} ${BRANCH} to your Downloads folder --"
+        echo -e "      ${LOOP_DIR}\n"
+        echo -e "Issuing this command:"
+        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
         git clone --branch=$BRANCH --recurse-submodules $REPO
     fi
     echo -e "\n--------------------------------\n"
     echo -e "🛑 Please check for errors in the window above before proceeding."
     echo -e "   If there are no errors listed, code has successfully downloaded.\n"
-    echo -e "Type 1 then ENTER to continue if and ONLY if"
-    echo -e "  there are no errors (scroll up in terminal window) and then:"
-    echo -e "* A helpful graphic will be displayed in your browser"
-    echo -e "* Xcode will open with your current download (wait for it)"
+    echo -e "Type 1 and return to continue if and ONLY if"
+    echo -e "  there are no errors (scroll up in terminal window to look for the word error)"
+    echo -e "\nAfter you Type 1 and return:"
+    echo -e "* The Loop and Learn webpage with abbreviated build steps will be displayed in your browser"
+    echo -e "* The LoopDocs webpage with detailed build steps will be displayed in your browser"
+    echo -e "* Xcode will open with your current download (wait for it)\n"
     echo -e "${RED}${BOLD}  Any entry (other than 1) cancels\n${NC}"
 
     options=("Continue")
@@ -175,20 +231,46 @@ then
                     then
                         echo -e "You have a persistent override file:"
                         echo -e "   ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
-                        echo -e "Check that file to confirm your Apple Developer ID is correct"
-                        echo -e "Opening your browser with build instructions"
-                        echo -e "  to automatically sign the targets for your app"
-                        sleep 5
+                        echo -e "The last 3 lines of that file are shown next:\n"
+                        tail -3 ../LoopConfigOverride.xcconfig
+                        echo -e "\n If the last line has your Apple Developer ID"
+                        echo -e "   with no slashes at the beginning of the line"
+                        echo -e "   your targets will be automatically signed"
+                        read -p "Hit return when ready to continue  " dummy
                     else
                         # make sure the LoopConfigOverride.xcconfig exists in clone
                         if [ -e LoopWorkspace/LoopConfigOverride.xcconfig ]
                         then
-                            echo -e "Copying LoopConfigOverride.xcconfig to ~/Downloads/BuildLoop"
-                            echo -e "Edit this file with your Apple Developer ID"
-                            echo -e "  to automatically sign the targets for your app"
-                            echo -e "Opening your browser with build instructions"
-                            cp -p LoopWorkspace/LoopConfigOverride.xcconfig ..
-                            sleep 5
+                            echo -e "Choose to enter Apple ID or Sign Manually (later in Xcode)"
+                            options=("Enter Apple ID" "Sign Manually")
+                            select opt in "${options[@]}"
+                            do
+                                case $opt in
+                                    "Enter Apple ID")
+                                        echo -e "The Apple Developer page will open"
+                                        echo -e "Log in to the page and note your 10-character Team ID"
+                                        echo -e "Then, return to terminal window"
+                                        open "https://developer.apple.com/account/#!/membership"
+                                        read -p "Enter the ID and hit return: " devID
+                                        if [ ${#devID} -ne 10 ]
+                                        then
+                                            echo -e "Something was wrong with entry"
+                                            echo -e "You can manually edit the file later or"
+                                            echo -e "  just sign each target in Xcode"
+                                        else 
+                                            echo -e "Copying LoopConfigOverride.xcconfig to ~/Downloads/BuildLoop"
+                                            echo -e "Adding a new line with your Apple Developer ID"
+                                            cp -p LoopWorkspace/LoopConfigOverride.xcconfig ..
+                                            echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> ../LoopConfigOverride.xcconfig
+                                            tail -3 ../LoopConfigOverride.xcconfig
+                                        fi
+                                        break
+                                        ;;
+                                    "Sign Manually")
+                                        break
+                                        ;;
+                                esac
+                            done
                         else
                             echo -e "This project does not have a persistent override file"
                             echo -e "You must sign the targets individually"
@@ -201,12 +283,17 @@ then
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]
                 then
                     # change this page to the one (not yet written) for persistent override
+                    echo -e "Opening your browser with abbreviated build instructions"
+                    sleep 2
                     open https://www.loopandlearn.org/workspace-build-loop
                 else
-                    echo -e "Opening your browser with build instructions"
+                    echo -e "Opening your browser with abbreviated build instructions"
                     sleep 2
                     open https://www.loopandlearn.org/workspace-build-loop
                 fi
+                echo -e "Opening your browser with step-by-step build instructions"
+                sleep 2
+                open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
                 cd LoopWorkspace
                 sleep 2
                 echo -e "Opening your project in Xcode . . ."
@@ -216,14 +303,14 @@ then
                 echo -e "You may close the terminal window now if you want"
                 echo -e "  or"
                 echo -e "You can press the up arrow ⬆️  on the keyboard"
-                echo -e "    followed by the ENTER key to repeat script from beginning.\n\n";
+                echo -e "    and return to repeat script from beginning.\n\n";
                 exit 0
                 break
                 ;;
             *)
                 echo -e "\n${RED}${BOLD}User cancelled - selected an invalid option${NC}\n"
                 echo -e "You can press the up arrow ⬆️  on the keyboard"
-                echo -e "    followed by the ENTER key to repeat script from beginning.\n\n";
+                echo -e "    and return to repeat script from beginning.\n\n";
                 exit 0
                 break
                 ;;
@@ -238,7 +325,7 @@ then
     echo -e "Downloading Loop Follow Script\n"
     echo -e "\n--------------------------------\n\n"
     rm ./BuildLoopFollow.sh
-    curl -fsSLo ./BuildLoopFollow.sh https://git.io/JTKEt
+    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/jonfawcett/LoopFollow/Main/BuildLoopFollow.sh
     echo -e "\n\n\n\n"
     source ./BuildLoopFollow.sh
 else
@@ -265,7 +352,7 @@ else
     echo -e "      this action configures you to have a full year"
     echo -e "      before you are forced to rebuild your app."
     echo -e "\n--------------------------------\n"
-    echo -e "Type a number from the list below and hit ENTER to proceed."
+    echo -e "Type a number from the list below and return to proceed."
     echo -e "${RED}${BOLD}  Any other entry - ENTER cancels\n"
     echo -e "You may need to scroll up in the terminal to see details about options${NC}\n"
     options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles & Derived Data")
@@ -305,7 +392,7 @@ else
             *)
                 echo -e "\n${RED}${BOLD}User cancelled - selected an invalid option${NC}\n"
                 echo -e "You can press the up arrow ⬆️  on the keyboard"
-                echo -e "    followed by the ENTER key to repeat script from beginning.\n\n";
+                echo -e "    and return to repeat script from beginning.\n\n";
                 exit 0
                 break
                 ;;
