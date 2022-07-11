@@ -48,6 +48,9 @@ while getopts 'dht' OPTION; do
       d) # set flag to download dev branches
          echo -e "  -d flag, sets BRANCH_TYPE=dev"
          BRANCH_TYPE=dev
+         echo -e ${LOOP_BUILD}
+         LOOP_BUILD="dev"-${LOOP_BUILD}
+         echo -e ${LOOP_BUILD}
          sleep 1
          ;;
       \?) # Invalid option
@@ -81,13 +84,12 @@ then
     mkdir $SCRIPT_DIR
 fi
 
-# make a copy of this script in script folder
-cd ${SCRIPT_DIR}
-if [ -e ./BuildLoop.sh ]
+# make a copy of this script in script directory
+if [ -e ${SCRIPT_DIR}/BuildLoop.sh ]
 then
-    rm ./BuildLoop.sh
+    rm ${SCRIPT_DIR}/BuildLoop.sh
 fi
-curl -fsSLo ./BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh
+curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh
 
 # clear
 
@@ -176,12 +178,12 @@ then
     echo -e "Please select which version of Loop you would like to download and build.\n"
     echo -e "Type a number from the list below and return"
     echo -e "${RED}${BOLD}  Any other entry cancels\n${NC}"
-    options=("Loop Master" "FreeAPS")
+    options=("Loop" "FreeAPS")
     select opt in "${options[@]}"
     do
         case $opt in
-            "Loop Master")
-                FOLDERNAME=Loop-Master
+            "Loop")
+                FOLDERNAME=Loop
                 REPO=https://github.com/LoopKit/LoopWorkspace
                 BRANCH=$BRANCH_LOOP
                 break
