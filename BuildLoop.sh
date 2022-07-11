@@ -72,8 +72,22 @@ else
     LOOPCONFIGOVERRIDE_VALID=0
 fi
 
-mkdir $LOOP_DIR
-mkdir $SCRIPT_DIR
+if [ ! -d ${LOOP_DIR} ]
+then
+    mkdir $LOOP_DIR
+fi
+if [ ! -d ${SCRIPT_DIR} ]
+then
+    mkdir $SCRIPT_DIR
+fi
+
+# make a copy of this script in script folder
+cd ${SCRIPT_DIR}
+if [ -e ./BuildLoop.sh ]
+then
+    rm ./BuildLoop.sh
+fi
+curl -fsSLo ./BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh
 
 # clear
 
