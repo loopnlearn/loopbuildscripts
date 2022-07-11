@@ -20,10 +20,11 @@ SCRIPT_DIR=~/Downloads/BuildLoop/Scripts
 FRESH_CLONE=1
 
 # BRANCH_TYPE
-BRANCH_TYPE=master
-#   Default value is master - determine branch for clone
-#   To build Loop-dev or FreeAPS-dev:
+#   This determines the branch for git clone command
+#   Default value is master
+#   To build Loop with dev or FreeAPS with freeaps_dev:
 #      use -d flag
+BRANCH_TYPE=master
 
 ############################################################
 # Process the input options                                #
@@ -48,9 +49,7 @@ while getopts 'dht' OPTION; do
       d) # set flag to download dev branches
          echo -e "  -d flag, sets BRANCH_TYPE=dev"
          BRANCH_TYPE=dev
-         echo -e ${LOOP_BUILD}
          LOOP_BUILD="dev"-${LOOP_BUILD}
-         echo -e ${LOOP_BUILD}
          sleep 1
          ;;
       \?) # Invalid option
@@ -58,22 +57,6 @@ while getopts 'dht' OPTION; do
          exit;;
    esac
 done
-# shift "$(($OPTIND -1))"
-# echo -e "There were ${OPTIND} options processed"
-
-if [ "$BRANCH_TYPE" = "dev" ]
-then
-    # To test prior to release, uncomment these 3 rows
-    BRANCH_LOOP=dev
-    BRANCH_FREE=freeaps_dev
-    LOOPCONFIGOVERRIDE_VALID=1
-    echo -e " -- BRANCH_LOOP set to  ${BRANCH_LOOP}  --"
-    echo -e " -- BRANCH_FREE set to  ${BRANCH_FREE}  --"
-else
-    BRANCH_LOOP=master
-    BRANCH_FREE=freeaps
-    LOOPCONFIGOVERRIDE_VALID=0
-fi
 
 if [ ! -d ${LOOP_DIR} ]
 then
@@ -133,8 +116,7 @@ echo -e "\n--------------------------------\n"
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
 echo -e "This script will assist you in one of these actions:"
 echo -e "  1 Download and build Loop"
-echo -e "      You will be asked to choose from the"
-echo -e "      released versions of Loop or FreeAPS"
+echo -e "      You will be asked to choose from Loop or FreeAPS"
 echo -e "  2 Download and build LoopFollow"
 echo -e "  3 Prepare your computer using a Utility Script"
 echo -e "     when updating your computer or an app"
@@ -177,6 +159,19 @@ then
     echo -e "  your phone is plugged into your computer\n"
     echo -e "Please select which version of Loop you would like to download and build.\n"
     echo -e "Type a number from the list below and return"
+    if [ "$BRANCH_TYPE" = "dev" ]
+    then
+        BRANCH_LOOP=dev
+        BRANCH_FREE=freeaps_dev
+        LOOPCONFIGOVERRIDE_VALID=1
+        echo -e "\n ${RED}${BOLD}You are running the script with a -d flag${NC}\n"
+        echo -e " -- If you choose Loop,    branch is ${RED}${BOLD}${BRANCH_LOOP}${NC}"
+        echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}${NC}\n"
+    else
+        BRANCH_LOOP=master
+        BRANCH_FREE=freeaps
+        LOOPCONFIGOVERRIDE_VALID=0
+    fi
     echo -e "${RED}${BOLD}  Any other entry cancels\n${NC}"
     options=("Loop" "FreeAPS")
     select opt in "${options[@]}"
@@ -226,7 +221,7 @@ then
     echo -e "   If there are no errors listed, code has successfully downloaded.\n"
     echo -e "Type 1 and return to continue if and ONLY if"
     echo -e "  there are no errors (scroll up in terminal window to look for the word error)"
-    echo -e "\nAfter you Type 1 and return:"
+    echo -e "\nAfter you type 1 and return:"
     echo -e "* The Loop and Learn webpage with abbreviated build steps will be displayed in your browser"
     echo -e "* The LoopDocs webpage with detailed build steps will be displayed in your browser"
     echo -e "* Xcode will open with your current download (wait for it)\n"
@@ -252,7 +247,7 @@ then
                         echo -e "\n If the last line has your Apple Developer ID"
                         echo -e "   with no slashes at the beginning of the line"
                         echo -e "   your targets will be automatically signed"
-                        read -p "Hit return when ready to continue  " dummy
+                        read -p "Return when ready to continue  " dummy
                     else
                         # make sure the LoopConfigOverride.xcconfig exists in clone
                         if [ -e LoopWorkspace/LoopConfigOverride.xcconfig ]
@@ -267,7 +262,7 @@ then
                                         echo -e "Log in to the page and note your 10-character Team ID"
                                         echo -e "Then, return to terminal window"
                                         open "https://developer.apple.com/account/#!/membership"
-                                        read -p "Enter the ID and hit return: " devID
+                                        read -p "Enter the ID and return: " devID
                                         if [ ${#devID} -ne 10 ]
                                         then
                                             echo -e "Something was wrong with entry"
