@@ -247,6 +247,7 @@ then
                         echo -e "\n If the last line has your Apple Developer ID"
                         echo -e "   with no slashes at the beginning of the line"
                         echo -e "   your targets will be automatically signed"
+                        echo -e "If ID is wrong - you can manually edit the file now\n"
                         read -p "Return when ready to continue  " dummy
                     else
                         # make sure the LoopConfigOverride.xcconfig exists in clone
