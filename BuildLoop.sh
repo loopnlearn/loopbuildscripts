@@ -178,7 +178,7 @@ function create_persistent_config_override() {
         cp -p LoopWorkspace/LoopConfigOverride.xcconfig ..
         echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> ../LoopConfigOverride.xcconfig
         report_persistent_config_override
-        echo -e "\nThe next time you build, this permanent file with automatically sign your targets"
+        echo -e "\nXcode uses the permanent file to automatically sign your targets"
     fi
 }
 
