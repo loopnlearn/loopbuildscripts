@@ -39,7 +39,7 @@ function usage() {
 }
 
 ############################################################
-# Process flags, the input options as positional parameters
+# Process flags, input options as positional parameters
 ############################################################
 while [ "$1" != "" ]; do
     case $1 in
@@ -50,13 +50,11 @@ while [ "$1" != "" ]; do
         -t | --test )  # Do not download clone - useful for testing
             echo -e "  -t or --test selected, sets FRESH_CLONE=0"
             FRESH_CLONE=0
-            sleep 1
             ;;
         -d | --dev )  # select dev branches
             echo -e "  -d or --dev selected, sets BRANCH_TYPE=dev"
             BRANCH_TYPE=dev
             LOOP_BUILD="dev"-${LOOP_BUILD}
-            sleep 1
             ;;
         * )  # argument not recognized
             echo -e "\n${RED}${BOLD}Input argument not recognized${NC}\n"
@@ -66,8 +64,10 @@ while [ "$1" != "" ]; do
     shift
 done
 
+sleep 1
+
 ############################################################
-# Define the rest of the functions (usage above):
+# Define the rest of the functions (usage defined above):
 ############################################################
 
 function initial_greeting() {
@@ -114,11 +114,17 @@ function return_when_ready() {
     read -p "Return when ready to continue  " dummy
 }
 
+############################################################
+# function configure_folders_download_script
+#
+# defines folder names and default locations
+# downloads copy of this script (main branch)
+#
+# This function call should be AFTER user accepts terms of use
+#    DO NOT MOVE call to this function before that question
+#
+############################################################
 function configure_folders_download_script() {
-    ############################################################
-    # defines folder names and default locations
-    # downloads copy of this script (main branch)
-    ############################################################
 
     LOOP_DIR=~/Downloads/BuildLoop/
     SCRIPT_DIR=~/Downloads/BuildLoop/Scripts
@@ -176,10 +182,14 @@ function create_persistent_config_override() {
     fi
 }
 
+############################################################
+# End of functions used by script
+############################################################
 
-##############################################
-#  BuildLoop script continues using functions
-##############################################
+
+############################################################
+#  BuildLoop script continues using functions defined above
+############################################################
 
 # call function
 initial_greeting
@@ -203,6 +213,8 @@ do
 done
 
 # user agreed; call function
+#    DO NOT MOVE call to configure_folders_download_script
+#       before user agrees to terms of use
 configure_folders_download_script
 
 echo -e "${NC}\n\n\n\n"
@@ -351,9 +363,10 @@ if [ "$WHICH" = "Loop" ]; then
                     echo -e "\n--------------------------------\n"
                 fi
                 echo -e "The following items will open (when you are ready)"
-                echo -e "* The Loop and Learn webpage with abbreviated build steps"
-                echo -e "* The LoopDocs webpage with detailed build steps"
-                echo -e "* Xcode will open with your current download\n"
+                echo -e "* Webpage with abbreviated build steps (Loop and Learn)"
+                echo -e "* Webpage with detailed build steps (LoopDocs)"
+                echo -e "* Xcode ready to prep your current download for build\n"
+                echo -e "     Do not forget to select Loop(Workspace)\n"
                 return_when_ready
                 # the helper page displayed depends on validity of persistent override
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
@@ -362,10 +375,10 @@ if [ "$WHICH" = "Loop" ]; then
                 else
                     open https://www.loopandlearn.org/workspace-build-loop
                 fi
-                sleep 4
+                sleep 5
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
                 cd LoopWorkspace
-                sleep 2
+                sleep 5
                 xed .
                 echo -e "\nShell Script Completed\n"
                 echo -e " * You may close the terminal window now if you want"
