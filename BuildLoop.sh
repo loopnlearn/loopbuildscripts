@@ -84,7 +84,7 @@ function initial_greeting() {
     echo -e "  and do so at your own risk.\n"
     echo -e "${NC}If you find the font too small to read comfortably"
     echo -e "  Hold down the CMD key and hit + (or -)"
-    echo -e "  to increase (decrease) size\n"
+    echo -e "  to increase (decrease) size"
     choose_or_cancel
 }
 
@@ -105,8 +105,8 @@ function exit_message() {
 }
 
 function choose_or_cancel() {
-    echo -e "Type a number from the list below and return to proceed."
-    echo -e "${RED}${BOLD}  To cancel, any entry not in list also works\n${NC}"
+    echo -e "\nType a number from the list below and return to proceed."
+    echo -e "${RED}${BOLD}  To cancel, any entry not in list also works${NC}"
     echo -e "\n--------------------------------\n"
 }
 
@@ -227,7 +227,6 @@ echo -e "      You will be asked to choose from Loop or FreeAPS"
 echo -e "  2 Download and build LoopFollow"
 echo -e "  3 Prepare your computer using a Utility Script"
 echo -e "     when updating your computer or an app"
-echo -e "\n--------------------------------\n"
 choose_or_cancel
 options=("Build Loop" "Build LoopFollow" "Utility Scripts" "Cancel")
 select opt in "${options[@]}"
@@ -266,10 +265,17 @@ if [ "$WHICH" = "Loop" ]; then
         BRANCH_LOOP=dev
         BRANCH_FREE=freeaps_dev
         LOOPCONFIGOVERRIDE_VALID=1
-        echo -e "\n ${RED}${BOLD}You are running the script with a -d flag${NC}\n"
+        echo -e "\n ${RED}${BOLD}You are running the script for the development version${NC}\n"
         echo -e " -- If you choose Loop,    branch is ${RED}${BOLD}${BRANCH_LOOP}${NC}"
         echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}${NC}\n"
+        echo -e " ${RED}${BOLD}Be aware that a development version may require frequent rebuilds${NC}\n"
+        echo -e " If you have not read this section of LoopDocs - please review before continuing"
+        echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#loop-development"
     else
+        echo -e "\n ${RED}${BOLD}You are running the script for the released version${NC}\n"
+        echo -e "  These webpages will tell you the date of the last release for:"
+        echo -e "  Loop:    https://github.com/LoopKit/Loop/releases"
+        echo -e "  FreeAPS: https://github.com/loopnlearn/LoopWorkspace/releases"
         BRANCH_LOOP=master
         BRANCH_FREE=freeaps
         LOOPCONFIGOVERRIDE_VALID=0
@@ -318,8 +324,7 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "🛑 Please check for errors in the window above before proceeding."
     echo -e "   If there are no errors listed, code has successfully downloaded.\n"
     echo -e "Type 1 and return to continue if and ONLY if"
-    echo -e "  there are no errors (scroll up in terminal window to look for the word error)\n"
-    #echo -e "${RED}${BOLD}  Any entry (other than 1) cancels\n${NC}"
+    echo -e "  there are no errors (scroll up in terminal window to look for the word error)"
     choose_or_cancel
     options=("Continue" "Cancel")
     select opt in "${options[@]}"
@@ -334,7 +339,7 @@ if [ "$WHICH" = "Loop" ]; then
                         # make sure the LoopConfigOverride.xcconfig exists in clone
                         if [ -e LoopWorkspace/LoopConfigOverride.xcconfig ]; then
                             echo -e "Choose to enter Apple Developer ID or wait and Sign Manually (later in Xcode)"
-                            echo -e "\nIf you choose Apple Developer ID, script will help you find it\n"
+                            echo -e "\nIf you choose Apple Developer ID, script will help you find it"
                             choose_or_cancel
                             options=("Enter Apple Developer ID" "Sign Manually" "Cancel")
                             select opt in "${options[@]}"
@@ -362,7 +367,7 @@ if [ "$WHICH" = "Loop" ]; then
                     fi
                     echo -e "\n--------------------------------\n"
                 fi
-                echo -e "The following items will open (when you are ready)"
+                echo -e "\nThe following items will open (when you are ready)"
                 echo -e "* Webpage with abbreviated build steps (Loop and Learn)"
                 echo -e "* Webpage with detailed build steps (LoopDocs)"
                 echo -e "* Xcode ready to prep your current download for build\n"
@@ -431,7 +436,7 @@ else
     echo -e "      this action configures you to have a full year"
     echo -e "      before you are forced to rebuild your app."
     echo -e "\n--------------------------------\n"
-    echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}\n"
+    echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
     choose_or_cancel
     options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles & Derived Data" "Cancel")
     select opt in "${options[@]}"
