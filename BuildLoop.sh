@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 ############################################################
 # define some font styles and colors
@@ -85,13 +85,16 @@ function initial_greeting() {
     echo -e "${NC}If you find the font too small to read comfortably"
     echo -e "  Hold down the CMD key and hit + (or -)"
     echo -e "  to increase (decrease) size\n"
-    echo -e "${RED}${BOLD}By typing 1 and ENTER, you indicate you agree"
-    echo -e "  Any other entry cancels"
-    echo -e "\n--------------------------------\n"
+    choose_or_cancel
+}
+
+function cancel_entry() {
+    echo -e "\n${RED}${BOLD}User canceled${NC}\n"
+    exit_message
 }
 
 function invalid_entry() {
-    echo -e "\n${RED}${BOLD}User entered an invalid option${NC}\n"
+    echo -e "\n${RED}${BOLD}User canceled by entering an invalid option${NC}\n"
     exit_message
 }
 
@@ -103,7 +106,12 @@ function exit_message() {
 
 function choose_or_cancel() {
     echo -e "Type a number from the list below and return to proceed."
-    echo -e "${RED}${BOLD}  Any other entry cancels\n${NC}"
+    echo -e "${RED}${BOLD}  To cancel, any entry not in list also works\n${NC}"
+    echo -e "\n--------------------------------\n"
+}
+
+function return_when_ready() {
+    read -p "Return when ready to continue  " dummy
 }
 
 function configure_folders_download_script() {
@@ -124,10 +132,6 @@ function configure_folders_download_script() {
 
     # store a copy of this script in script directory
     curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh
-}
-
-function return_when_ready() {
-    read -p "Return when ready to continue  " dummy
 }
 
 function report_persistent_config_override() {
@@ -180,17 +184,20 @@ function create_persistent_config_override() {
 # call function
 initial_greeting
 
-options=("Agree")
+options=("Agree" "Cancel")
 select opt in "${options[@]}"
 do
     case $opt in
         "Agree")
             break
             ;;
+        "Cancel")
+            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
+            exit_message
+            ;;
         *)
             echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
             exit_message
-            break
             ;;
     esac
 done
@@ -210,7 +217,7 @@ echo -e "  3 Prepare your computer using a Utility Script"
 echo -e "     when updating your computer or an app"
 echo -e "\n--------------------------------\n"
 choose_or_cancel
-options=("Build Loop" "Build LoopFollow" "Utility Scripts")
+options=("Build Loop" "Build LoopFollow" "Utility Scripts" "Cancel")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -226,9 +233,11 @@ do
             WHICH=UtilityScripts
             break
             ;;
+        "Cancel")
+            cancel_entry
+            ;;
         *)
             invalid_entry
-            break
             ;;
     esac
 done
@@ -254,7 +263,7 @@ if [ "$WHICH" = "Loop" ]; then
         LOOPCONFIGOVERRIDE_VALID=0
     fi
     choose_or_cancel
-    options=("Loop" "FreeAPS")
+    options=("Loop" "FreeAPS" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -270,9 +279,11 @@ if [ "$WHICH" = "Loop" ]; then
                 BRANCH=$BRANCH_FREE
                 break
                 ;;
+            "Cancel")
+                cancel_entry
+                ;;
             *)
                 invalid_entry
-                break
                 ;;
         esac
     done
@@ -298,7 +309,7 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "  there are no errors (scroll up in terminal window to look for the word error)\n"
     #echo -e "${RED}${BOLD}  Any entry (other than 1) cancels\n${NC}"
     choose_or_cancel
-    options=("Continue")
+    options=("Continue" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -313,7 +324,7 @@ if [ "$WHICH" = "Loop" ]; then
                             echo -e "Choose to enter Apple Developer ID or wait and Sign Manually (later in Xcode)"
                             echo -e "\nIf you choose Apple Developer ID, script will help you find it\n"
                             choose_or_cancel
-                            options=("Enter Apple Developer ID" "Sign Manually")
+                            options=("Enter Apple Developer ID" "Sign Manually" "Cancel")
                             select opt in "${options[@]}"
                             do
                                 case $opt in
@@ -324,9 +335,12 @@ if [ "$WHICH" = "Loop" ]; then
                                     "Sign Manually")
                                         break
                                         ;;
+                                    "Cancel")
+                                        cancel_entry
+                                        ;;
                                       *) # Invalid option
-                                         echo -e "Error: Invalid option"
-                                         exit;;
+                                         invalid_entry
+                                         ;;
                                 esac
                             done
                         else
@@ -336,20 +350,19 @@ if [ "$WHICH" = "Loop" ]; then
                     fi
                     echo -e "\n--------------------------------\n"
                 fi
-                echo -e "The following items will open (in a few seconds)"
-                echo -e "* The Loop and Learn webpage with abbreviated build steps will be displayed in your browser"
-                echo -e "* The LoopDocs webpage with detailed build steps will be displayed in your browser"
-                echo -e "* Xcode will open with your current download (wait for it)\n"
+                echo -e "The following items will open (when you are ready)"
+                echo -e "* The Loop and Learn webpage with abbreviated build steps"
+                echo -e "* The LoopDocs webpage with detailed build steps"
+                echo -e "* Xcode will open with your current download\n"
+                return_when_ready
                 # the helper page displayed depends on validity of persistent override
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
                     # change this page to the one (not yet written) for persistent override
-                    sleep 3
                     open https://www.loopandlearn.org/workspace-build-loop
                 else
-                    sleep 3
                     open https://www.loopandlearn.org/workspace-build-loop
                 fi
-                sleep 3
+                sleep 4
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
                 cd LoopWorkspace
                 sleep 2
@@ -362,9 +375,11 @@ if [ "$WHICH" = "Loop" ]; then
                 exit 0
                 break
                 ;;
+            "Cancel")
+                cancel_entry
+                ;;
             *)
                 invalid_entry
-                break
                 ;;
         esac
     done
@@ -405,7 +420,7 @@ else
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}\n"
     choose_or_cancel
-    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles & Derived Data")
+    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles & Derived Data" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -436,9 +451,11 @@ else
                 source ./CleanProfCartDerived.sh
                 break
                 ;;
+            "Cancel")
+                cancel_entry
+                ;;
             *)
                 invalid_entry
-                break
                 ;;
         esac
     done
