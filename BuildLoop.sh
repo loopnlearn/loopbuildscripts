@@ -120,11 +120,12 @@ function configure_folders_download_script() {
         mkdir $SCRIPT_DIR
     fi
 
-    # store a fresh copy of this script in script directory
-    if [ -e ${SCRIPT_DIR}/BuildLoop.sh ]; then
-        rm ${SCRIPT_DIR}/BuildLoop.sh
-    fi
+    # store a copy of this script in script directory
     curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh
+}
+
+function return_when_ready() {
+    read -p "Return when ready to continue  " dummy
 }
 
 function report_persistent_config_override() {
@@ -137,7 +138,7 @@ function report_persistent_config_override() {
     echo -e "   your targets will be automatically signed"
     echo -e "Any line that starts with // is ignored"
     echo -e "If ID is wrong - you should manually edit the file or delete the file now\n"
-    read -p "Return when ready to continue  " dummy
+    return_when_ready
 }
 
 function create_persistent_config_override() {
@@ -145,10 +146,12 @@ function create_persistent_config_override() {
     echo -e "* Log in to the page and note your 10-character Team ID"
     echo -e " * If the Memebship page does not show, you may need to select it"
     echo -e " * If you already have your account open in your browser, you may need to go to the already opened page"
-    echo -e " * For reference, this is the page that will open:"
+    echo -e " * Once you get your ID, return to terminal window"
+    echo -e "This is the page that will open:"
     echo -e "   https://developer.apple.com/account/#!/membership\n"
-    echo -e "Then, return to terminal window"
+    return_when_ready
     open "https://developer.apple.com/account/#!/membership"
+    echo -e " * Click in terminal window\n"
     read -p "Enter the ID and return: " devID
     if [ ${#devID} -ne 10 ]; then
         echo -e "Something was wrong with entry"
@@ -328,23 +331,22 @@ if [ "$WHICH" = "Loop" ]; then
                     fi
                     echo -e "\n--------------------------------\n"
                 fi
+                echo -e "The following items will open (in a few seconds)"
+                echo -e "* The Loop and Learn webpage with abbreviated build steps will be displayed in your browser"
+                echo -e "* The LoopDocs webpage with detailed build steps will be displayed in your browser"
+                echo -e "* Xcode will open with your current download (wait for it)\n"
                 # the helper page displayed depends on validity of persistent override
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
                     # change this page to the one (not yet written) for persistent override
-                    echo -e "* The Loop and Learn webpage with abbreviated build steps will be displayed in your browser"
-                    sleep 2
+                    sleep 3
                     open https://www.loopandlearn.org/workspace-build-loop
                 else
-                    echo -e "* The Loop and Learn webpage with abbreviated build steps will be displayed in your browser"
-                    sleep 2
+                    sleep 3
                     open https://www.loopandlearn.org/workspace-build-loop
                 fi
-                echo -e "* The LoopDocs webpage with detailed build steps will be displayed in your browser"
-                sleep 2
+                sleep 3
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
                 cd LoopWorkspace
-                sleep 2
-                echo -e "* Xcode will open with your current download (wait for it)\n"
                 sleep 2
                 xed .
                 echo -e "\nShell Script Completed\n"
@@ -369,7 +371,6 @@ then
     echo -e "\n\n--------------------------------\n\n"
     echo -e "Downloading Loop Follow Script\n"
     echo -e "\n--------------------------------\n\n"
-    rm ./BuildLoopFollow.sh
     curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/jonfawcett/LoopFollow/Main/BuildLoopFollow.sh
     echo -e "\n\n\n\n"
     source ./BuildLoopFollow.sh
@@ -407,7 +408,6 @@ else
                 echo -e "\n--------------------------------\n"
                 echo -e "Downloading Derived Data Script"
                 echo -e "\n--------------------------------\n"
-                rm ./CleanCartDerived.sh
                 curl -fsSLo ./CleanCartDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanCartDerived.sh
                 echo -e "\n\n\n\n"
                 source ./CleanCartDerived.sh
@@ -417,7 +417,6 @@ else
                 echo -e "\n--------------------------------\n"
                 echo -e "Downloading Xcode Cleanup Script"
                 echo -e "\n--------------------------------\n"
-                rm ./XcodeClean.sh
                 curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/XcodeClean.sh
                 echo -e "\n\n\n\n"
                 source ./XcodeClean.sh
@@ -427,7 +426,6 @@ else
                 echo -e "\n--------------------------------\n"
                 echo -e "Downloading Profiles and Derived Data Script"
                 echo -e "\n--------------------------------\n"
-                rm ./CleanProfCartDerived.sh
                 curl -fsSLo ./CleanProfCartDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfCartDerived.sh
                 echo -e "\n\n\n\n"
                 source ./CleanProfCartDerived.sh
