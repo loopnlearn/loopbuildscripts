@@ -139,28 +139,32 @@ function report_persistent_config_override() {
     echo -e "   with no slashes at the beginning of the line"
     echo -e "   your targets will be automatically signed"
     echo -e "Any line that starts with // is ignored"
-    echo -e "If ID is wrong - you should manually edit the file or delete the file now\n"
+    echo -e "  If ID is OK, hit return"
+    echo -e "  If ID is not OK, you can edit the file\n"
     return_when_ready
 }
 
 function create_persistent_config_override() {
-    echo -e "The Apple Developer page will open"
-    echo -e "* Log in to the page and note your 10-character Team ID"
-    echo -e " * If the Memebship page does not show, you may need to select it"
+    echo -e "\n--------------------------------\n"
+    echo -e "The Apple Developer page will open when you hit return"
+    echo -e " * Log in if needed"
+    echo -e " * If the Membership page does not show, you may need to select it"
+    echo -e "     Your Apple Developer ID is the 10-character Team ID"
     echo -e " * If you already have your account open in your browser, you may need to go to the already opened page"
     echo -e " * Once you get your ID, return to terminal window"
     echo -e "This is the page that will open:"
     echo -e "   https://developer.apple.com/account/#!/membership\n"
     return_when_ready
     open "https://developer.apple.com/account/#!/membership"
-    echo -e " * Click in terminal window\n"
+    echo -e "\n * Click in terminal window"
     read -p "Enter the ID and return: " devID
+    echo -e "\n--------------------------------\n"
     if [ ${#devID} -ne 10 ]; then
         echo -e "Something was wrong with entry"
         echo -e "You can manually sign each target in Xcode"
     else 
         echo -e "Creating ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
-        echo -e "   with your Apple Developer ID"
+        echo -e "   with your Apple Developer ID\n"
         cp -p LoopWorkspace/LoopConfigOverride.xcconfig ..
         echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> ../LoopConfigOverride.xcconfig
         report_persistent_config_override
@@ -273,7 +277,6 @@ if [ "$WHICH" = "Loop" ]; then
         esac
     done
 
-    echo -e "\n\n\n\n"
     LOOP_DIR=~/Downloads/BuildLoop/$FOLDERNAME-$LOOP_BUILD
     if [ ${FRESH_CLONE} == 1 ]; then
         mkdir $LOOP_DIR
