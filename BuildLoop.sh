@@ -307,14 +307,14 @@ if [ "$WHICH" = "Loop" ]; then
                     else
                         # make sure the LoopConfigOverride.xcconfig exists in clone
                         if [ -e LoopWorkspace/LoopConfigOverride.xcconfig ]; then
-                            echo -e "Choose to enter Apple ID or wait and Sign Manually (later in Xcode)"
-                            echo -e "\nIf you choose Apple ID, script will help you find it\n"
+                            echo -e "Choose to enter Apple Developer ID or wait and Sign Manually (later in Xcode)"
+                            echo -e "\nIf you choose Apple Developer ID, script will help you find it\n"
                             choose_or_cancel
-                            options=("Enter Apple ID" "Sign Manually")
+                            options=("Enter Apple Developer ID" "Sign Manually")
                             select opt in "${options[@]}"
                             do
                                 case $opt in
-                                    "Enter Apple ID")
+                                    "Enter Apple Developer ID")
                                         create_persistent_config_override
                                         break
                                         ;;
