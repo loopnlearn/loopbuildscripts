@@ -26,6 +26,9 @@ FRESH_CLONE=1
 #   Default value is master
 BRANCH_TYPE=master
 
+# Prepare date-time stamp for folder
+LOOP_BUILD=$(date +'%y%m%d-%H%M')
+
 function usage() {
     echo -e "Allowed arguments:"
     echo -e "  -h or --help : print this help message"
@@ -109,7 +112,6 @@ function configure_folders_download_script() {
     # downloads copy of this script (main branch)
     ############################################################
 
-    LOOP_BUILD=$(date +'%y%m%d-%H%M')
     LOOP_DIR=~/Downloads/BuildLoop/
     SCRIPT_DIR=~/Downloads/BuildLoop/Scripts
 
