@@ -85,7 +85,19 @@ function initial_greeting() {
     echo -e "${NC}If you find the font too small to read comfortably"
     echo -e "  Hold down the CMD key and hit + (or -)"
     echo -e "  to increase (decrease) size"
-    choose_or_cancel
+    accept_or_cancel
+}
+
+function accept_or_cancel() {
+    echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you agree"
+    echo -e "  Any other entry cancels"
+    echo -e "\n--------------------------------\n${NC}"
+}
+
+function choose_or_cancel() {
+    echo -e "\nType a number from the list below and return to proceed."
+    echo -e "${RED}${BOLD}  To cancel, any entry not in list also works${NC}"
+    echo -e "\n--------------------------------\n"
 }
 
 function cancel_entry() {
@@ -102,12 +114,6 @@ function exit_message() {
     echo -e "You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n";
     exit 0
-}
-
-function choose_or_cancel() {
-    echo -e "\nType a number from the list below and return to proceed."
-    echo -e "${RED}${BOLD}  To cancel, any entry not in list also works${NC}"
-    echo -e "\n--------------------------------\n"
 }
 
 function return_when_ready() {
