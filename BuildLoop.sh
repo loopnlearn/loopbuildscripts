@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## copy from helper_functions.sh to beginning of scripts
+
 ############################################################
 # define some font styles and colors
 ############################################################
@@ -150,7 +152,7 @@ function report_persistent_config_override() {
     echo -e "The file used by Xcode to sign your app is found at:"
     echo -e "   ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
     echo -e "The last 3 lines of that file are shown next:\n"
-    tail -3 ../LoopConfigOverride.xcconfig
+    tail -3 ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig
     echo -e "\nIf the last line has your Apple Developer ID"
     echo -e "   with no slashes at the beginning of the line"
     echo -e "   your targets will be automatically signed"
@@ -168,7 +170,7 @@ function create_persistent_config_override() {
     echo -e "     Your Apple Developer ID is the 10-character Team ID"
     echo -e " * If you already have your account open in your browser, you may need to go to the already opened page"
     echo -e " * Once you get your ID, return to terminal window"
-    echo -e "This is the page that will open:"
+    echo -e "This is the page that will open after you hit return:"
     echo -e "   https://developer.apple.com/account/#!/membership\n"
     return_when_ready
     open "https://developer.apple.com/account/#!/membership"
@@ -181,20 +183,57 @@ function create_persistent_config_override() {
     else 
         echo -e "Creating ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
         echo -e "   with your Apple Developer ID\n"
-        cp -p LoopWorkspace/LoopConfigOverride.xcconfig ..
-        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> ../LoopConfigOverride.xcconfig
+        cp -p LoopConfigOverride.xcconfig ~/Downloads/BuildLoop
+        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig
         report_persistent_config_override
         echo -e "\nXcode uses the permanent file to automatically sign your targets"
     fi
 }
 
+function check_config_override_existence_offer_to_configure() {
+    echo -e "\n--------------------------------\n"
+    if [ -e ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig ]; then
+        report_persistent_config_override
+    else
+        # make sure the LoopConfigOverride.xcconfig exists in clone
+        if [ -e LoopConfigOverride.xcconfig ]; then
+            echo -e "Choose to enter Apple Developer ID or wait and Sign Manually (later in Xcode)"
+            echo -e "\nIf you choose Apple Developer ID, script will help you find it"
+            choose_or_cancel
+            options=("Enter Apple Developer ID" "Sign Manually" "Cancel")
+            select opt in "${options[@]}"
+            do
+                case $opt in
+                    "Enter Apple Developer ID")
+                        create_persistent_config_override
+                        break
+                        ;;
+                    "Sign Manually")
+                        break
+                        ;;
+                    "Cancel")
+                        cancel_entry
+                        ;;
+                      *) # Invalid option
+                         invalid_entry
+                         ;;
+                esac
+            done
+        else
+            echo -e "This project requires you to sign the targets individually"
+            LOOPCONFIGOVERRIDE_VALID=0
+        fi
+    fi
+    echo -e "\n--------------------------------\n"
+}
+
 ############################################################
 # End of functions used by script
+#    - end of helper_functions.sh common code
 ############################################################
 
-
 ############################################################
-#  BuildLoop script continues using functions defined above
+# begin script specific to BuildLoop.sh
 ############################################################
 
 # call function
@@ -337,41 +376,9 @@ if [ "$WHICH" = "Loop" ]; then
     do
         case $opt in
             "Continue")
+                cd LoopWorkspace
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-                    echo -e "\n--------------------------------\n"
-                    if [ -e ../LoopConfigOverride.xcconfig ]; then
-                        report_persistent_config_override
-                    else
-                        # make sure the LoopConfigOverride.xcconfig exists in clone
-                        if [ -e LoopWorkspace/LoopConfigOverride.xcconfig ]; then
-                            echo -e "Choose to enter Apple Developer ID or wait and Sign Manually (later in Xcode)"
-                            echo -e "\nIf you choose Apple Developer ID, script will help you find it"
-                            choose_or_cancel
-                            options=("Enter Apple Developer ID" "Sign Manually" "Cancel")
-                            select opt in "${options[@]}"
-                            do
-                                case $opt in
-                                    "Enter Apple Developer ID")
-                                        create_persistent_config_override
-                                        break
-                                        ;;
-                                    "Sign Manually")
-                                        break
-                                        ;;
-                                    "Cancel")
-                                        cancel_entry
-                                        ;;
-                                      *) # Invalid option
-                                         invalid_entry
-                                         ;;
-                                esac
-                            done
-                        else
-                            echo -e "This project requires you to sign the targets individually"
-                            LOOPCONFIGOVERRIDE_VALID=0
-                        fi
-                    fi
-                    echo -e "\n--------------------------------\n"
+                    check_config_override_existence_offer_to_configure
                 fi
                 echo -e "\nThe following items will open (when you are ready)"
                 echo -e "* Webpage with abbreviated build steps (Loop and Learn)"
@@ -388,7 +395,6 @@ if [ "$WHICH" = "Loop" ]; then
                 fi
                 sleep 5
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
-                cd LoopWorkspace
                 sleep 5
                 xed .
                 echo -e "\nShell Script Completed\n"
