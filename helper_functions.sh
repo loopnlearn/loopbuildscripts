@@ -165,7 +165,11 @@ function report_persistent_config_override() {
     echo -e "   your targets will be automatically signed"
     echo -e "Any line that starts with // is ignored"
     echo -e "  If ID is OK, hit return"
-    echo -e "  If ID is not OK, you can edit the file\n"
+    echo -e "  If ID is not OK:"
+    echo -e "    Edit the file before hitting return"
+    echo -e "     step 1: open finder, navigate to Downloads/BuildLoop"
+    echo -e "     step 2: double click on LoopConfigOverride.xcconfig"
+    echo -e "     step 3: edit and save file"
     return_when_ready
 }
 
