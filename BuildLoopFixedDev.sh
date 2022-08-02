@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## copy from helper_functions.sh to beginning of scripts
+# copy from helper_functions.sh to beginning of scripts
 
 ############################################################
 # define some font styles and colors
@@ -145,7 +145,7 @@ function configure_folders_download_script() {
     fi
 
     # store a copy of this script in script directory
-    curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh
+    curl -fsSLo ${SCRIPT_DIR}/BuildLoopFixedDev.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFixedDev.sh
 }
 
 function report_persistent_config_override() {
@@ -281,15 +281,14 @@ echo -e "\n--------------------------------\n"
 BRANCH_LOOP=dev
 BRANCH_FREE=freeaps_dev
 LOOPCONFIGOVERRIDE_VALID=1
-echo -e "\n ${RED}${BOLD}You are running the script for the development version${NC}\n"
+echo -e "\n ${RED}${BOLD}You are running the script for the development version${NC}"
 echo -e " -- If you choose Loop,    branch is ${RED}${BOLD}${BRANCH_LOOP}${NC}"
-echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}${NC}\n"
+echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}${NC}"
 echo -e " ${RED}${BOLD}Be aware that a development version may require frequent rebuilds${NC}\n"
 echo -e " If you have not read this section of LoopDocs - please review before continuing"
 echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#loop-development"
 echo -e "\nThis script chooses a version (commit) of the development branch"
-echo -e "    that has been built and lightly tested by the loop and learn team"
-echo -e "    Both Loop and FreeAPS development branches support the use of DASH.\n"
+echo -e "    that has been built and lightly tested"
 echo -e "${RED}${BOLD}Loop    development branch version:"
 echo -e "     ${LOOP_DEV_STABLE_DATE} workspace revision ${LOOP_DEV_STABLE_SHA}"
 echo -e "FreeAPS development branch version:"
@@ -297,14 +296,14 @@ echo -e "     ${FAPS_DEV_STABLE_DATE} workspace revision ${FAPS_DEV_STABLE_SHA}"
 echo -e "${NC}\nBefore you begin, please ensure that"
 echo -e "  you have Xcode and Xcode command line tools installed, and"
 echo -e "  your phone is plugged into your computer\n"
-echo -e "Please select which version of Loop you would like to download and build.\n"
+echo -e "Please select which version of Loop you would like to download and build"
 
 choose_or_cancel
-options=("Loop dev tested" "FreeAPS dev tested" "Cancel")
+options=("Loop dev" "FreeAPS dev" "Cancel")
 select opt in "${options[@]}"
 do
     case $opt in
-        "Loop dev tested")
+        "Loop dev")
             FOLDERNAME=Loop'_dev_'${LOOP_DEV_STABLE_SHA}
             REPO=https://github.com/LoopKit/LoopWorkspace
             BRANCH=dev
@@ -312,7 +311,7 @@ do
             LOOPCONFIGOVERRIDE_VALID=1
             break
             ;;
-        "FreeAPS dev tested")
+        "FreeAPS dev")
             FOLDERNAME=FreeAPS'_dev_'${FAPS_DEV_STABLE_SHA}
             REPO=https://github.com/loopnlearn/LoopWorkspace
             BRANCH=freeaps_dev

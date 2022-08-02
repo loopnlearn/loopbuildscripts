@@ -7,7 +7,7 @@
 
 ## start the copy below:
 
-## copy from helper_functions.sh to beginning of scripts
+# copy from helper_functions.sh to beginning of scripts
 
 ############################################################
 # define some font styles and colors
