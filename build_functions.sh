@@ -221,12 +221,6 @@ do
     esac
 done
 
-# user agreed;
-#    DO NOT MOVE call to download_script
-#       before user agrees to terms of use
-configure_folders
-download_script
-
 echo -e "${NC}\n\n\n\n"
 
 ############################################################
