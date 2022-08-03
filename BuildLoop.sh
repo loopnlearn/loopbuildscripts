@@ -1,5 +1,9 @@
 #!/bin/bash # script BuildLoop.sh
 
+############################################################
+# this code must be repeated in any build script that uses build_functions.sh
+############################################################
+
 BUILD_DIR=~/Downloads/BuildLoop
 SCRIPT_DIR=$BUILD_DIR"/"Scripts
 
@@ -10,12 +14,23 @@ if [ ! -d ${SCRIPT_DIR} ]; then
     mkdir $SCRIPT_DIR
 fi
 
-# store a copy of build_functions.sh in script directory
-curl -fsSLo ${SCRIPT_DIR}/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/reorg_vs2/build_functions.sh
+# define branch (to make it easier when updating)
+# typically branch is main
+SCRIPT_BRANCH=reorg_v2
 
-## This script is BuildLoop.sh, execute that script
+# store a copy of build_functions.sh in script directory
+curl -fsSLo ${SCRIPT_DIR}/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
+
+# This runs the common build_functions.sh
 cd $SCRIPT_DIR
 source ./build_functions.sh
+
+############################################################
+# The rest of this is specific to BuildLoop.sh
+############################################################
+
+# store a copy of this script.sh in script directory
+curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh
 
 echo -e "\n--------------------------------\n"
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"

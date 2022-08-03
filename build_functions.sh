@@ -1,6 +1,6 @@
 #!/bin/bash # build_functions.sh
 
-# These are used for more than one BuildLoopXXX.sh script
+# Common functions used by multiple build scripts
 
 ############################################################
 # define some font styles and colors
@@ -31,7 +31,6 @@ SCRIPT_DIR=$BUILD_DIR"/"Scripts
 
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH=$BUILD_DIR"/"$OVERRIDE_FILE
-
 
 function usage() {
     echo -e "Allowed arguments:"
