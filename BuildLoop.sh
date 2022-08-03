@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/bin/bash # script BuildLoop.sh
+
+# copy from helper_functions.sh to beginning of scripts
+# for each different script that uses this, modify script name
+#    first line of script and
+#    in function download_script
 
 ############################################################
 # define some font styles and colors
@@ -21,13 +26,8 @@ NC='\033[0m'
 #     Download fresh clone every time script is run
 FRESH_CLONE=1
 
-# BRANCH_TYPE
-#   This determines the branch for git clone command
-#   Default value is master
-BRANCH_TYPE=master
-
 # Prepare date-time stamp for folder
-LOOP_BUILD=$(date +'%y%m%d-%H%M')
+DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
 function usage() {
     echo -e "Allowed arguments:"
@@ -35,7 +35,6 @@ function usage() {
     echo -e "  -t or --test : sets FRESH_CLONE=0"
     echo -e "      To test script, execute while in folder "
     echo -e "          between BuildLoop and LoopWorkspace"
-    echo -e "  -d or --dev  : use dev branches (not master)"
 }
 
 ############################################################
@@ -50,11 +49,6 @@ while [ "$1" != "" ]; do
         -t | --test )  # Do not download clone - useful for testing
             echo -e "  -t or --test selected, sets FRESH_CLONE=0"
             FRESH_CLONE=0
-            ;;
-        -d | --dev )  # select dev branches
-            echo -e "  -d or --dev selected, sets BRANCH_TYPE=dev"
-            BRANCH_TYPE=dev
-            LOOP_BUILD="dev"-${LOOP_BUILD}
             ;;
         * )  # argument not recognized
             echo -e "\n${RED}${BOLD}Input argument not recognized${NC}\n"
@@ -120,37 +114,39 @@ function return_when_ready() {
     read -p "Return when ready to continue  " dummy
 }
 
+function configure_folders() {
+
+    BUILD_DIR=~/Downloads/BuildLoop
+    SCRIPT_DIR=$BUILD_DIR"/"Scripts
+
+    if [ ! -d ${BUILD_DIR} ]; then
+        mkdir $BUILD_DIR
+    fi
+    if [ ! -d ${SCRIPT_DIR} ]; then
+        mkdir $SCRIPT_DIR
+    fi
+}
+
 ############################################################
-# function configure_folders_download_script
+# function download_script
 #
-# defines folder names and default locations
-# downloads copy of this script (main branch)
+# downloads copy of this script (from main branch)
 #
 # This function call should be AFTER user accepts terms of use
 #    DO NOT MOVE call to this function before that question
 #
 ############################################################
-function configure_folders_download_script() {
-
-    LOOP_DIR=~/Downloads/BuildLoop/
-    SCRIPT_DIR=~/Downloads/BuildLoop/Scripts
-
-    if [ ! -d ${LOOP_DIR} ]; then
-        mkdir $LOOP_DIR
-    fi
-    if [ ! -d ${SCRIPT_DIR} ]; then
-        mkdir $SCRIPT_DIR
-    fi
-
+function download_script() {
     # store a copy of this script in script directory
     curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh
 }
 
 function report_persistent_config_override() {
+    OVERRIDE_FILE=$BUILD_DIR"/"LoopConfigOverride.xcconfig
     echo -e "The file used by Xcode to sign your app is found at:"
     echo -e "   ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
     echo -e "The last 3 lines of that file are shown next:\n"
-    tail -3 ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig
+    tail -3 $OVERRIDE_FILE
     echo -e "\nIf the last line has your Apple Developer ID"
     echo -e "   with no slashes at the beginning of the line"
     echo -e "   your targets will be automatically signed"
@@ -185,8 +181,8 @@ function create_persistent_config_override() {
     else 
         echo -e "Creating ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
         echo -e "   with your Apple Developer ID\n"
-        cp -p LoopConfigOverride.xcconfig ~/Downloads/BuildLoop
-        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig
+        cp -p LoopConfigOverride.xcconfig $OVERRIDE_FILE
+        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> $OVERRIDE_FILE
         report_persistent_config_override
         echo -e "\nXcode uses the permanent file to automatically sign your targets"
     fi
@@ -194,11 +190,11 @@ function create_persistent_config_override() {
 
 function check_config_override_existence_offer_to_configure() {
     echo -e "\n--------------------------------\n"
-    if [ -e ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig ]; then
+    if [ -e $OVERRIDE_FILE ]; then
         report_persistent_config_override
     else
         # make sure the LoopConfigOverride.xcconfig exists in clone
-        if [ -e LoopConfigOverride.xcconfig ]; then
+        if [ -e $OVERRIDE_FILE ]; then
             echo -e "Choose to enter Apple Developer ID or wait and Sign Manually (later in Xcode)"
             echo -e "\nIf you choose Apple Developer ID, script will help you find it"
             choose_or_cancel
@@ -229,16 +225,7 @@ function check_config_override_existence_offer_to_configure() {
     echo -e "\n--------------------------------\n"
 }
 
-############################################################
-# End of functions used by script
-#    - end of helper_functions.sh common code
-############################################################
-
-############################################################
-# begin script specific to BuildLoop.sh
-############################################################
-
-# call function
+# call functions that are always used
 initial_greeting
 
 options=("Agree" "Cancel")
@@ -259,12 +246,24 @@ do
     esac
 done
 
-# user agreed; call function
-#    DO NOT MOVE call to configure_folders_download_script
+# user agreed;
+#    DO NOT MOVE call to download_script
 #       before user agrees to terms of use
-configure_folders_download_script
+configure_folders
+download_script
 
 echo -e "${NC}\n\n\n\n"
+
+############################################################
+# End of functions used by script
+#    - end of helper_functions.sh common code
+############################################################
+
+
+############################################################
+# begin script specific to BuildLoop.sh
+############################################################
+
 
 echo -e "\n--------------------------------\n"
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
@@ -308,38 +307,26 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "  Xcode command line tools installed, and"
     echo -e "  your phone is plugged into your computer\n"
     echo -e "Please select which version of Loop you would like to download and build.\n"
-    if [ "$BRANCH_TYPE" = "dev" ]; then
-        BRANCH_LOOP=dev
-        BRANCH_FREE=freeaps_dev
-        LOOPCONFIGOVERRIDE_VALID=1
-        echo -e "\n ${RED}${BOLD}You are running the script for the development version${NC}\n"
-        echo -e " -- If you choose Loop,    branch is ${RED}${BOLD}${BRANCH_LOOP}${NC}"
-        echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}${NC}\n"
-        echo -e " ${RED}${BOLD}Be aware that a development version may require frequent rebuilds${NC}\n"
-        echo -e " If you have not read this section of LoopDocs - please review before continuing"
-        echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#loop-development"
-    else
-        echo -e "\n ${RED}${BOLD}You are running the script for the released version${NC}\n"
-        echo -e "  These webpages will tell you the date of the last release for:"
-        echo -e "  Loop:    https://github.com/LoopKit/Loop/releases"
-        echo -e "  FreeAPS: https://github.com/loopnlearn/LoopWorkspace/releases"
-        BRANCH_LOOP=master
-        BRANCH_FREE=freeaps
-        LOOPCONFIGOVERRIDE_VALID=0
-    fi
+    echo -e "\n ${RED}${BOLD}You are running the script for the released version${NC}\n"
+    echo -e "  These webpages will tell you the date of the last release for:"
+    echo -e "  Loop:    https://github.com/LoopKit/Loop/releases"
+    echo -e "  FreeAPS: https://github.com/loopnlearn/LoopWorkspace/releases"
+    BRANCH_LOOP=master
+    BRANCH_FREE=freeaps
+    LOOPCONFIGOVERRIDE_VALID=0
     choose_or_cancel
     options=("Loop" "FreeAPS" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
             "Loop")
-                FOLDERNAME=Loop
+                FORK_NAME=Loop
                 REPO=https://github.com/LoopKit/LoopWorkspace
                 BRANCH=$BRANCH_LOOP
                 break
                 ;;
             "FreeAPS")
-                FOLDERNAME=FreeAPS
+                FORK_NAME=FreeAPS
                 REPO=https://github.com/loopnlearn/LoopWorkspace
                 BRANCH=$BRANCH_FREE
                 break
@@ -353,7 +340,7 @@ if [ "$WHICH" = "Loop" ]; then
         esac
     done
 
-    LOOP_DIR=~/Downloads/BuildLoop/$FOLDERNAME-$LOOP_BUILD
+    LOOP_DIR=$BUILD_DIR"/"$FORK_NAME"-"$DOWNLOAD_DATE
     if [ ${FRESH_CLONE} == 1 ]; then
         mkdir $LOOP_DIR
         cd $LOOP_DIR
@@ -361,7 +348,7 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "\n\n\n\n"
     echo -e "\n--------------------------------\n"
     if [ ${FRESH_CLONE} == 1 ]; then
-        echo -e " -- Downloading ${FOLDERNAME} ${BRANCH} to your Downloads folder --"
+        echo -e " -- Downloading ${FORK_NAME} ${BRANCH} to your Downloads folder --"
         echo -e "      ${LOOP_DIR}\n"
         echo -e "Issuing this command:"
         echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
@@ -419,7 +406,7 @@ if [ "$WHICH" = "Loop" ]; then
 elif [ "$WHICH" = "LoopFollow" ]
 then
     # Note that BuildLoopFollow.sh has a warning about Xcode and phone, not needed here
-    cd $LOOP_DIR/Scripts
+    cd $SCRIPT_DIR
     echo -e "\n\n--------------------------------\n\n"
     echo -e "Downloading Loop Follow Script\n"
     echo -e "\n--------------------------------\n\n"
@@ -427,7 +414,7 @@ then
     echo -e "\n\n\n\n"
     source ./BuildLoopFollow.sh
 else
-    cd $LOOP_DIR/Scripts
+    cd $SCRIPT_DIR
     echo -e "\n\n\n\n"
     echo -e "\n--------------------------------\n"
     echo -e "${BOLD}These utility scripts automate several cleanup actions${NC}"
