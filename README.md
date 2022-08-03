@@ -31,7 +31,6 @@ This is documented in
 1. Open terminal
 2. Copy/Paste this code into terminal (use copy icon, bottom right): 
 
-Master Branch
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh)"
 ```
