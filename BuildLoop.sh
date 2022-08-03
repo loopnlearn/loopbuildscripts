@@ -16,7 +16,7 @@ fi
 
 # define branch (to make it easier when updating)
 # typically branch is main
-SCRIPT_BRANCH=update-reorganize
+SCRIPT_BRANCH=main
 
 # store a copy of build_functions.sh in script directory
 curl -fsSLo $SCRIPT_DIR/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
