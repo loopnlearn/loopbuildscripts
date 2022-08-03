@@ -10,17 +10,11 @@ if [ ! -d ${SCRIPT_DIR} ]; then
     mkdir $SCRIPT_DIR
 fi
 
-# store a copy of all the build scripts in script directory
-# build_functions.sh is needed for BuildLoop.sh and BuildLoopFixedDev.sh
-#  when working on a different branch, need to change main to that branch
+# store a copy of build_functions.sh in script directory
 curl -fsSLo ${SCRIPT_DIR}/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/reorg_vs2/build_functions.sh
-curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/reorg_vs2/BuildLoop.sh
-curl -fsSLo ${SCRIPT_DIR}/BuildLoopFixedDev.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/reorg_vs2/BuildLoopFixedDev.sh
 
 ## This script is BuildLoop.sh, execute that script
 cd $SCRIPT_DIR
-source ./BuildLoop.sh
-
 source ./build_functions.sh
 
 echo -e "\n--------------------------------\n"
