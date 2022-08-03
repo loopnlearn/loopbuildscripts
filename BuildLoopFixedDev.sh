@@ -118,6 +118,8 @@ function configure_folders() {
 
     BUILD_DIR=~/Downloads/BuildLoop
     SCRIPT_DIR=$BUILD_DIR"/"Scripts
+    OVERRIDE_FILE=LoopConfigOverride.xcconfig
+    OVERRIDE_FULLPATH=$BUILD_DIR"/"$OVERRIDE_FILE
 
     if [ ! -d ${BUILD_DIR} ]; then
         mkdir $BUILD_DIR
@@ -142,11 +144,10 @@ function download_script() {
 }
 
 function report_persistent_config_override() {
-    OVERRIDE_FILE=$BUILD_DIR"/"LoopConfigOverride.xcconfig
     echo -e "The file used by Xcode to sign your app is found at:"
-    echo -e "   ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
+    echo -e "   ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
     echo -e "The last 3 lines of that file are shown next:\n"
-    tail -3 $OVERRIDE_FILE
+    tail -3 $OVERRIDE_FULLPATH
     echo -e "\nIf the last line has your Apple Developer ID"
     echo -e "   with no slashes at the beginning of the line"
     echo -e "   your targets will be automatically signed"
@@ -181,8 +182,8 @@ function create_persistent_config_override() {
     else 
         echo -e "Creating ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
         echo -e "   with your Apple Developer ID\n"
-        cp -p LoopConfigOverride.xcconfig $OVERRIDE_FILE
-        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> $OVERRIDE_FILE
+        cp -p LoopConfigOverride.xcconfig $OVERRIDE_FULLPATH
+        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> $OVERRIDE_FULLPATH
         report_persistent_config_override
         echo -e "\nXcode uses the permanent file to automatically sign your targets"
     fi
@@ -190,7 +191,7 @@ function create_persistent_config_override() {
 
 function check_config_override_existence_offer_to_configure() {
     echo -e "\n--------------------------------\n"
-    if [ -e $OVERRIDE_FILE ]; then
+    if [ -e $OVERRIDE_FULLPATH ]; then
         report_persistent_config_override
     else
         # make sure the LoopConfigOverride.xcconfig exists in clone
@@ -322,7 +323,6 @@ do
 done
 
 LOOP_DIR=$BUILD_DIR"/"$FORK_NAME"-"$BRANCH"-"$DOWNLOAD_DATE"_"$FIXED_SHA
-echo -e "LOOP_DIR defined as ${LOOP_DIR}"
 if [ ${FRESH_CLONE} == 1 ]; then
     mkdir $LOOP_DIR
     cd $LOOP_DIR
