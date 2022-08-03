@@ -30,7 +30,7 @@ source ./build_functions.sh
 ############################################################
 
 # store a copy of this script.sh in script directory
-curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh
+curl -fsSLo ${SCRIPT_DIR}/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/${SCRIPT_BRANCH}/BuildLoop.sh
 
 echo -e "\n--------------------------------\n"
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
