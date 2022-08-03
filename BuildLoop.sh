@@ -19,7 +19,7 @@ curl -fsSLo ${SCRIPT_DIR}/BuildLoopFixedDev.sh https://raw.githubusercontent.com
 
 ## This script is BuildLoop.sh, execute that script
 cd $SCRIPT_DIR
-./BuildLoop.sh
+source ./BuildLoop.sh
 
 source ./build_functions.sh
 
