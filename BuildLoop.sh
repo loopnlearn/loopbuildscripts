@@ -19,7 +19,7 @@ fi
 SCRIPT_BRANCH=reorg_v2
 
 # store a copy of build_functions.sh in script directory
-curl -fsSLo ${SCRIPT_DIR}/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
+curl -fsSLo ${SCRIPT_DIR}/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/${SCRIPT_BRANCH}/build_functions.sh
 
 # This runs the common build_functions.sh
 cd $SCRIPT_DIR
