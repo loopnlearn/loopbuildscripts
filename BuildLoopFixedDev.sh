@@ -33,10 +33,10 @@ source ./build_functions.sh
 curl -fsSLo ${SCRIPT_DIR}/BuildLoopFixedDev.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFixedDev.sh
 
 # Stable Dev SHA
-LOOP_DEV_STABLE_SHA=9c48e05
-LOOP_DEV_STABLE_DATE="Aug 3, 2022"
-FAPS_DEV_STABLE_SHA=1b87b65
-FAPS_DEV_STABLE_DATE="Aug 1, 2022"
+LOOP_DEV_TESTED_SHA=b6a3671
+LOOP_DEV_TESTED_DATE="Aug 4, 2022"
+FAPS_DEV_TESTED_SHA=1b87b65
+FAPS_DEV_TESTED_DATE="Aug 1, 2022"
 FIXED_SHA=0
 
 echo -e "\n--------------------------------\n"
@@ -52,9 +52,9 @@ echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#loop-developme
 echo -e "\nThis script chooses a version (commit) of the development branch"
 echo -e "    that has been built and lightly tested"
 echo -e "${RED}${BOLD}Loop    development branch version:"
-echo -e "     ${LOOP_DEV_STABLE_DATE} workspace revision ${LOOP_DEV_STABLE_SHA}"
+echo -e "     ${LOOP_DEV_TESTED_DATE} workspace revision ${LOOP_DEV_TESTED_SHA}"
 echo -e "FreeAPS development branch version:"
-echo -e "     ${FAPS_DEV_STABLE_DATE} workspace revision ${FAPS_DEV_STABLE_SHA}"
+echo -e "     ${FAPS_DEV_TESTED_DATE} workspace revision ${FAPS_DEV_TESTED_SHA}"
 echo -e "${NC}\nBefore you begin, please ensure that"
 echo -e "  you have Xcode and Xcode command line tools installed, and"
 echo -e "  your phone is plugged into your computer\n"
@@ -69,7 +69,7 @@ do
             FORK_NAME=Loop
             REPO=https://github.com/LoopKit/LoopWorkspace
             BRANCH=dev
-            FIXED_SHA=$LOOP_DEV_STABLE_SHA
+            FIXED_SHA=$LOOP_DEV_TESTED_SHA
             LOOPCONFIGOVERRIDE_VALID=1
             break
             ;;
@@ -77,7 +77,7 @@ do
             FORK_NAME=FreeAPS
             REPO=https://github.com/loopnlearn/LoopWorkspace
             BRANCH=freeaps_dev
-            FIXED_SHA=$FAPS_DEV_STABLE_SHA
+            FIXED_SHA=$FAPS_DEV_TESTED_SHA
             LOOPCONFIGOVERRIDE_VALID=1
             break
             ;;
