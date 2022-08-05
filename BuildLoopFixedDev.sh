@@ -157,7 +157,8 @@ do
             # the helper page displayed depends on validity of persistent override
             if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
                 # change this page to the one (not yet written) for persistent override
-                open https://www.loopandlearn.org/workspace-build-loop
+                # open https://www.loopandlearn.org/workspace-build-loop
+                echo -e "loop and learn page not yet updated - skipping that"
             else
                 open https://www.loopandlearn.org/workspace-build-loop
             fi
@@ -165,7 +166,7 @@ do
             if [ ${FIXED_SHA} == 0 ]; then
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
             else
-                open "https://loopkit.github.io/loopdocs/build/step13/#signing-targets"
+                open "https://loopkit.github.io/loopdocs/build/step13/#build-loop"
             fi
             sleep 5
             xed .
