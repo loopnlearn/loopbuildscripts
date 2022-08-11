@@ -5,7 +5,7 @@
 ############################################################
 
 BUILD_DIR=~/Downloads/BuildLoop
-SCRIPT_DIR=$BUILD_DIR"/"Scripts
+SCRIPT_DIR=~/Downloads/BuildLoop/Scripts
 
 if [ ! -d ${BUILD_DIR} ]; then
     mkdir $BUILD_DIR
@@ -20,6 +20,14 @@ SCRIPT_BRANCH=main
 
 # store a copy of build_functions.sh in script directory
 curl -fsSLo $SCRIPT_DIR/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
+
+# Verify build_functions.sh was downloaded.
+if [ ! -f $SCRIPT_DIR/build_functions.sh ]; then
+    echo -e "Error, build-functions.sh not downloaded "
+    echo -e "Please attempt to download manually by issuing this command:"
+    echo -e "curl -fsSLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
+    exit
+fi
 
 # This runs the common build_functions.sh
 cd $SCRIPT_DIR
