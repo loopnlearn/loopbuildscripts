@@ -14,15 +14,25 @@ if [ ! -d ${SCRIPT_DIR} ]; then
     mkdir $SCRIPT_DIR
 fi
 
+# change directory to $SCRIPT_DIR before curl calls
+cd $SCRIPT_DIR
+
 # define branch (to make it easier when updating)
 # typically branch is main
 SCRIPT_BRANCH=main
 
 # store a copy of build_functions.sh in script directory
-curl -fsSLo $SCRIPT_DIR/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
+curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
 
-# This runs the common build_functions.sh
-cd $SCRIPT_DIR
+# Verify build_functions.sh was downloaded.
+if [ ! -f ./build_functions.sh ]; then
+    echo -e "Error, build_functions.sh not downloaded "
+    echo -e "Please attempt to download manually by issuing this command:"
+    echo -e "curl -SLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
+    exit
+fi
+
+# This brings in functions from build_functions.sh
 source ./build_functions.sh
 
 ############################################################
@@ -30,7 +40,7 @@ source ./build_functions.sh
 ############################################################
 
 # store a copy of this script.sh in script directory
-curl -fsSLo $SCRIPT_DIR/BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh
+curl -fsSLo ./BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh
 
 echo -e "\n--------------------------------\n"
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
