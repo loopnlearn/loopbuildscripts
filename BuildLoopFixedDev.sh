@@ -5,7 +5,7 @@
 ############################################################
 
 BUILD_DIR=~/Downloads/BuildLoop
-SCRIPT_DIR=~/Downloads/BuildLoop/Scripts
+SCRIPT_DIR=$BUILD_DIR/Scripts
 
 if [ ! -d ${BUILD_DIR} ]; then
     mkdir $BUILD_DIR
@@ -25,7 +25,7 @@ curl -fsSLo $SCRIPT_DIR/build_functions.sh https://raw.githubusercontent.com/loo
 if [ ! -f $SCRIPT_DIR/build_functions.sh ]; then
     echo -e "Error, build-functions.sh not downloaded "
     echo -e "Please attempt to download manually by issuing this command:"
-    echo -e "curl -fsSLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
+    echo -e "curl -SLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
     exit
 fi
 

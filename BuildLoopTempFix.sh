@@ -5,7 +5,7 @@
 ############################################################
 
 BUILD_DIR=~/Downloads/BuildLoop
-SCRIPT_DIR=$BUILD_DIR"/"Scripts
+SCRIPT_DIR=$BUILD_DIR/Scripts
 
 if [ ! -d ${BUILD_DIR} ]; then
     mkdir $BUILD_DIR
@@ -45,7 +45,7 @@ FRESH_CLONE=1
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
 BUILD_DIR=~/Downloads/BuildLoop
-SCRIPT_DIR=$BUILD_DIR"/"Scripts
+SCRIPT_DIR=$BUILD_DIR/Scripts
 
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH=$BUILD_DIR"/"$OVERRIDE_FILE
