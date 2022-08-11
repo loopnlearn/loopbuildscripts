@@ -4,7 +4,7 @@
 # this code must be repeated in any build script that uses build_functions.sh
 ############################################################
 
-BUILD_DIR=~/Downloads/"Build Loop"
+BUILD_DIR=~/Downloads/"BuildLoop"
 SCRIPT_DIR="${BUILD_DIR}/Scripts"
 
 if [ ! -d "${BUILD_DIR}" ]; then
@@ -19,7 +19,7 @@ cd "${SCRIPT_DIR}"
 
 # define branch (to make it easier when updating)
 # typically branch is main
-SCRIPT_BRANCH=with-spaces
+SCRIPT_BRANCH=main
 
 # store a copy of build_functions.sh in script directory
 curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh

@@ -26,7 +26,7 @@ FRESH_CLONE=1
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
-BUILD_DIR=~/Downloads/"Build Loop"
+BUILD_DIR=~/Downloads/"BuildLoop"
 SCRIPT_DIR="${BUILD_DIR}/Scripts"
 
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
@@ -119,7 +119,7 @@ function return_when_ready() {
 
 function report_persistent_config_override() {
     echo -e "The file used by Xcode to sign your app is found at:"
-    echo -e "   ~/Downloads/Build Loop/${OVERRIDE_FILE}"
+    echo -e "   ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
     echo -e "The last 3 lines of that file are shown next:\n"
     tail -3 "${OVERRIDE_FULLPATH}"
     echo -e "\nIf the last line has your Apple Developer ID"
@@ -129,7 +129,7 @@ function report_persistent_config_override() {
     echo -e "  If ID is OK, hit return"
     echo -e "  If ID is not OK:"
     echo -e "    Edit the file before hitting return"
-    echo -e "     step 1: open finder, navigate to Downloads/Build Loop"
+    echo -e "     step 1: open finder, navigate to Downloads/BuildLoop"
     echo -e "     step 2: double click on "${OVERRIDE_FILE}""
     echo -e "     step 3: edit and save file"
     return_when_ready
@@ -154,7 +154,7 @@ function create_persistent_config_override() {
         echo -e "Something was wrong with entry"
         echo -e "You can manually sign each target in Xcode"
     else 
-        echo -e "Creating ~/Downloads/Build Loop/${OVERRIDE_FILE}"
+        echo -e "Creating ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
         echo -e "   with your Apple Developer ID\n"
         cp -p "${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
         echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> "${OVERRIDE_FULLPATH}"
