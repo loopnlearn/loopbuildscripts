@@ -26,11 +26,11 @@ FRESH_CLONE=1
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
-BUILD_DIR=~/Downloads/BuildLoop
-SCRIPT_DIR=$BUILD_DIR/Scripts
+BUILD_DIR=~/Downloads/"Build Loop"
+SCRIPT_DIR="${BUILD_DIR}/Scripts"
 
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
-OVERRIDE_FULLPATH=$BUILD_DIR"/"$OVERRIDE_FILE
+OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
 function usage() {
     echo -e "Allowed arguments:"
@@ -119,9 +119,9 @@ function return_when_ready() {
 
 function report_persistent_config_override() {
     echo -e "The file used by Xcode to sign your app is found at:"
-    echo -e "   ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
+    echo -e "   ~/Downloads/Build Loop/${OVERRIDE_FILE}"
     echo -e "The last 3 lines of that file are shown next:\n"
-    tail -3 $OVERRIDE_FULLPATH
+    tail -3 "${OVERRIDE_FULLPATH}"
     echo -e "\nIf the last line has your Apple Developer ID"
     echo -e "   with no slashes at the beginning of the line"
     echo -e "   your targets will be automatically signed"
@@ -129,8 +129,8 @@ function report_persistent_config_override() {
     echo -e "  If ID is OK, hit return"
     echo -e "  If ID is not OK:"
     echo -e "    Edit the file before hitting return"
-    echo -e "     step 1: open finder, navigate to Downloads/BuildLoop"
-    echo -e "     step 2: double click on LoopConfigOverride.xcconfig"
+    echo -e "     step 1: open finder, navigate to Downloads/Build Loop"
+    echo -e "     step 2: double click on "${OVERRIDE_FILE}""
     echo -e "     step 3: edit and save file"
     return_when_ready
 }
@@ -154,10 +154,10 @@ function create_persistent_config_override() {
         echo -e "Something was wrong with entry"
         echo -e "You can manually sign each target in Xcode"
     else 
-        echo -e "Creating ~/Downloads/BuildLoop/LoopConfigOverride.xcconfig"
+        echo -e "Creating ~/Downloads/Build Loop/${OVERRIDE_FILE}"
         echo -e "   with your Apple Developer ID\n"
-        cp -p LoopConfigOverride.xcconfig $OVERRIDE_FULLPATH
-        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> $OVERRIDE_FULLPATH
+        cp -p "${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
+        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> "${OVERRIDE_FULLPATH}"
         report_persistent_config_override
         echo -e "\nXcode uses the permanent file to automatically sign your targets"
     fi
@@ -165,11 +165,11 @@ function create_persistent_config_override() {
 
 function check_config_override_existence_offer_to_configure() {
     echo -e "\n--------------------------------\n"
-    if [ -e $OVERRIDE_FULLPATH ]; then
+    if [ -e "${OVERRIDE_FULLPATH}" ]; then
         report_persistent_config_override
     else
-        # make sure the LoopConfigOverride.xcconfig exists in clone
-        if [ -e $OVERRIDE_FILE ]; then
+        # make sure the "${OVERRIDE_FILE}" exists in clone
+        if [ -e "${OVERRIDE_FILE}" ]; then
             echo -e "Choose to enter Apple Developer ID or wait and Sign Manually (later in Xcode)"
             echo -e "\nIf you choose Apple Developer ID, script will help you find it"
             choose_or_cancel

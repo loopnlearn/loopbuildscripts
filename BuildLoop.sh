@@ -4,22 +4,22 @@
 # this code must be repeated in any build script that uses build_functions.sh
 ############################################################
 
-BUILD_DIR=~/Downloads/BuildLoop
-SCRIPT_DIR=$BUILD_DIR/Scripts
+BUILD_DIR=~/Downloads/"Build Loop"
+SCRIPT_DIR="${BUILD_DIR}/Scripts"
 
-if [ ! -d ${BUILD_DIR} ]; then
-    mkdir $BUILD_DIR
+if [ ! -d "${BUILD_DIR}" ]; then
+    mkdir "${BUILD_DIR}"
 fi
-if [ ! -d ${SCRIPT_DIR} ]; then
-    mkdir $SCRIPT_DIR
+if [ ! -d "${SCRIPT_DIR}" ]; then
+    mkdir "${SCRIPT_DIR}"
 fi
 
 # change directory to $SCRIPT_DIR before curl calls
-cd $SCRIPT_DIR
+cd "${SCRIPT_DIR}"
 
 # define branch (to make it easier when updating)
 # typically branch is main
-SCRIPT_BRANCH=main
+SCRIPT_BRANCH=with-spaces
 
 # store a copy of build_functions.sh in script directory
 curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
@@ -119,10 +119,10 @@ if [ "$WHICH" = "Loop" ]; then
         esac
     done
 
-    LOOP_DIR=$BUILD_DIR"/"$FORK_NAME"-"$DOWNLOAD_DATE
+    LOOP_DIR="${BUILD_DIR}/${FORK_NAME}-${DOWNLOAD_DATE}"
     if [ ${FRESH_CLONE} == 1 ]; then
-        mkdir $LOOP_DIR
-        cd $LOOP_DIR
+        mkdir "${LOOP_DIR}"
+        cd "${LOOP_DIR}"
     fi
     echo -e "\n\n\n\n"
     echo -e "\n--------------------------------\n"
