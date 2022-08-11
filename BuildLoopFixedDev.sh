@@ -26,9 +26,11 @@ curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/Lo
 
 # Verify build_functions.sh was downloaded.
 if [ ! -f ./build_functions.sh ]; then
-    echo -e "Error, build_functions.sh not downloaded "
-    echo -e "Please attempt to download manually by issuing this command:"
+    echo -e "\n *** Error *** build_functions.sh not downloaded "
+    echo -e "Please attempt to download manually"
+    echo -e "  Copy the following line and paste into terminal\n"
     echo -e "curl -SLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
+    echo -e ""
     exit
 fi
 
