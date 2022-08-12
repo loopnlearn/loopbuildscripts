@@ -4,18 +4,18 @@
 # this code must be repeated in any build script that uses build_functions.sh
 ############################################################
 
-BUILD_DIR=~/Downloads/BuildLoop
-SCRIPT_DIR=$BUILD_DIR/Scripts
+BUILD_DIR=~/Downloads/"BuildLoop"
+SCRIPT_DIR="${BUILD_DIR}/Scripts"
 
-if [ ! -d ${BUILD_DIR} ]; then
-    mkdir $BUILD_DIR
+if [ ! -d "${BUILD_DIR}" ]; then
+    mkdir "${BUILD_DIR}"
 fi
-if [ ! -d ${SCRIPT_DIR} ]; then
-    mkdir $SCRIPT_DIR
+if [ ! -d "${SCRIPT_DIR}" ]; then
+    mkdir "${SCRIPT_DIR}"
 fi
 
 # change directory to $SCRIPT_DIR before curl calls
-cd $SCRIPT_DIR
+cd "${SCRIPT_DIR}"
 
 # define branch (to make it easier when updating)
 # typically branch is main
@@ -102,10 +102,10 @@ do
     esac
 done
 
-LOOP_DIR=$BUILD_DIR"/"$FORK_NAME"-"$BRANCH"-"$DOWNLOAD_DATE"_"$FIXED_SHA
+LOOP_DIR="${BUILD_DIR}/${FORK_NAME}-${BRANCH}-${DOWNLOAD_DATE}_${FIXED_SHA}"
 if [ ${FRESH_CLONE} == 1 ]; then
-    mkdir $LOOP_DIR
-    cd $LOOP_DIR
+    mkdir "${LOOP_DIR}"
+    cd "${LOOP_DIR}"
 fi
 echo -e "\n\n\n\n"
 echo -e "\n--------------------------------\n"
@@ -128,7 +128,7 @@ do
     case $opt in
         "Continue")
             cd LoopWorkspace
-            this_dir=$(pwd)
+            this_dir="$(pwd)"
             echo -e "In ${this_dir}"
             if [ ${FRESH_CLONE} == 0 ]; then
                 echo -e "\nScript used with test flag, extra steps to prepare downloaded code\n"
