@@ -14,6 +14,8 @@ if [ ! -d "${SCRIPT_DIR}" ]; then
     mkdir "${SCRIPT_DIR}"
 fi
 
+STARTING_DIR="${PWD}"
+
 # change directory to $SCRIPT_DIR before curl calls
 cd "${SCRIPT_DIR}"
 
@@ -106,6 +108,8 @@ LOOP_DIR="${BUILD_DIR}/${FORK_NAME}-${BRANCH}-${DOWNLOAD_DATE}_${FIXED_SHA}"
 if [ ${FRESH_CLONE} == 1 ]; then
     mkdir "${LOOP_DIR}"
     cd "${LOOP_DIR}"
+else
+    LOOP_DIR=${STARTING_DIR}
 fi
 echo -e "\n\n\n\n"
 echo -e "\n--------------------------------\n"
@@ -127,6 +131,7 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Continue")
+            cd "${LOOP_DIR}"
             cd LoopWorkspace
             this_dir="$(pwd)"
             echo -e "In ${this_dir}"
@@ -161,20 +166,17 @@ do
             fi
 
             echo -e "\nThe following items will open (when you are ready)"
-            echo -e "* Webpage with abbreviated build steps (Loop and Learn)"
             echo -e "* Webpage with detailed build steps (LoopDocs)"
-            echo -e "* Xcode ready to prep your current download for build\n"
-            echo -e "     Do not forget to select Loop(Workspace)\n"
+            echo -e "* Xcode ready to prep your current download for build"
+            echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+            echo -e " *** Unlock your phone and plug it into your computer"
+            echo -e "     Trust computer if asked"
+            echo -e " *** Optional (New Apple Watch - never built Loop on it)"
+            echo -e "              Paired to phone, on your wrist and unlocked"
+            echo -e "              Trust computer if asked"
+            echo -e "\nAFTER you hit return:"
+            echo -e " *** Do not forget to select Loop(Workspace)\n"
             return_when_ready
-            # the helper page displayed depends on validity of persistent override
-            if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-                # change this page to the one (not yet written) for persistent override
-                # open https://www.loopandlearn.org/workspace-build-loop
-                echo -e "loop and learn page not yet updated - skipping that"
-            else
-                open https://www.loopandlearn.org/workspace-build-loop
-            fi
-            sleep 5
             if [ ${FIXED_SHA} == 0 ]; then
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
             else
