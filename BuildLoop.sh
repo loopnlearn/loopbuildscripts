@@ -14,6 +14,8 @@ if [ ! -d "${SCRIPT_DIR}" ]; then
     mkdir "${SCRIPT_DIR}"
 fi
 
+STARTING_DIR="${PWD}"
+
 # change directory to $SCRIPT_DIR before curl calls
 cd "${SCRIPT_DIR}"
 
@@ -132,6 +134,8 @@ if [ "$WHICH" = "Loop" ]; then
         echo -e "Issuing this command:"
         echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
         git clone --branch=$BRANCH --recurse-submodules $REPO
+    else
+        cd "${STARTING_DIR}"
     fi
     echo -e "\n--------------------------------\n"
     echo -e "🛑 Please check for errors in the window above before proceeding."
@@ -152,7 +156,14 @@ if [ "$WHICH" = "Loop" ]; then
                 echo -e "* Webpage with abbreviated build steps (Loop and Learn)"
                 echo -e "* Webpage with detailed build steps (LoopDocs)"
                 echo -e "* Xcode ready to prep your current download for build\n"
-                echo -e "     Do not forget to select Loop(Workspace)\n"
+                echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+                echo -e " *** Unlock your phone and plug it into your computer"
+                echo -e "     Trust computer if asked"
+                echo -e " *** Optional (New Apple Watch - never built Loop on it)"
+                echo -e "              Paired to phone, on your wrist and unlocked"
+                echo -e "              Trust computer if asked"
+                echo -e "\nAFTER you hit return:"
+                echo -e " *** Do not forget to select Loop(Workspace)\n"
                 return_when_ready
                 # the helper page displayed depends on validity of persistent override
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
