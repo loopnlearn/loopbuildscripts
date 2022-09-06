@@ -49,8 +49,8 @@ curl -fsSLo ./BuildLoopFixedDev.sh https://raw.githubusercontent.com/loopnlearn/
 # Stable Dev SHA
 LOOP_DEV_TESTED_SHA=65761f9
 LOOP_DEV_TESTED_DATE="Sep 02, 2022"
-FAPS_DEV_TESTED_SHA=76b4630
-FAPS_DEV_TESTED_DATE="Aug 9, 2022"
+FAPS_DEV_TESTED_SHA=cac0eeb
+FAPS_DEV_TESTED_DATE="Sep 6, 2022"
 FIXED_SHA=0
 
 echo -e "\n--------------------------------\n"
@@ -109,7 +109,7 @@ if [ ${FRESH_CLONE} == 1 ]; then
     mkdir "${LOOP_DIR}"
     cd "${LOOP_DIR}"
 else
-    LOOP_DIR=${STARTING_DIR}
+    cd "${STARTING_DIR}"
 fi
 echo -e "\n\n\n\n"
 echo -e "\n--------------------------------\n"
@@ -131,7 +131,6 @@ select opt in "${options[@]}"
 do
     case $opt in
         "Continue")
-            cd "${LOOP_DIR}"
             cd LoopWorkspace
             this_dir="$(pwd)"
             echo -e "In ${this_dir}"
