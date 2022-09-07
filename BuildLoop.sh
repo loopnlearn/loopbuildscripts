@@ -84,9 +84,8 @@ echo -e "\n\n\n\n"
 
 if [ "$WHICH" = "Loop" ]; then
     echo -e "\n--------------------------------\n"
-    echo -e "Before you begin, please ensure that you have Xcode installed,"
-    echo -e "  Xcode command line tools installed, and"
-    echo -e "  your phone is plugged into your computer\n"
+    echo -e "Before you begin, please ensure"
+    echo -e "  you have Xcode and Xcode command line tools installed\n"
     echo -e "Please select which version of Loop you would like to download and build.\n"
     echo -e "\n ${RED}${BOLD}You are running the script for the released version${NC}\n"
     echo -e "  These webpages will tell you the date of the last release for:"

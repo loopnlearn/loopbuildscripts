@@ -69,9 +69,8 @@ echo -e "${RED}${BOLD}Loop    development branch version:"
 echo -e "     ${LOOP_DEV_TESTED_DATE} workspace revision ${LOOP_DEV_TESTED_SHA}"
 echo -e "FreeAPS development branch version:"
 echo -e "     ${FAPS_DEV_TESTED_DATE} workspace revision ${FAPS_DEV_TESTED_SHA}"
-echo -e "${NC}\nBefore you begin, please ensure that"
-echo -e "  you have Xcode and Xcode command line tools installed, and"
-echo -e "  your phone is plugged into your computer\n"
+echo -e "${NC}\nBefore you begin, please ensure"
+echo -e "  you have Xcode and Xcode command line tools installed\n"
 echo -e "Please select which version of Loop you would like to download and build"
 
 choose_or_cancel
