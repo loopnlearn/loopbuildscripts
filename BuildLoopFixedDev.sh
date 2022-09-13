@@ -166,14 +166,7 @@ do
             echo -e "\nThe following items will open (when you are ready)"
             echo -e "* Webpage with detailed build steps (LoopDocs)"
             echo -e "* Xcode ready to prep your current download for build"
-            echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
-            echo -e " *** Unlock your phone and plug it into your computer"
-            echo -e "     Trust computer if asked"
-            echo -e " *** Optional (New Apple Watch - never built Loop on it)"
-            echo -e "              Paired to phone, on your wrist and unlocked"
-            echo -e "              Trust computer if asked"
-            echo -e "\nAFTER you hit return:"
-            echo -e " *** Do not forget to select Loop(Workspace)\n"
+            before_final_return_message
             return_when_ready
             if [ ${FIXED_SHA} == 0 ]; then
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"

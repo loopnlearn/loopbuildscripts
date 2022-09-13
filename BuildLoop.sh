@@ -155,14 +155,7 @@ if [ "$WHICH" = "Loop" ]; then
                 echo -e "* Webpage with abbreviated build steps (Loop and Learn)"
                 echo -e "* Webpage with detailed build steps (LoopDocs)"
                 echo -e "* Xcode ready to prep your current download for build\n"
-                echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
-                echo -e " *** Unlock your phone and plug it into your computer"
-                echo -e "     Trust computer if asked"
-                echo -e " *** Optional (New Apple Watch - never built Loop on it)"
-                echo -e "              Paired to phone, on your wrist and unlocked"
-                echo -e "              Trust computer if asked"
-                echo -e "\nAFTER you hit return:"
-                echo -e " *** Do not forget to select Loop(Workspace)\n"
+                before_final_return_message
                 return_when_ready
                 # the helper page displayed depends on validity of persistent override
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then

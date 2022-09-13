@@ -117,6 +117,24 @@ function return_when_ready() {
     read -p "Return when ready to continue  " dummy
 }
 
+function ios16_warning() {
+    echo -e "${RED}${BOLD}  If you have iOS 16 (watchOS 9), you must enable Developer Mode${NC}"
+    echo -e "${RED}${BOLD}  Check in Phone Settings->Privacy & Security${NC}"
+}
+
+
+function before_final_return_message() {
+    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    ios16_warning
+    echo -e " *** Unlock your phone and plug it into your computer"
+    echo -e "     Trust computer if asked"
+    echo -e " *** Optional (New Apple Watch - never built Loop on it)"
+    echo -e "              Paired to phone, on your wrist and unlocked"
+    echo -e "              Trust computer if asked"
+    echo -e "\nAFTER you hit return:"
+    echo -e " *** Do not forget to select Loop(Workspace)\n"
+}
+
 function report_persistent_config_override() {
     echo -e "The file used by Xcode to sign your app is found at:"
     echo -e "   ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
