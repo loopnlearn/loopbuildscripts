@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 clear
 echo -e "\n\n🕒 Please be patient. On older computers and virtual machines, this may take 5-10 minutes or longer to run.\n"
