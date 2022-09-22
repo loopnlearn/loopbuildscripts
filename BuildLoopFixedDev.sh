@@ -37,6 +37,10 @@ if [ ! -f ./build_functions.sh ]; then
 fi
 
 # This brings in functions from build_functions.sh
+#   When testing update to build_functions.sh,
+#     uncomment next line to test, then comment before release
+# source ~/Downloads/ManualClones/lnl/loopbuildscripts/build_functions.sh
+#     comment next line to test, then uncomment before release
 source ./build_functions.sh
 
 ############################################################
@@ -53,7 +57,7 @@ FAPS_DEV_TESTED_SHA=8b06d3e
 FAPS_DEV_TESTED_DATE="Sep 19, 2022"
 FIXED_SHA=0
 
-echo -e "\n--------------------------------\n"
+section_separator
 BRANCH_LOOP=dev
 BRANCH_FREE=freeaps_dev
 LOOPCONFIGOVERRIDE_VALID=1
@@ -62,7 +66,7 @@ echo -e " -- If you choose Loop,    branch is ${RED}${BOLD}${BRANCH_LOOP}${NC}"
 echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}${NC}"
 echo -e " ${RED}${BOLD}Be aware that a development version may require frequent rebuilds${NC}\n"
 echo -e " If you have not read this section of LoopDocs - please review before continuing"
-echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#loop-development"
+echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#whats-going-on-in-the-dev-branch"
 echo -e "\nThis script chooses a version (commit) of the development branch"
 echo -e "    that has been built and lightly tested"
 echo -e "${RED}${BOLD}Loop    development branch version:"
@@ -110,8 +114,7 @@ if [ ${FRESH_CLONE} == 1 ]; then
 else
     cd "${STARTING_DIR}"
 fi
-echo -e "\n\n\n\n"
-echo -e "\n--------------------------------\n"
+section_separator
 if [ ${FRESH_CLONE} == 1 ]; then
     echo -e " -- Downloading ${FORK_NAME} ${BRANCH} to your Downloads folder --"
     echo -e "      ${LOOP_DIR}\n"
@@ -119,15 +122,13 @@ if [ ${FRESH_CLONE} == 1 ]; then
     echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
     git clone --branch=$BRANCH --recurse-submodules $REPO
 fi
-echo -e "\n--------------------------------\n"
-echo -e "🛑 Please check for errors in the window above before proceeding."
-echo -e "   If there are no errors listed, code has successfully downloaded.\n"
-echo -e "Type 1 and return to continue if and ONLY if"
-echo -e "  there are no errors - scroll up in terminal window to look for the word error"
-choose_or_cancel
+
+section_separator
+clone_download_error_check
 options=("Continue" "Cancel")
 select opt in "${options[@]}"
 do
+    section_separator
     case $opt in
         "Continue")
             cd LoopWorkspace
@@ -163,7 +164,8 @@ do
                 check_config_override_existence_offer_to_configure
             fi
 
-            echo -e "\nThe following items will open (when you are ready)"
+            section_separator
+            echo -e "The following items will open (when you are ready)"
             echo -e "* Webpage with detailed build steps (LoopDocs)"
             echo -e "* Xcode ready to prep your current download for build"
             before_final_return_message
@@ -175,12 +177,7 @@ do
             fi
             sleep 5
             xed .
-            echo -e "\nShell Script Completed\n"
-            echo -e " * You may close the terminal window now if you want"
-            echo -e "  or"
-            echo -e " * You can press the up arrow ⬆️  on the keyboard"
-            echo -e "    and return to repeat script from beginning.\n\n";
-            exit 0
+            exit_message
             break
             ;;
         "Cancel")

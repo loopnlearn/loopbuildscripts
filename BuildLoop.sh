@@ -37,6 +37,10 @@ if [ ! -f ./build_functions.sh ]; then
 fi
 
 # This brings in functions from build_functions.sh
+#   When testing update to build_functions.sh,
+#     uncomment next line to test, then comment before release
+# source ~/Downloads/ManualClones/lnl/loopbuildscripts/build_functions.sh
+#     comment next line to test, then uncomment before release
 source ./build_functions.sh
 
 ############################################################
@@ -46,7 +50,7 @@ source ./build_functions.sh
 # store a copy of this script.sh in script directory
 curl -fsSLo ./BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh
 
-echo -e "\n--------------------------------\n"
+section_separator
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
 echo -e "This script will assist you in one of these actions:"
 echo -e "  1 Download and build Loop"
@@ -83,7 +87,7 @@ done
 echo -e "\n\n\n\n"
 
 if [ "$WHICH" = "Loop" ]; then
-    echo -e "\n--------------------------------\n"
+    section_separator
     echo -e "Before you begin, please ensure"
     echo -e "  you have Xcode and Xcode command line tools installed\n"
     echo -e "Please select which version of Loop you would like to download and build.\n"
@@ -93,6 +97,7 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "  FreeAPS: https://github.com/loopnlearn/LoopWorkspace/releases"
     BRANCH_LOOP=master
     BRANCH_FREE=freeaps
+    # after release, change next line to 1
     LOOPCONFIGOVERRIDE_VALID=0
     choose_or_cancel
     options=("Loop" "FreeAPS" "Cancel")
@@ -125,8 +130,7 @@ if [ "$WHICH" = "Loop" ]; then
         mkdir "${LOOP_DIR}"
         cd "${LOOP_DIR}"
     fi
-    echo -e "\n\n\n\n"
-    echo -e "\n--------------------------------\n"
+    section_separator
     if [ ${FRESH_CLONE} == 1 ]; then
         echo -e " -- Downloading ${FORK_NAME} ${BRANCH} to your Downloads folder --"
         echo -e "      ${LOOP_DIR}\n"
@@ -136,44 +140,28 @@ if [ "$WHICH" = "Loop" ]; then
     else
         cd "${STARTING_DIR}"
     fi
-    echo -e "\n--------------------------------\n"
-    echo -e "🛑 Please check for errors in the window above before proceeding."
-    echo -e "   If there are no errors listed, code has successfully downloaded.\n"
-    echo -e "Type 1 and return to continue if and ONLY if"
-    echo -e "  there are no errors (scroll up in terminal window to look for the word error)"
-    choose_or_cancel
+    section_separator
+    clone_download_error_check
     options=("Continue" "Cancel")
     select opt in "${options[@]}"
     do
+        section_separator
         case $opt in
             "Continue")
                 cd LoopWorkspace
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
                     check_config_override_existence_offer_to_configure
+                    section_separator
                 fi
                 echo -e "\nThe following items will open (when you are ready)"
-                echo -e "* Webpage with abbreviated build steps (Loop and Learn)"
                 echo -e "* Webpage with detailed build steps (LoopDocs)"
                 echo -e "* Xcode ready to prep your current download for build\n"
                 before_final_return_message
                 return_when_ready
-                # the helper page displayed depends on validity of persistent override
-                if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-                    # change this page to the one (not yet written) for persistent override
-                    open https://www.loopandlearn.org/workspace-build-loop
-                else
-                    open https://www.loopandlearn.org/workspace-build-loop
-                fi
-                sleep 5
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
                 sleep 5
                 xed .
-                echo -e "\nShell Script Completed\n"
-                echo -e " * You may close the terminal window now if you want"
-                echo -e "  or"
-                echo -e " * You can press the up arrow ⬆️  on the keyboard"
-                echo -e "    and return to repeat script from beginning.\n\n";
-                exit 0
+                exit_message
                 break
                 ;;
             "Cancel")
@@ -214,42 +202,39 @@ else
     echo -e "\n${RED}${BOLD}    Beware that you might be required to fully uninstall"
     echo -e "      and reinstall Xcode if you run this script with Xcode installed.\n${NC}"
     echo -e "    Always a good idea to reboot your computer after Xcode Cleanup.\n"
-    echo -e "3 ➡️  Clean Profiles & Derived Data:\n"
+    echo -e "3 ➡️  Clean Profiles:\n"
     echo -e "    For those with a paid Apple Developer ID,"
     echo -e "      this action configures you to have a full year"
     echo -e "      before you are forced to rebuild your app."
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
     choose_or_cancel
-    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles & Derived Data" "Cancel")
+    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
             "Clean Derived Data")
                 echo -e "\n--------------------------------\n"
-                echo -e "Downloading Derived Data Script"
+                echo -e "Downloading Script: CleanDerived.sh"
                 echo -e "\n--------------------------------\n"
-                curl -fsSLo ./CleanCartDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanCartDerived.sh
-                echo -e "\n\n\n\n"
-                source ./CleanCartDerived.sh
+                curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanDerived.sh
+                source ./CleanDerived.sh
                 break
                 ;;
             "Xcode Cleanup (The Big One)")
                 echo -e "\n--------------------------------\n"
-                echo -e "Downloading Xcode Cleanup Script"
+                echo -e "Downloading Script: XcodeClean.sh"
                 echo -e "\n--------------------------------\n"
                 curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/XcodeClean.sh
-                echo -e "\n\n\n\n"
                 source ./XcodeClean.sh
                 break
                 ;;
-            "Clean Profiles & Derived Data")
+            "Clean Profiles")
                 echo -e "\n--------------------------------\n"
-                echo -e "Downloading Profiles and Derived Data Script"
+                echo -e "Downloading Script: ClearProfiles.sh"
                 echo -e "\n--------------------------------\n"
-                curl -fsSLo ./CleanProfCartDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfCartDerived.sh
-                echo -e "\n\n\n\n"
-                source ./CleanProfCartDerived.sh
+                curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfiles.sh
+                source ./CleanProfiles.sh
                 break
                 ;;
             "Cancel")

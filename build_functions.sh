@@ -67,19 +67,24 @@ sleep 1
 # Define the rest of the functions (usage defined above):
 ############################################################
 
+function section_separator() {
+    clear
+    echo -e "--------------------------------\n"
+}
+
 function initial_greeting() {
-    echo -e "${RED}${BOLD}\n\n--------------------------------\n\n"
-    echo -e "IMPORTANT\n"
-    echo -e "Please understand that this project:\n"
-    echo -e "- Is Open Source software"
-    echo -e "- Is not \"approved\" for therapy\n"
-    echo -e "And that:"
-    echo -e "- You take full responsibility for"
-    echo -e "  reading and understanding the documenation"
-    echo -e "  (LoopsDocs is found at https://loopdocs.org)"
-    echo -e "  before building and running this system,"
-    echo -e "  and do so at your own risk.\n"
-    echo -e "${NC}If you find the font too small to read comfortably"
+    section_separator
+    echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
+    echo -e "${BOLD}This project is:${RED}${BOLD}"
+    echo -e "  Open Source software"
+    echo -e "  Not \"approved\" for therapy${NC}\n"
+    echo -e "${BOLD}And that:${RED}${BOLD}"
+    echo -e "  You take full responsibility for reading"
+    echo -e "  and understanding the documenation,"
+    echo -e "  LoopsDocs, found at https://loopdocs.org,"
+    echo -e "  before building or running this system,"
+    echo -e "  and do so at your own risk.${NC}\n"
+    echo -e "If you find the font too small to read comfortably"
     echo -e "  Hold down the CMD key and hit + (or -)"
     echo -e "  to increase (decrease) size"
     accept_or_cancel
@@ -108,7 +113,11 @@ function invalid_entry() {
 }
 
 function exit_message() {
-    echo -e "You can press the up arrow ⬆️  on the keyboard"
+    section_separator
+    echo -e "\nShell Script Completed\n"
+    echo -e " * You may close the terminal window now if you want"
+    echo -e "   or"
+    echo -e " * You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n";
     exit 0
 }
@@ -118,19 +127,28 @@ function return_when_ready() {
 }
 
 function ios16_warning() {
-    echo -e "${RED}${BOLD}  If you have iOS 16 (watchOS 9), you must enable Developer Mode${NC}"
+    echo -e "\n${RED}${BOLD}  If you have iOS 16 (watchOS 9), you must enable Developer Mode${NC}"
     echo -e "${RED}${BOLD}  Check in Phone Settings->Privacy & Security${NC}"
+    echo -e "  For more information:"
+    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
+function clone_download_error_check() {
+    echo -e "🛑 Check for successful Download\n"
+    echo -e "   Please scroll up and look for the word ${BOLD}error${NC} in the window above."
+    echo -e "   If there are no errors listed, code has successfully downloaded, Continue."
+    echo -e "   If you see the word error, Cancel and resolve the problem."
+    choose_or_cancel
+}
 
 function before_final_return_message() {
     echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
-    ios16_warning
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     echo -e " *** Optional (New Apple Watch - never built Loop on it)"
     echo -e "              Paired to phone, on your wrist and unlocked"
     echo -e "              Trust computer if asked"
+    ios16_warning
     echo -e "\nAFTER you hit return:"
     echo -e " *** Do not forget to select Loop(Workspace)\n"
 }
@@ -138,38 +156,42 @@ function before_final_return_message() {
 function report_persistent_config_override() {
     echo -e "The file used by Xcode to sign your app is found at:"
     echo -e "   ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
-    echo -e "The last 3 lines of that file are shown next:\n"
-    tail -3 "${OVERRIDE_FULLPATH}"
+    echo -e "The last line of that file is shown next:\n"
+    tail -1 "${OVERRIDE_FULLPATH}"
     echo -e "\nIf the last line has your Apple Developer ID"
     echo -e "   with no slashes at the beginning of the line"
     echo -e "   your targets will be automatically signed"
-    echo -e "Any line that starts with // is ignored"
-    echo -e "  If ID is OK, hit return"
+    echo -e "Any line that starts with // is ignored\n"
     echo -e "  If ID is not OK:"
     echo -e "    Edit the file before hitting return"
     echo -e "     step 1: open finder, navigate to Downloads/BuildLoop"
     echo -e "     step 2: double click on "${OVERRIDE_FILE}""
-    echo -e "     step 3: edit and save file"
+    echo -e "     step 3: edit and save file\n"
+    echo -e "  If ID is OK, hit return\n"
     return_when_ready
 }
 
-function create_persistent_config_override() {
-    echo -e "\n--------------------------------\n"
-    echo -e "The Apple Developer page will open when you hit return"
-    echo -e " * Log in if needed"
-    echo -e " * If the Membership page does not show, you may need to select it"
-    echo -e "     Your Apple Developer ID is the 10-character Team ID"
-    echo -e " * If you already have your account open in your browser, you may need to go to the already opened page"
-    echo -e " * Once you get your ID, return to terminal window"
-    echo -e "This is the page that will open after you hit return:"
+function how_to_find_your_id() {
+    echo -e "Your Apple Developer ID is the 10-character Team ID"
+    echo -e "  found on the Membership page after logging into your account at:"
     echo -e "   https://developer.apple.com/account/#!/membership\n"
+}
+
+function create_persistent_config_override() {
+    section_separator
+    echo -e "The Apple Developer page will open when you hit return\n"
+    how_to_find_your_id
+    echo -e "That page will be opened for you."
+    echo -e "  Once you get your ID, you will enter it in this terminal window"
     return_when_ready
+    #
     open "https://developer.apple.com/account/#!/membership"
-    echo -e "\n * Click in terminal window"
+    echo -e "\n *** \nClick in terminal window so you can"
     read -p "Enter the ID and return: " devID
-    echo -e "\n--------------------------------\n"
+    #
+    section_separator
     if [ ${#devID} -ne 10 ]; then
-        echo -e "Something was wrong with entry"
+        echo -e "Something was wrong with the entry"
         echo -e "You can manually sign each target in Xcode"
     else 
         echo -e "Creating ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
@@ -182,8 +204,9 @@ function create_persistent_config_override() {
 }
 
 function check_config_override_existence_offer_to_configure() {
-    echo -e "\n--------------------------------\n"
+    section_separator
     if [ -e "${OVERRIDE_FULLPATH}" ]; then
+        how_to_find_your_id
         report_persistent_config_override
     else
         # make sure the "${OVERRIDE_FILE}" exists in clone
@@ -215,7 +238,6 @@ function check_config_override_existence_offer_to_configure() {
             LOOPCONFIGOVERRIDE_VALID=0
         fi
     fi
-    echo -e "\n--------------------------------\n"
 }
 
 # call functions that are always used
