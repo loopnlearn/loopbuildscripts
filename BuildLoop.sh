@@ -140,7 +140,6 @@ if [ "$WHICH" = "Loop" ]; then
     else
         cd "${STARTING_DIR}"
     fi
-    section_separator
     clone_download_error_check
     options=("Continue" "Cancel")
     select opt in "${options[@]}"

@@ -123,7 +123,6 @@ if [ ${FRESH_CLONE} == 1 ]; then
     git clone --branch=$BRANCH --recurse-submodules $REPO
 fi
 
-section_separator
 clone_download_error_check
 options=("Continue" "Cancel")
 select opt in "${options[@]}"

@@ -134,6 +134,7 @@ function ios16_warning() {
 }
 
 function clone_download_error_check() {
+    echo -e "--------------------------------\n"
     echo -e "🛑 Check for successful Download\n"
     echo -e "   Please scroll up and look for the word ${BOLD}error${NC} in the window above."
     echo -e "   If there are no errors listed, code has successfully downloaded, Continue."
