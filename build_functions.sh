@@ -77,22 +77,15 @@ function initial_greeting() {
     echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
     echo -e "${BOLD}This project is:${RED}${BOLD}"
     echo -e "  Open Source software"
-    echo -e "  Not \"approved\" for therapy${NC}\n"
-    echo -e "${BOLD}And that:${RED}${BOLD}"
-    echo -e "  You take full responsibility for reading"
-    echo -e "  and understanding the documenation,"
-    echo -e "  LoopsDocs, found at https://loopdocs.org,"
-    echo -e "  before building or running this system,"
-    echo -e "  and do so at your own risk.${NC}\n"
-    echo -e "If you find the font too small to read comfortably"
-    echo -e "  Hold down the CMD key and hit + (or -)"
-    echo -e "  to increase (decrease) size"
-    accept_or_cancel
-}
-
-function accept_or_cancel() {
-    echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you agree"
-    echo -e "  Any other entry cancels"
+    echo -e "  Not \"approved\" for therapy\n"
+    echo -e "  You take full responsibility for reading and"
+    echo -e "  understanding the documenation, LoopsDocs, found at "
+    echo -e "      https://loopdocs.org,"
+    echo -e "  before building or running this system, and"
+    echo -e "  you do so at your own risk.${NC}\n"
+    echo -e "To increase (decrease) font size"
+    echo -e "  Hold down the CMD key and hit + (-)"
+    echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
     echo -e "\n--------------------------------\n${NC}"
 }
 
