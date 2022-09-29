@@ -37,11 +37,13 @@ if [ ! -f ./build_functions.sh ]; then
 fi
 
 # This brings in functions from build_functions.sh
-#   When testing update to build_functions.sh,
-#     uncomment next line to test, then comment before release
-# source ~/Downloads/ManualClones/lnl/loopbuildscripts/build_functions.sh
-#     comment next line to test, then uncomment before release
-source ./build_functions.sh
+#   When testing update to build_functions.sh, set to 1 for testing only
+DEBUG_FLAG=0
+if [ ${DEBUG_FLAG} == 0 ]; then
+    source ./build_functions.sh
+else
+    source ~/Downloads/ManualClones/lnl/loopbuildscripts/build_functions.sh
+fi
 
 ############################################################
 # The rest of this is specific to BuildLoop.sh
@@ -128,8 +130,10 @@ if [ "$WHICH" = "Loop" ]; then
     LOOP_DIR="${BUILD_DIR}/${FORK_NAME}-${DOWNLOAD_DATE}"
     if [ ${FRESH_CLONE} == 1 ]; then
         mkdir "${LOOP_DIR}"
-        cd "${LOOP_DIR}"
+    else
+        LOOP_DIR="${STARTING_DIR}"
     fi
+    cd "${LOOP_DIR}"
     section_separator
     if [ ${FRESH_CLONE} == 1 ]; then
         echo -e " -- Downloading ${FORK_NAME} ${BRANCH} to your Downloads folder --"
@@ -137,9 +141,8 @@ if [ "$WHICH" = "Loop" ]; then
         echo -e "Issuing this command:"
         echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
         git clone --branch=$BRANCH --recurse-submodules $REPO
-    else
-        cd "${STARTING_DIR}"
     fi
+    #
     clone_download_error_check
     options=("Continue" "Cancel")
     select opt in "${options[@]}"
