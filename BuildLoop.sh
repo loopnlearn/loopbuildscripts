@@ -155,9 +155,9 @@ if [ "$WHICH" = "Loop" ]; then
                     check_config_override_existence_offer_to_configure
                     section_separator
                 fi
-                echo -e "\nThe following items will open (when you are ready)"
+                echo -e "The following items will open (when you are ready)"
                 echo -e "* Webpage with detailed build steps (LoopDocs)"
-                echo -e "* Xcode ready to prep your current download for build\n"
+                echo -e "* Xcode ready to prep your current download for build"
                 before_final_return_message
                 return_when_ready
                 open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
