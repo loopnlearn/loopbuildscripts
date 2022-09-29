@@ -23,6 +23,12 @@ NC='\033[0m'
 #     Download fresh clone every time script is run
 FRESH_CLONE=1
 
+# CLONE_OBTAINED is used as a flag
+#   if the script goes through the process to download a clone
+#   this is set to 1, and the exit_message is updated to
+#   inform the user how to cd to LOOP_DIR / LoopWorkspace
+CLONE_OBTAINED=0
+
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
@@ -111,12 +117,16 @@ function exit_message() {
     echo -e " * You may close the terminal window now if you want"
     echo -e "   or"
     echo -e " * You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning.\n\n";
+    echo -e "    and return to repeat script from beginning.\n\n"
+    echo -e "To configure this terminal to LoopWorkspace folder of new download"
+    echo -e " copy and paste the following line into the terminal\n"
+    echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
     exit 0
 }
 
 function return_when_ready() {
-    read -p "Return when ready to continue  " dummy
+    echo -e "${RED}${BOLD}Return when ready to continue${NC}"
+    read -p "" dummy
 }
 
 function ios16_warning() {
@@ -127,6 +137,8 @@ function ios16_warning() {
 }
 
 function clone_download_error_check() {
+    # indicate that a clone was created
+    CLONE_OBTAINED=1
     echo -e "--------------------------------\n"
     echo -e "🛑 Check for successful Download\n"
     echo -e "   Please scroll up and look for the word ${BOLD}error${NC} in the window above."
@@ -153,14 +165,14 @@ function report_persistent_config_override() {
     echo -e "The last line of that file is shown next:\n"
     tail -1 "${OVERRIDE_FULLPATH}"
     echo -e "\nIf the last line has your Apple Developer ID"
-    echo -e "   with no slashes at the beginning of the line"
     echo -e "   your targets will be automatically signed"
-    echo -e "Any line that starts with // is ignored\n"
+    echo -e "WARNING: Any line that starts with // is ignored\n"
     echo -e "  If ID is not OK:"
     echo -e "    Edit the file before hitting return"
     echo -e "     step 1: open finder, navigate to Downloads/BuildLoop"
-    echo -e "     step 2: double click on "${OVERRIDE_FILE}""
-    echo -e "     step 3: edit and save file\n"
+    echo -e "     step 2: locate and double click on "${OVERRIDE_FILE}""
+    echo -e "             this will open that file in Xcode"
+    echo -e "     step 3: edit in Xcode and save file\n"
     echo -e "  If ID is OK, hit return\n"
     return_when_ready
 }
