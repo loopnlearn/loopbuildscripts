@@ -233,7 +233,7 @@ else
                 ;;
             "Clean Profiles")
                 echo -e "\n--------------------------------\n"
-                echo -e "Downloading Script: ClearProfiles.sh"
+                echo -e "Downloading Script: CleanProfiles.sh"
                 echo -e "\n--------------------------------\n"
                 curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfiles.sh
                 source ./CleanProfiles.sh
