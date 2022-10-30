@@ -143,7 +143,7 @@ do
             fi
             echo -e "  Checking out commit ${FIXED_SHA}\n"
             git checkout $FIXED_SHA --recurse-submodules --quiet
-            git branch
+            git --no-pager branch
             echo -e "Continue if no errors reported"
             choose_or_cancel
             options=("Continue" "Cancel")
