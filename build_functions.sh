@@ -142,8 +142,11 @@ function clone_download_error_check() {
     echo -e "--------------------------------\n"
     echo -e "🛑 Check for successful Download\n"
     echo -e "   Please scroll up and look for the word ${BOLD}error${NC} in the window above."
+    echo -e "   OR use the Find command for terminal, CMD+F,"
+    echo -e "      then type error (in new row, top of terminal) and hit return"
+    echo -e"       Click in terminal again before typing your response below"
     echo -e "   If there are no errors listed, code has successfully downloaded, Continue."
-    echo -e "   If you see the word error, Cancel and resolve the problem."
+    echo -e "   If you see the word error in the download, Cancel and resolve the problem."
     choose_or_cancel
 }
 
