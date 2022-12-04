@@ -55,8 +55,8 @@ curl -fsSLo ./BuildLoopFixedDev.sh https://raw.githubusercontent.com/loopnlearn/
 # Stable Dev SHA
 LOOP_DEV_TESTED_SHA=ca8a374
 LOOP_DEV_TESTED_DATE="Sep 26, 2022"
-FAPS_DEV_TESTED_SHA=7718a1d
-FAPS_DEV_TESTED_DATE="Nov 15, 2022"
+FAPS_DEV_TESTED_SHA=efd9241
+FAPS_DEV_TESTED_DATE="Dec 04, 2022"
 FIXED_SHA=0
 
 section_separator
