@@ -67,9 +67,9 @@ BRANCH_FREE=freeaps_dev
 LOOPCONFIGOVERRIDE_VALID=1
 echo -e "\n ${RED}${BOLD}You are running the script for the development version${NC}"
 echo -e " -- If you choose Loop,    branch is ${RED}${BOLD}${BRANCH_LOOP}${NC}"
-echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}${NC}"
-echo -e "\nThe version prepared with this script is not necessarily the most recent development version\n"
-echo -e " ${RED}${BOLD}Be aware that a development version may require frequent rebuilds${NC}\n"
+echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}"
+echo -e "\n** The version prepared might not be the most recent development version **"
+echo -e "\n** Be aware that a development version may require frequent rebuilds **${NC}\n"
 echo -e " If you have not read this section of LoopDocs - please review before continuing"
 echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#whats-going-on-in-the-dev-branch"
 return_when_ready
