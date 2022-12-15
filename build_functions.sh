@@ -142,9 +142,9 @@ function clone_download_error_check() {
     echo -e "--------------------------------\n"
     echo -e "🛑 Check for successful Download\n"
     echo -e "   Please scroll up and look for the word ${BOLD}error${NC} in the window above."
-    echo -e "   OR use the Find command for terminal, CMD+F,"
+    echo -e "   OR use the Find command for terminal, hold down CMD key and tap F,"
     echo -e "      then type error (in new row, top of terminal) and hit return"
-    echo -e"       Click in terminal again before typing your response below"
+    echo -e "      Be sure to click in terminal again if you use CMD-F"
     echo -e "   If there are no errors listed, code has successfully downloaded, Continue."
     echo -e "   If you see the word error in the download, Cancel and resolve the problem."
     choose_or_cancel
@@ -165,7 +165,7 @@ function before_final_return_message() {
 function report_persistent_config_override() {
     echo -e "The file used by Xcode to sign your app is found at:"
     echo -e "   ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
-    echo -e "The last line of that file is shown next:\n"
+    echo -e "The last line of that file is shown next:"
     tail -1 "${OVERRIDE_FULLPATH}"
     echo -e "\nIf the last line has your Apple Developer ID"
     echo -e "   your targets will be automatically signed"
@@ -176,7 +176,7 @@ function report_persistent_config_override() {
     echo -e "     step 2: locate and double click on "${OVERRIDE_FILE}""
     echo -e "             this will open that file in Xcode"
     echo -e "     step 3: edit in Xcode and save file\n"
-    echo -e "  If ID is OK, hit return\n"
+    echo -e "  If ID is OK, hit return"
     return_when_ready
 }
 
