@@ -53,12 +53,10 @@ fi
 curl -fsSLo ./BuildLoopFixedDev.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFixedDev.sh
 
 # Stable Dev SHA
-LOOP_DEV_TESTED_SHA=ca8a374
-LOOP_DEV_TESTED_DATE="Sep 26, 2022"
+LOOP_DEV_TESTED_SHA=290211f
+LOOP_DEV_TESTED_DATE="Dec 15, 2022"
 FAPS_DEV_TESTED_SHA=efd9241
 FAPS_DEV_TESTED_DATE="Dec 04, 2022"
-LOOP_DEV_G7_SHA=f245588
-LOOP_DEV_G7_DATE="Nov 27, 2022"
 FIXED_SHA=0
 
 section_separator
@@ -76,19 +74,16 @@ return_when_ready
 #
 echo -e "\nThis script chooses a version (commit) of the development branch"
 echo -e "    that has been built and lightly tested"
-echo -e "${RED}${BOLD}Loop    development branch version:"
+echo -e "${RED}${BOLD}Loop    development branch version (includes Dexcom G7 Support):"
 echo -e "     ${LOOP_DEV_TESTED_DATE} workspace revision ${LOOP_DEV_TESTED_SHA}"
 echo -e "FreeAPS development branch version:"
 echo -e "     ${FAPS_DEV_TESTED_DATE} workspace revision ${FAPS_DEV_TESTED_SHA}"
-echo -e "${NC}\nFor G7 users - this version builds and some people are using it"
-echo -e "${RED}${BOLD}Loop dev with G7; WARNING: requires Xcode 14.1"
-echo -e "     ${LOOP_DEV_G7_DATE} workspace revision ${LOOP_DEV_G7_SHA}"
 echo -e "${NC}\nBefore you begin, please ensure"
 echo -e "  you have Xcode and Xcode command line tools installed\n"
 echo -e "Please select which version of Loop you would like to download and build"
 
 choose_or_cancel
-options=("Loop dev" "FreeAPS dev" "Loop dev with G7" "Cancel")
+options=("Loop dev" "FreeAPS dev" "Cancel")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -105,14 +100,6 @@ do
             REPO=https://github.com/loopnlearn/LoopWorkspace
             BRANCH=freeaps_dev
             FIXED_SHA=$FAPS_DEV_TESTED_SHA
-            LOOPCONFIGOVERRIDE_VALID=1
-            break
-            ;;
-        "Loop dev with G7")
-            FORK_NAME=Loop
-            REPO=https://github.com/LoopKit/LoopWorkspace
-            BRANCH=dev
-            FIXED_SHA=$LOOP_DEV_G7_SHA
             LOOPCONFIGOVERRIDE_VALID=1
             break
             ;;
