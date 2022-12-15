@@ -165,7 +165,7 @@ function before_final_return_message() {
 function report_persistent_config_override() {
     echo -e "The file used by Xcode to sign your app is found at:"
     echo -e "   ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
-    echo -e "The last line of that file is shown next:"
+    echo -e "   The last line of that file is shown next:"
     tail -1 "${OVERRIDE_FULLPATH}"
     echo -e "\nIf the last line has your Apple Developer ID"
     echo -e "   your targets will be automatically signed"
