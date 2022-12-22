@@ -120,15 +120,16 @@ do
             echo -e "     iOS 16 is required and Developer Mode must be enabled"
             echo -e "\nLoopCaregiver is slightly different than building Loop-dev"
             echo -e "\nAFTER you hit return:"
-            echo -e " *** Select LoopCaregiver and your phone"
             echo -e " *** Wait for all the Package Dependencies to load\n"
             echo -e " You need to sign the LoopCaregiver app manually"
-            echo -e " 1. Click on the folder icon in Xcode"
-            echo -e " 2. Scroll down to LoopCaregiver and click on it"
-            echo -e " 3. Sign with your TeamID in Signing & Capabilities"
+            echo -e " 1. Select LoopCaregiver and your phone in Xcode (middle top)"
+            echo -e " 2. Click on the folder icon in Xcode (left pane top)"
+            echo -e " 3. Scroll down to LoopCaregiver and click on it (left pane)"
+            echo -e " 4. Sign with your TeamID in Signing & Capabilities (middle pane)"
             echo -e " Press the build (play) icon"
             return_when_ready
             xed .
+            return_when_ready
             exit_message
             break
             ;;
