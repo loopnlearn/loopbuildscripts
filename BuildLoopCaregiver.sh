@@ -125,10 +125,14 @@ do
             echo -e " 1. Select LoopCaregiver and your phone in Xcode (middle top)"
             echo -e " 2. Click on the folder icon in Xcode (left pane top)"
             echo -e " 3. Scroll down to LoopCaregiver and click on it (left pane)"
-            echo -e " 4. Sign with your TeamID in Signing & Capabilities (middle pane)"
+            echo -e " 4. Click on Signing & Capabilities (middle pane, near top)"
+            echo -e " 5. Sign with your TeamID (middle pane)"
             echo -e " Press the build (play) icon"
+            echo -e "The next return opens Xcode"
             return_when_ready
             xed .
+            echo -e "Then final return ends the script"
+            echo -e " After you hit return, scroll up if you still need directions"
             return_when_ready
             exit_message
             break
