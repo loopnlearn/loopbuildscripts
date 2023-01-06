@@ -21,7 +21,7 @@ cd "${SCRIPT_DIR}"
 
 # define branch (to make it easier when updating)
 # typically branch is main
-SCRIPT_BRANCH=main
+SCRIPT_BRANCH=dev
 
 # store a copy of build_functions.sh in script directory
 curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
@@ -97,10 +97,10 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "  These webpages will tell you the date of the last release for:"
     echo -e "  Loop:    https://github.com/LoopKit/Loop/releases"
     echo -e "  FreeAPS: https://github.com/loopnlearn/LoopWorkspace/releases"
-    BRANCH_LOOP=master
-    BRANCH_FREE=freeaps
+    BRANCH_LOOP=dev
+    BRANCH_FREE=freeaps_dev
     # after release, change next line to 1
-    LOOPCONFIGOVERRIDE_VALID=0
+    LOOPCONFIGOVERRIDE_VALID=1
     choose_or_cancel
     options=("Loop" "FreeAPS" "Cancel")
     select opt in "${options[@]}"
