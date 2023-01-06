@@ -118,7 +118,7 @@ function exit_message() {
     echo -e "   or"
     echo -e " * You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n"
-    if [ ! -z "$LOOP_DIR"]; then
+    if [[ ! -z "$LOOP_DIR" ]]; then
         echo -e "To configure this terminal to LoopWorkspace folder of new download;"
         echo -e " copy and paste the following line into the terminal\n"
         echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
