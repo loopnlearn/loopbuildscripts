@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 
 clear
@@ -9,9 +9,6 @@ rm -rf "$HOME/Library/Developer/Xcode/iOS\ DeviceSupport"
 
 echo -e "✅ Removing Developer watchOS DeviceSupport Library\n"
 rm -rf "$HOME/Library/Developer/Xcode/watchOS\ DeviceSupport"
-
-echo -e "✅ Removing Cache CarthageKit\n"
-rm -rf "$HOME/Library/Caches/org.carthage.CarthageKit"
 
 echo -e "✅ Removing Developer DerivedData\n"
 rm -rf "$HOME/Library/Developer/Xcode/DerivedData"
