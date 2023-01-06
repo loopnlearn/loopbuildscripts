@@ -160,7 +160,11 @@ if [ "$WHICH" = "Loop" ]; then
                 echo -e "* Xcode ready to prep your current download for build"
                 before_final_return_message
                 return_when_ready
-                open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
+                if [ ${SCRIPT_BRANCH} == 'dev' ]; then
+                    open "https://marionbarker.github.io/loopdocs/build/step14/#initial-xcode-screens"
+                else
+                    open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
+                fi
                 sleep 5
                 xed .
                 exit_message
