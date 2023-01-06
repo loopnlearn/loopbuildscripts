@@ -97,8 +97,16 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "  These webpages will tell you the date of the last release for:"
     echo -e "  Loop:    https://github.com/LoopKit/Loop/releases"
     echo -e "  FreeAPS: https://github.com/loopnlearn/LoopWorkspace/releases"
-    BRANCH_LOOP=dev
-    BRANCH_FREE=freeaps_dev
+    if [ ${SCRIPT_BRANCH} == 'dev' ]; then
+        echo -e "\n ${RED}${BOLD}This is the dev branch of BuildLoop.sh,"
+        echo -e "used for testing just prior to release of development branches."
+        echo -e "You will, in fact, get most recent version of development branch.${NC}\n"
+        BRANCH_LOOP=dev
+        BRANCH_FREE=freeaps_dev
+    else
+        BRANCH_LOOP=master
+        BRANCH_FREE=freeaps
+    fi
     # after release, change next line to 1
     LOOPCONFIGOVERRIDE_VALID=1
     choose_or_cancel
@@ -163,7 +171,7 @@ if [ "$WHICH" = "Loop" ]; then
                 if [ ${SCRIPT_BRANCH} == 'dev' ]; then
                     open "https://marionbarker.github.io/loopdocs/build/step14/#initial-xcode-screens"
                 else
-                    open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
+                    open "https://loopkit.github.io/loopdocs/build/step14/#initial-xcode-screens"
                 fi
                 sleep 5
                 xed .
