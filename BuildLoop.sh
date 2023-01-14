@@ -104,7 +104,7 @@ if [ "$WHICH" = "Loop" ]; then
         BRANCH_LOOP=dev
         BRANCH_FREE=freeaps_dev
     else
-        BRANCH_LOOP=master
+        BRANCH_LOOP=main
         BRANCH_FREE=freeaps
     fi
     # after release, change next line to 1
