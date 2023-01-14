@@ -97,7 +97,7 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "  These webpages will tell you the date of the last release for:"
     echo -e "  Loop:    https://github.com/LoopKit/Loop/releases"
     echo -e "  FreeAPS: https://github.com/loopnlearn/LoopWorkspace/releases"
-    BRANCH_LOOP=master
+    BRANCH_LOOP=main
     BRANCH_FREE=freeaps
     # after release, change next line to 1
     LOOPCONFIGOVERRIDE_VALID=0
