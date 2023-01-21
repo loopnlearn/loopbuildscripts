@@ -21,7 +21,8 @@ cd "${SCRIPT_DIR}"
 
 # define branch (to make it easier when updating)
 # typically branch is main
-SCRIPT_BRANCH=main
+# SCRIPT_BRANCH=main
+SCRIPT_BRANCH=main_lnl_patches
 
 # store a copy of build_functions.sh in script directory
 curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
@@ -54,12 +55,13 @@ curl -fsSLo ./BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuil
 
 section_separator
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
-echo -e "This script will assist you in one of these actions:"
+echo -e "This script will help you to:"
 echo -e "  1 Download and build Loop"
-echo -e "      You will be asked to choose from Loop or FreeAPS"
 echo -e "  2 Download and build LoopFollow"
 echo -e "  3 Prepare your computer using a Utility Script"
 echo -e "     when updating your computer or an app"
+echo -e "\nRun the script again to choose a different task"
+echo -e "If you want all three, first choose 3, then 1 and finally 2"
 choose_or_cancel
 options=("Build Loop" "Build LoopFollow" "Utility Scripts" "Cancel")
 select opt in "${options[@]}"
@@ -90,27 +92,32 @@ echo -e "\n\n\n\n"
 
 if [ "$WHICH" = "Loop" ]; then
     section_separator
-    echo -e "Before you begin, please ensure"
+    echo -e "Before you continue, please ensure"
     echo -e "  you have Xcode and Xcode command line tools installed\n"
-    echo -e "Please select which version of Loop you would like to download and build.\n"
+    echo -e "Please select which version of Loop to download and build."
     echo -e "\n ${RED}${BOLD}You are running the script for the released version${NC}\n"
-    echo -e "  These webpages will tell you the date of the last release for:"
+    echo -e "  This webpage will tell you the date of the last release for:"
     echo -e "  Loop:    https://github.com/LoopKit/Loop/releases"
-    echo -e "  FreeAPS: https://github.com/loopnlearn/LoopWorkspace/releases"
+    echo -e "\n  Loop with Patches adds some CGM options and CustomTypeOne LoopPatches"
+    echo -e "    The patched version gets updated after a release"
+    echo -e "    Review webpage below to learn about patches and check status after a new release"
+    echo -e "       https://www.loopandlearn.org/build-select"
     if [ ${SCRIPT_BRANCH} == 'dev' ]; then
         echo -e "\n ${RED}${BOLD}This is the dev branch of BuildLoop.sh,"
         echo -e "used for testing just prior to release of development branches."
-        echo -e "You will, in fact, get most recent version of development branch.${NC}\n"
+        echo -e "You will, in fact, get most recent version of development branch."
+        echo -e "The dev branch does NOT have patches available"
+        echo -e " Choosing patches, builds main${NC}\n"
         BRANCH_LOOP=dev
-        BRANCH_FREE=freeaps_dev
+        BRANCH_PATCHES=main
     else
         BRANCH_LOOP=main
-        BRANCH_FREE=freeaps
+        BRANCH_PATCHES=main_lnl_patches
     fi
     # after release, change next line to 1
     LOOPCONFIGOVERRIDE_VALID=1
     choose_or_cancel
-    options=("Loop" "FreeAPS" "Cancel")
+    options=("Loop" "Loop with Patches" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -120,10 +127,10 @@ if [ "$WHICH" = "Loop" ]; then
                 BRANCH=$BRANCH_LOOP
                 break
                 ;;
-            "FreeAPS")
-                FORK_NAME=FreeAPS
+            "Loop with Patches")
+                FORK_NAME=Loop_lnl_patches
                 REPO=https://github.com/loopnlearn/LoopWorkspace
-                BRANCH=$BRANCH_FREE
+                BRANCH=$BRANCH_PATCHES
                 break
                 ;;
             "Cancel")
