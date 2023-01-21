@@ -78,6 +78,10 @@ function section_separator() {
     echo -e "--------------------------------\n"
 }
 
+function section_divider() {
+    echo -e "--------------------------------\n"
+}
+
 function initial_greeting() {
     section_separator
     echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
