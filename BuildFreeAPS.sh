@@ -76,7 +76,7 @@ do
     esac
 done
 
-LOOP_DIR="${BUILD_DIR}/${FORK_NAME}-${BRANCH}-${DOWNLOAD_DATE}_${FIXED_SHA}"
+LOOP_DIR="${BUILD_DIR}/${FORK_NAME}-${DOWNLOAD_DATE}"
 if [ ${FRESH_CLONE} == 1 ]; then
     mkdir "${LOOP_DIR}"
 else
@@ -96,31 +96,12 @@ clone_download_error_check
 options=("Continue" "Cancel")
 select opt in "${options[@]}"
 do
-    section_separator
     case $opt in
         "Continue")
             cd LoopWorkspace
-            echo -e "Continue if no errors reported"
-            choose_or_cancel
-            options=("Continue" "Cancel")
-            select opt in "${options[@]}"
-            do
-                case $opt in
-                    "Continue")
-                        break
-                        ;;
-                    "Cancel")
-                        cancel_entry
-                        ;;
-                      *) # Invalid option
-                         invalid_entry
-                         ;;
-                esac
-            done
             if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
                 check_config_override_existence_offer_to_configure
             fi
-
             section_separator
             echo -e "The following items will open (when you are ready)"
             echo -e "* Webpage with detailed build steps (LoopDocs)"
