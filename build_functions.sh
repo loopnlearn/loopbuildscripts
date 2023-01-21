@@ -116,7 +116,7 @@ function invalid_entry() {
 }
 
 function exit_message() {
-    section_separator
+    section_divider
     echo -e "\nShell Script Completed\n"
     echo -e " * You may close the terminal window now if you want"
     echo -e "   or"
