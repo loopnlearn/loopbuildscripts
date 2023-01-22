@@ -78,6 +78,10 @@ function section_separator() {
     echo -e "--------------------------------\n"
 }
 
+function section_divider() {
+    echo -e "--------------------------------\n"
+}
+
 function initial_greeting() {
     section_separator
     echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
@@ -112,7 +116,7 @@ function invalid_entry() {
 }
 
 function exit_message() {
-    section_separator
+    section_divider
     echo -e "\nShell Script Completed\n"
     echo -e " * You may close the terminal window now if you want"
     echo -e "   or"
@@ -163,7 +167,7 @@ function before_final_return_message() {
     echo -e "              Trust computer if asked"
     ios16_warning
     echo -e "\nAFTER you hit return:"
-    echo -e " *** Do not forget to select Loop(Workspace)\n"
+    echo -e " *** Do not forget to ${RED}${BOLD}select Loop(Workspace)${NC}\n"
 }
 
 function report_persistent_config_override() {
