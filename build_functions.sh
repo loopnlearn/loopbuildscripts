@@ -228,7 +228,8 @@ function check_config_override_existence_offer_to_configure() {
     else
         # make sure the "${OVERRIDE_FILE}" exists in clone
         if [ -e "${OVERRIDE_FILE}" ]; then
-            echo -e "Choose 1 to Sign Automatically or 2 to Sign Manually (later in Xcode)"
+            echo -e "Choose 1 to Sign Automatically or "
+            echo -e "       2 to Sign Manually (later in Xcode)"
             echo -e "\nIf you choose Sign Automatically, script guides you"
             echo -e "  to create a permanent signing file"
             echo -e "  containing your Apple Developer ID"
