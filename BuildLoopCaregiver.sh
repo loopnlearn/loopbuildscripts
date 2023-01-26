@@ -134,7 +134,22 @@ do
             echo -e "Then final return ends the script"
             echo -e " After you hit return, scroll up if you still need directions"
             return_when_ready
-            exit_message
+            #exit_message
+            # the regular exist message uses LoopWorkspace
+            section_divider
+            echo -e "\nShell Script Completed\n"
+            echo -e " * You may close the terminal window now if you want"
+            echo -e "   or"
+            echo -e " * You can press the up arrow ⬆️  on the keyboard"
+            echo -e "    and return to repeat script from beginning.\n\n"
+            if [[ -z ${LOOP_DIR} ]]; then
+                exit 0
+            else
+                echo -e "To configure this terminal to LoopCaregiver folder of new download;"
+                echo -e " copy and paste the following line into the terminal\n"
+                echo -e "cd ${LOOP_DIR}/LoopCaregiver\n"
+                exit 0
+            fi
             break
             ;;
         "Cancel")
