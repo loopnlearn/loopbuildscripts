@@ -68,9 +68,9 @@ do
     case $opt in
         "Continue")
             FORK_NAME=LoopCaregiver
-            REPO=https://github.com/gestrich/LoopWorkspace
-            BRANCH=caregiver
-            LOOPCONFIGOVERRIDE_VALID=1
+            REPO=https://github.com/LoopKit/LoopCaregiver
+            BRANCH=dev
+            LOOPCONFIGOVERRIDE_VALID=0
             break
             ;;
         "Cancel")
