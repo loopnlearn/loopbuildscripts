@@ -121,8 +121,10 @@ do
             ios16_warning
             echo -e "\nAFTER you hit return:"
             echo -e " *** Do not forget to ${RED}${BOLD}select LoopCaregiver${NC}\n"
-            echo -e "This needs to be done in two places: Schema at top, next to your phone"
-            echo -e " Click on Folder icon upper left pane and click on LoopCaregiver (at bottom)"
+            echo -e "This needs to be done in two places: Scheme at top, next to your phone,"
+            echo -e "  and in folders pane, click on LoopCaregiver (at bottom left)"
+            echo -e "  ${RED}${BOLD}Wait${NC} until all packages are downloaded and resolved"
+            echo -e "  Hit build after indexing starts (upper right)"
             return_when_ready
             xed .
             #exit_message
