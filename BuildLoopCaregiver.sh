@@ -70,7 +70,6 @@ do
             FORK_NAME=LoopCaregiver
             REPO=https://github.com/LoopKit/LoopCaregiver
             BRANCH=dev
-            LOOPCONFIGOVERRIDE_VALID=0
             break
             ;;
         "Cancel")
@@ -108,32 +107,24 @@ do
             cd LoopCaregiver
             this_dir="$(pwd)"
             echo -e "In ${this_dir}"
-            # I expect this will get added later - comment out for now
-            #if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-            #    check_config_override_existence_offer_to_configure
-            #fi
+            if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
+                check_config_override_existence_offer_to_configure
+            fi
             section_separator
             echo -e "Xcode will open (when you are ready)"
+            section_separator
+            echo -e "The following items will open (when you are ready)"
+            echo -e "* Xcode ready to prep your current download for build"
             echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
             echo -e " *** Unlock your phone and plug it into your computer"
             echo -e "     Trust computer if asked"
-            echo -e "     iOS 16 is required and Developer Mode must be enabled"
-            echo -e "\nLoopCaregiver is slightly different than building Loop-dev"
+            ios16_warning
             echo -e "\nAFTER you hit return:"
-            echo -e " *** Wait for all the Package Dependencies to load\n"
-            echo -e " You need to sign the LoopCaregiver app manually"
-            echo -e " 1. Select LoopCaregiver and your phone in Xcode (middle top)"
-            echo -e " 2. Click on the folder icon in Xcode (left pane top)"
-            echo -e " 3. Scroll down to LoopCaregiver and click on it (left pane)"
-            echo -e " 4. Click on Signing & Capabilities (middle pane, near top)"
-            echo -e " 5. Sign with your TeamID (middle pane)"
-            echo -e " Press the build (play) icon"
-            echo -e "The next return opens Xcode"
+            echo -e " *** Do not forget to ${RED}${BOLD}select LoopCaregiver${NC}\n"
+            echo -e "This needs to be done in two places: Schema at top, next to your phone"
+            echo -e " Click on Folder icon upper left pane and click on LoopCaregiver (at bottom)"
             return_when_ready
             xed .
-            echo -e "Then final return ends the script"
-            echo -e " After you hit return, scroll up if you still need directions"
-            return_when_ready
             #exit_message
             # the regular exist message uses LoopWorkspace
             section_divider
