@@ -179,7 +179,7 @@ function report_persistent_config_override() {
     echo -e "   your targets will be automatically signed"
     echo -e "WARNING: Any line that starts with // is ignored\n"
     echo -e "  If ID is not OK:"
-    echo -e "    Edit the file before hitting return"
+    echo -e "    Edit the ${OVERRIDE_FILE} before hitting return"
     echo -e "     step 1: open finder, navigate to Downloads/BuildLoop"
     echo -e "     step 2: locate and double click on "${OVERRIDE_FILE}""
     echo -e "             this will open that file in Xcode"
@@ -192,6 +192,7 @@ function how_to_find_your_id() {
     echo -e "Your Apple Developer ID is the 10-character Team ID"
     echo -e "  found on the Membership page after logging into your account at:"
     echo -e "   https://developer.apple.com/account/#!/membership\n"
+    echo -e "It may be necessary to click on the Membership Details icon"
 }
 
 function create_persistent_config_override() {
