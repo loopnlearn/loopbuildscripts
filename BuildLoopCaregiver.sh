@@ -105,7 +105,7 @@ do
     section_separator
     case $opt in
         "Continue")
-            cd LoopWorkspace
+            cd LoopCaregiver
             this_dir="$(pwd)"
             echo -e "In ${this_dir}"
             # I expect this will get added later - comment out for now
