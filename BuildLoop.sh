@@ -170,6 +170,9 @@ if [ "$WHICH" = "Loop" ]; then
                 echo -e "* Webpage with detailed build steps (LoopDocs)"
                 echo -e "* Xcode ready to prep your current download for build"
                 before_final_return_message
+                echo -e "\n${RED}${BOLD}As of Loop 3.2${NC}, LoopWorkspace is already configured."
+                echo -e "LoopWorkspace shows up in 2 places at top of Xcode."
+                echo -e "LoopDocs graphics will be updated soon.\n"
                 return_when_ready
                 if [ ${SCRIPT_BRANCH} == 'dev' ]; then
                     open "https://marionbarker.github.io/loopdocs/build/step14/#initial-xcode-screens"
