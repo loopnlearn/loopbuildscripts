@@ -166,8 +166,6 @@ function before_final_return_message() {
     echo -e "              Paired to phone, on your wrist and unlocked"
     echo -e "              Trust computer if asked"
     ios16_warning
-    echo -e "\nAFTER you hit return:"
-    echo -e " *** Do not forget to ${RED}${BOLD}select Loop(Workspace)${NC}\n"
 }
 
 function report_persistent_config_override() {
