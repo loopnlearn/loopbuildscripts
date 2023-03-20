@@ -107,6 +107,8 @@ do
             echo -e "* Webpage with detailed build steps (LoopDocs)"
             echo -e "* Xcode ready to prep your current download for build"
             before_final_return_message
+            echo -e "\nAFTER you hit return:"
+            echo -e " *** Do not forget to ${RED}${BOLD}select Loop(Workspace)${NC}\n"
             return_when_ready
             open "https://loopkit.github.io/loopdocs/build/step14/#initial-xcode-screens"
             sleep 2
