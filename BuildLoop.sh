@@ -95,22 +95,12 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "  you have Xcode and Xcode command line tools installed\n"
     echo -e "Please select which version of Loop to download and build."
     echo -e "\n  Loop:    https://github.com/LoopKit/Loop/releases"
+    echo -e "      This is always the current released version"
     echo -e "\n  Loop with Patches:"
     echo -e "      adds some CGM options and CustomTypeOne LoopPatches"
-    echo -e "      Review https://www.loopandlearn.org/build-select"
-    if [ ${SCRIPT_BRANCH} == 'dev' ]; then
-        echo -e "\n ${RED}${BOLD}This is the dev branch of BuildLoop.sh,"
-        echo -e "used for testing just prior to release of development branches."
-        echo -e "You will, in fact, get most recent version of development branch."
-        echo -e "The dev branch does NOT have patches available"
-        echo -e " Choosing patches, builds main${NC}\n"
-        BRANCH_LOOP=dev
-        BRANCH_PATCHES=main
-    else
-        BRANCH_LOOP=main
-        BRANCH_PATCHES=main_lnl_patches
-    fi
-    # after release, change next line to 1
+    echo -e "      Review https://www.loopandlearn.org/main-lnl-patches"
+    BRANCH_LOOP=main
+    BRANCH_PATCHES=main_lnl_patches
     LOOPCONFIGOVERRIDE_VALID=1
     choose_or_cancel
     options=("Loop" "Loop with Patches" "Cancel")
@@ -166,20 +156,13 @@ if [ "$WHICH" = "Loop" ]; then
                     check_config_override_existence_offer_to_configure
                     section_separator
                 fi
-                echo -e "The following items will open (when you are ready)"
-                echo -e "* Webpage with detailed build steps (LoopDocs)"
+                echo -e "The following item will open (when you are ready)"
                 echo -e "* Xcode ready to prep your current download for build"
                 before_final_return_message
                 echo -e "\n${RED}${BOLD}As of Loop 3.2${NC}, LoopWorkspace is already configured."
                 echo -e "LoopWorkspace shows up in 2 places at top of Xcode."
                 echo -e "LoopDocs graphics will be updated soon.\n"
                 return_when_ready
-                if [ ${SCRIPT_BRANCH} == 'dev' ]; then
-                    open "https://marionbarker.github.io/loopdocs/build/step14/#initial-xcode-screens"
-                else
-                    open "https://loopkit.github.io/loopdocs/build/step14/#initial-xcode-screens"
-                fi
-                sleep 5
                 xed .
                 exit_message
                 break
