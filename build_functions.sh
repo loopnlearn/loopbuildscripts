@@ -129,7 +129,7 @@ function exit_message() {
         echo -e " copy and paste the following line into the terminal\n"
         echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
         echo -e "  If you need to reopen Xcode while in the LoopWorkspace folder"
-        echo -e "  Type"
+        echo -e "  Type or copy"
         echo -e "xed ."
         echo -e "  After pasting the cd ... LoopWorkspace command"
         exit 0

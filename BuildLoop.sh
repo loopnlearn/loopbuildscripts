@@ -97,7 +97,7 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "\n  Loop:    https://github.com/LoopKit/Loop/releases"
     echo -e "      This is always the current released version"
     echo -e "\n  Loop with Patches:"
-    echo -e "      adds some CGM options and CustomTypeOne LoopPatches"
+    echo -e "      adds 2 CGM options, CustomTypeOne LoopPatches, new Logo"
     echo -e "      Review https://www.loopandlearn.org/main-lnl-patches"
     BRANCH_LOOP=main
     BRANCH_PATCHES=main_lnl_patches
