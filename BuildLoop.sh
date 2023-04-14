@@ -5,7 +5,9 @@
 ############################################################
 
 BUILD_DIR=~/Downloads/"BuildLoop"
+OVERRIDE_FILE=LoopConfigOverride.xcconfig
 SCRIPT_DIR="${BUILD_DIR}/Scripts"
+DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
@@ -21,7 +23,7 @@ cd "${SCRIPT_DIR}"
 
 # define branch (to make it easier when updating)
 # typically branch is main
-SCRIPT_BRANCH=main
+SCRIPT_BRANCH=updated-signing
 
 # store a copy of build_functions.sh in script directory
 curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
