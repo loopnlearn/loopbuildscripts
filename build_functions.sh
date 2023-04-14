@@ -32,10 +32,10 @@ CLONE_OBTAINED=0
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
-BUILD_DIR=~/Downloads/"BuildLoop"
-SCRIPT_DIR="${BUILD_DIR}/Scripts"
+# BUILD_DIR=~/Downloads/"BuildLoop"
+# SCRIPT_DIR="${BUILD_DIR}/Scripts"
 
-OVERRIDE_FILE=LoopConfigOverride.xcconfig
+# OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
 function usage() {
@@ -174,15 +174,14 @@ function before_final_return_message() {
 
 function report_persistent_config_override() {
     echo -e "The file used by Xcode to sign your app is found at:"
-    echo -e "   ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
+    echo -e "   ${OVERRIDE_FULLPATH}"
     echo -e "   The last line of that file is shown next:"
     tail -1 "${OVERRIDE_FULLPATH}"
     echo -e "\nIf the last line has your Apple Developer ID"
     echo -e "   your targets will be automatically signed"
-    echo -e "WARNING: Any line that starts with // is ignored\n"
     echo -e "  If ID is not OK:"
     echo -e "    Edit the ${OVERRIDE_FILE} before hitting return"
-    echo -e "     step 1: open finder, navigate to Downloads/BuildLoop"
+    echo -e "     step 1: open finder, navigate to ${BUILD_DIR}"
     echo -e "     step 2: locate and double click on "${OVERRIDE_FILE}""
     echo -e "             this will open that file in Xcode"
     echo -e "     step 3: edit in Xcode and save file\n"
@@ -214,23 +213,56 @@ function create_persistent_config_override() {
         echo -e "Something was wrong with the entry"
         echo -e "You can manually sign each target in Xcode"
     else 
-        echo -e "Creating ~/Downloads/BuildLoop/${OVERRIDE_FILE}"
+        echo -e "Creating ${OVERRIDE_FULLPATH}"
         echo -e "   with your Apple Developer ID\n"
-        cp -p "${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
-        echo -e "LOOP_DEVELOPMENT_TEAM = ${devID}" >> "${OVERRIDE_FULLPATH}"
+        # For Loop, copy the file and add developer ID
+        # For LoopFollow, will create file and add developer ID
+        if [ -f ${OVERRIDE_FILE} ]; then
+            cp -p "${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
+        fi
+        echo -e "${DEV_TEAM_SETTING_NAME} = ${devID}" >> "${OVERRIDE_FULLPATH}"
         report_persistent_config_override
         echo -e "\nXcode uses the permanent file to automatically sign your targets"
     fi
 }
 
+set_development_team() {
+    team_id="$1"
+    if [ -f ${OVERRIDE_FILE} ]; then
+        cp -p "${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
+    fi
+    echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
+}
+
 function check_config_override_existence_offer_to_configure() {
     section_separator
-    if [ -e "${OVERRIDE_FULLPATH}" ]; then
-        how_to_find_your_id
+
+    # Automatic signing functionality:
+    # 1) Use existing Override file
+    # 2) Copy team from latest provisioning profile
+    # 3) Enter team manually with option to skip
+    if [ -f ${OVERRIDE_FULLPATH} ] && grep -q "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}; then
+        # how_to_find_your_id
         report_persistent_config_override
     else
-        # make sure the "${OVERRIDE_FILE}" exists in clone
-        if [ -e "${OVERRIDE_FILE}" ]; then
+        PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+
+        if [ -d "${PROFILES_DIR}" ]; then
+            latest_file=$(find "${PROFILES_DIR}" -type f -name "*.mobileprovision" -print0 | xargs -0 ls -t | head -n1)
+            if [ -n "$latest_file" ]; then
+                # Decode the .mobileprovision file using the security command
+                decoded_xml=$(security cms -D -i "$latest_file")
+
+                # Extract the Team ID from the XML
+                DEVELOPMENT_TEAM=$(echo "$decoded_xml" | awk -F'[<>]' '/<key>TeamIdentifier<\/key>/ { getline; getline; print $3 }')
+            fi
+        fi
+
+        if [ -n "$DEVELOPMENT_TEAM" ]; then
+            echo -e "Using TeamIdentifier from the latest provisioning profile\n"
+            set_development_team "$DEVELOPMENT_TEAM"
+            report_persistent_config_override
+        else
             echo -e "Choose 1 to Sign Automatically or "
             echo -e "       2 to Sign Manually (later in Xcode)"
             echo -e "\nIf you choose Sign Automatically, script guides you"
@@ -251,14 +283,11 @@ function check_config_override_existence_offer_to_configure() {
                     "Cancel")
                         cancel_entry
                         ;;
-                      *) # Invalid option
-                         invalid_entry
-                         ;;
+                    *) # Invalid option
+                        invalid_entry
+                        ;;
                 esac
             done
-        else
-            echo -e "This project requires you to sign the targets individually"
-            LOOPCONFIGOVERRIDE_VALID=0
         fi
     fi
 }
