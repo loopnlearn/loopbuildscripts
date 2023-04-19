@@ -109,9 +109,7 @@ do
             cd LoopCaregiver
             this_dir="$(pwd)"
             echo -e "In ${this_dir}"
-            if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-                check_config_override_existence_offer_to_configure
-            fi
+            check_config_override_existence_offer_to_configure
             section_separator
             echo -e "Xcode will open (when you are ready)"
             section_separator
