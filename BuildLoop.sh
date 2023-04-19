@@ -62,7 +62,6 @@ echo -e "  2 Download and build LoopFollow"
 echo -e "  3 Prepare your computer using a Utility Script"
 echo -e "     when updating your computer or an app"
 echo -e "\nRun the script again to choose a different task"
-echo -e "If you want all three, first choose 3, then 1 and finally 2"
 choose_or_cancel
 options=("Build Loop" "Build LoopFollow" "Utility Scripts" "Cancel")
 select opt in "${options[@]}"
@@ -211,9 +210,8 @@ else
     echo -e "      and reinstall Xcode if you run this script with Xcode installed.\n${NC}"
     echo -e "    Always a good idea to reboot your computer after Xcode Cleanup.\n"
     echo -e "3 ➡️  Clean Profiles:\n"
-    echo -e "    For those with a paid Apple Developer ID,"
-    echo -e "      this action configures you to have a full year"
-    echo -e "      before you are forced to rebuild your app."
+    echo -e "    Incorporated in the BuildLoop section"
+    echo -e "    No longer needed as a stand-alone step."
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
     choose_or_cancel
