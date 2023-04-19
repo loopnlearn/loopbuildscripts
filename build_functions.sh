@@ -142,7 +142,8 @@ function return_when_ready() {
 }
 
 function ensure_a_year() {
-    echo -e "${RED}${BOLD}Most people should choose to ensure a year${NC}\n"
+    echo -e "${RED}${BOLD}Ensure a year by deleting old provisioning profiles${NC}"
+    echo -e "  Unless you have a specific reason, choose option 1\n"
     options=("Ensure a Year" "Skip" "Quit Scipt")
     select opt in "${options[@]}"
     do
