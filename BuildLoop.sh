@@ -159,6 +159,7 @@ if [ "$WHICH" = "Loop" ]; then
                     check_config_override_existence_offer_to_configure
                     section_separator
                 fi
+                ensure_a_year
                 echo -e "The following item will open (when you are ready)"
                 echo -e "* Xcode ready to prep your current download for build"
                 before_final_return_message
