@@ -141,6 +141,32 @@ function return_when_ready() {
     read -p "" dummy
 }
 
+function ensure_a_year() {
+    echo -e "${RED}${BOLD}Most people should choose to ensure a year${NC}\n"
+    options=("Ensure a Year" "Skip" "Quit Scipt")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "Ensure a Year")
+                rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
+                echo -e "✅ Profiles were cleaned"
+                echo -e "   Next app you build with Xcode will last a year"
+                return_when_ready
+                break
+                ;;
+            "Skip")
+                break
+                ;;
+            "Quit Scipt")
+                cancel_entry
+                ;;
+            *) # Invalid option
+                invalid_entry
+                ;;
+        esac
+    done
+}
+
 function ios16_warning() {
     echo -e "\n${RED}${BOLD}  If you have iOS 16 (watchOS 9), you must enable Developer Mode${NC}"
     echo -e "${RED}${BOLD}  Check in Phone Settings->Privacy & Security${NC}"
@@ -173,20 +199,34 @@ function before_final_return_message() {
 }
 
 function report_persistent_config_override() {
-    echo -e "The file used by Xcode to sign your app is found at:"
-    echo -e "   ${OVERRIDE_FULLPATH}"
-    echo -e "   The last line of that file is shown next:"
+    echo -e "You Apple Developer ID was found automatically:"
     tail -1 "${OVERRIDE_FULLPATH}"
-    echo -e "\nIf the last line has your Apple Developer ID"
-    echo -e "   your targets will be automatically signed"
-    echo -e "  If ID is not OK:"
-    echo -e "    Edit the ${OVERRIDE_FILE} before hitting return"
-    echo -e "     step 1: open finder, navigate to ${BUILD_DIR}"
-    echo -e "     step 2: locate and double click on "${OVERRIDE_FILE}""
-    echo -e "             this will open that file in Xcode"
-    echo -e "     step 3: edit in Xcode and save file\n"
-    echo -e "  If ID is OK, hit return"
-    return_when_ready
+    echo -e "\nIf that is correct your app will be automatically signed\n"
+    options=("ID is OK" "Editing Instructions" "Quit Scipt")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "ID is OK")
+                break
+                ;;
+            "Editing Instructions")
+                echo -e "    Edit the ${OVERRIDE_FILE} before hitting return"
+                echo -e "     step 1: open finder, navigate to ${BUILD_DIR}"
+                echo -e "     step 2: locate and double click on "${OVERRIDE_FILE}""
+                echo -e "             this will open that file in Xcode"
+                echo -e "     step 3: edit in Xcode and save file\n"
+                echo -e "  When ready to proceed, hit return"
+                return_when_ready
+                break
+                ;;
+            "Quit Scipt")
+                cancel_entry
+                ;;
+            *) # Invalid option
+                invalid_entry
+                ;;
+        esac
+    done
 }
 
 function how_to_find_your_id() {
