@@ -199,7 +199,7 @@ function before_final_return_message() {
 }
 
 function report_persistent_config_override() {
-    echo -e "You Apple Developer ID was found automatically:"
+    echo -e "Your Apple Developer ID was found automatically:"
     tail -1 "${OVERRIDE_FULLPATH}"
     echo -e "\nIf that is correct your app will be automatically signed\n"
     options=("ID is OK" "Editing Instructions" "Quit Scipt")
