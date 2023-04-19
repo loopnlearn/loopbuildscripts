@@ -5,7 +5,9 @@
 ############################################################
 
 BUILD_DIR=~/Downloads/"BuildLoop"
+OVERRIDE_FILE=LoopConfigOverride.xcconfig
 SCRIPT_DIR="${BUILD_DIR}/Scripts"
+DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
@@ -53,19 +55,14 @@ fi
 curl -fsSLo ./BuildLoopFixedDev.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFixedDev.sh
 
 # Stable Dev SHA
-LOOP_DEV_TESTED_SHA=885cbd3
-LOOP_DEV_TESTED_DATE="2023 Jan 11"
-FAPS_DEV_TESTED_SHA=dc27707
-FAPS_DEV_TESTED_DATE="2023 Jan 11"
+LOOP_DEV_TESTED_SHA=5a7a181
+LOOP_DEV_TESTED_DATE="2023 Apr 05"
 FIXED_SHA=0
 
 section_separator
 BRANCH_LOOP=dev
-BRANCH_FREE=freeaps_dev
-LOOPCONFIGOVERRIDE_VALID=1
 echo -e "\n ${RED}${BOLD}You are running the script for the development version${NC}"
-echo -e " -- If you choose Loop,    branch is ${RED}${BOLD}${BRANCH_LOOP}${NC}"
-echo -e " -- If you choose FreeAPS, branch is ${RED}${BOLD}${BRANCH_FREE}"
+echo -e " -- Loop branch is ${RED}${BOLD}${BRANCH_LOOP}${NC}"
 echo -e "\n** The version prepared might not be the most recent development version **"
 echo -e "\n** Be aware that a development version may require frequent rebuilds **${NC}\n"
 echo -e " If you have not read this section of LoopDocs - please review before continuing"
@@ -76,41 +73,15 @@ echo -e "\nThis script chooses a version (commit) of the development branch"
 echo -e "    that has been built and lightly tested"
 echo -e "${RED}${BOLD}Loop    development branch version (includes Dexcom G7 Support):"
 echo -e "     ${LOOP_DEV_TESTED_DATE} workspace revision ${LOOP_DEV_TESTED_SHA}"
-echo -e "FreeAPS development branch version:"
-echo -e "     ${FAPS_DEV_TESTED_DATE} workspace revision ${FAPS_DEV_TESTED_SHA}"
 echo -e "${NC}\nBefore you begin, please ensure"
 echo -e "  you have Xcode and Xcode command line tools installed\n"
 echo -e "Please select which version of Loop you would like to download and build"
 
-choose_or_cancel
-options=("Loop dev" "FreeAPS dev" "Cancel")
-select opt in "${options[@]}"
-do
-    case $opt in
-        "Loop dev")
-            FORK_NAME=Loop
-            REPO=https://github.com/LoopKit/LoopWorkspace
-            BRANCH=dev
-            FIXED_SHA=$LOOP_DEV_TESTED_SHA
-            LOOPCONFIGOVERRIDE_VALID=1
-            break
-            ;;
-        "FreeAPS dev")
-            FORK_NAME=FreeAPS
-            REPO=https://github.com/loopnlearn/LoopWorkspace
-            BRANCH=freeaps_dev
-            FIXED_SHA=$FAPS_DEV_TESTED_SHA
-            LOOPCONFIGOVERRIDE_VALID=1
-            break
-            ;;
-        "Cancel")
-            cancel_entry
-            ;;
-        *)
-            invalid_entry
-            ;;
-    esac
-done
+FORK_NAME=Loop
+REPO=https://github.com/LoopKit/LoopWorkspace
+BRANCH=dev
+FIXED_SHA=$LOOP_DEV_TESTED_SHA
+LOOPCONFIGOVERRIDE_VALID=1
 
 LOOP_DIR="${BUILD_DIR}/${FORK_NAME}-${BRANCH}-${DOWNLOAD_DATE}_${FIXED_SHA}"
 if [ ${FRESH_CLONE} == 1 ]; then
@@ -164,22 +135,13 @@ do
                          ;;
                 esac
             done
-            if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-                check_config_override_existence_offer_to_configure
-            fi
+            check_config_override_existence_offer_to_configure
 
             section_separator
-            echo -e "The following items will open (when you are ready)"
-            echo -e "* Webpage with detailed build steps (LoopDocs)"
+            echo -e "The following item will open (when you are ready)"
             echo -e "* Xcode ready to prep your current download for build"
             before_final_return_message
             return_when_ready
-            if [ ${FIXED_SHA} == 0 ]; then
-                open "https://loopkit.github.io/loopdocs/build/step14/#prepare-to-build"
-            else
-                open "https://loopkit.github.io/loopdocs/build/step13/#build-loop"
-            fi
-            sleep 5
             xed .
             exit_message
             break

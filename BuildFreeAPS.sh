@@ -5,7 +5,9 @@
 ############################################################
 
 BUILD_DIR=~/Downloads/"BuildLoop"
+OVERRIDE_FILE=LoopConfigOverride.xcconfig
 SCRIPT_DIR="${BUILD_DIR}/Scripts"
+DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
@@ -54,7 +56,6 @@ curl -fsSLo ./BuildFreeAPS.sh https://raw.githubusercontent.com/loopnlearn/LoopB
 
 section_separator
 BRANCH_FREE=freeaps
-LOOPCONFIGOVERRIDE_VALID=1
 echo -e "\n ${RED}${BOLD}You are running the script for FreeAPS${NC}"
 choose_or_cancel
 options=("Continue" "Cancel")
@@ -99,19 +100,14 @@ do
     case $opt in
         "Continue")
             cd LoopWorkspace
-            if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-                check_config_override_existence_offer_to_configure
-            fi
+            check_config_override_existence_offer_to_configure
             section_separator
-            echo -e "The following items will open (when you are ready)"
-            echo -e "* Webpage with detailed build steps (LoopDocs)"
+            echo -e "The following item will open (when you are ready)"
             echo -e "* Xcode ready to prep your current download for build"
             before_final_return_message
             echo -e "\nAFTER you hit return:"
             echo -e " *** Do not forget to ${RED}${BOLD}select Loop(Workspace)${NC}\n"
             return_when_ready
-            open "https://loopkit.github.io/loopdocs/build/step14/#initial-xcode-screens"
-            sleep 2
             xed .
             exit_message
             break
