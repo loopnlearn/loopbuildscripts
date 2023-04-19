@@ -23,7 +23,7 @@ cd "${SCRIPT_DIR}"
 
 # define branch (to make it easier when updating)
 # typically branch is main
-SCRIPT_BRANCH=updated-signing
+SCRIPT_BRANCH=main
 
 # store a copy of build_functions.sh in script directory
 curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
