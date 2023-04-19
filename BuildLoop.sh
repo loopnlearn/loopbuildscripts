@@ -157,9 +157,10 @@ if [ "$WHICH" = "Loop" ]; then
                 cd LoopWorkspace
                 if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
                     check_config_override_existence_offer_to_configure
-                    section_separator
                 fi
+                section_separator
                 ensure_a_year
+                section_separator
                 echo -e "The following item will open (when you are ready)"
                 echo -e "* Xcode ready to prep your current download for build"
                 before_final_return_message
