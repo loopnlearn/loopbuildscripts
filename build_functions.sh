@@ -401,9 +401,6 @@ function verify_xcode_path() {
     fi
 }
 
-# call functions that are always used
-initial_greeting
-
 
 ############################################################
 # End of functions used by script
