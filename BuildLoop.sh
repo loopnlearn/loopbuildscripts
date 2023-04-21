@@ -27,6 +27,8 @@ else
   source "$LOCAL_BUILD_FUNCTIONS_PATH"
 fi
 
+initial_greeting
+
 ############################################################
 # The rest of this is specific to BuildLoop.sh
 ############################################################
