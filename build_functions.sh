@@ -22,6 +22,9 @@ NC='\033[0m'
 #   Default value is 1, which means:
 #     Download fresh clone every time script is run
 : ${FRESH_CLONE:="1"}
+# CLONE_STATUS used to test error messages
+#   Default value is 0, which means no errors with clone
+: ${CLONE_STATUS:="0"}
 
 # CLONE_OBTAINED is used as a flag
 #   if the script goes through the process to download a clone
@@ -142,7 +145,7 @@ function exit_message() {
     echo -e "    and return to repeat script from beginning.\n\n"
     if [[ -z ${LOOP_DIR} ]]; then
         exit 0
-    else
+    elif [ $clone_exit_status -eq 0 ]; then
         echo -e "To configure this terminal to LoopWorkspace folder of new download;"
         echo -e " copy and paste the following line into the terminal\n"
         echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
@@ -152,6 +155,7 @@ function exit_message() {
         echo -e "  After pasting the cd ... LoopWorkspace command"
         exit 0
     fi
+    exit 0
 }
 
 function return_when_ready() {
@@ -366,21 +370,23 @@ function verify_xcode_path() {
         echo -e "Continuing the script..."
         sleep 2
     else
-        echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path. It is set to: $xcode_path${NC}"
+        echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path."
+        echo -e "     It is set to: $xcode_path${NC}"
         echo -e "Please choose an option below to proceed:\n"
         options=("Correct xcode-select path" "Skip" "Quit Script")
         select opt in "${options[@]}"
         do
             case $opt in
                 "Correct xcode-select path")
-                    echo -e "You will be prompted for your password to set the correct Xcode path."
+                    echo -e "You might be prompted for your password."
+                    echo -e "  Use the password for logging into your Mac."
                     sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
                     # Check if the path was corrected successfully
                     xcode_path=$(xcode-select -p)
                     if [[ "$xcode_path" == *Xcode.app* ]]; then
                         echo -e "✅ xcode-select path has been corrected."
-                        sleep 2
+                        return_when_ready
                         break
                     else
                         echo -e "${RED}❌ Failed to set xcode-select path correctly.${NC}"
@@ -402,7 +408,7 @@ function verify_xcode_path() {
 }
 
 # call functions that are always used
-initial_greeting
+# initial_greeting
 
 ############################################################
 # End of functions used by script
