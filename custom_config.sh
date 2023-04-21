@@ -19,7 +19,7 @@ unset FRESH_CLONE
 #export LOCAL_BUILD_FUNCTIONS_PATH="$HOME/Downloads/ManualClones/lnl/loopbuildscripts/build_functions.sh"
 
 
-# FRESH_CLONE (of 0) lets you with existing LoopWorkspace clone (saves time)
+# FRESH_CLONE (of 0) lets you use an existing LoopWorkspace clone (saves time)
 #   Uncomment the line
 #   The terminal must be one level higher than an existing LoopWorkspace folder
 # export FRESH_CLONE="0"
