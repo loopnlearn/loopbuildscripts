@@ -95,26 +95,6 @@ function initial_greeting() {
     echo -e "  Hold down the CMD key and hit + (-)"
     echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
     echo -e "\n--------------------------------\n${NC}"
-
-    options=("Agree" "Cancel")
-    select opt in "${options[@]}"
-    do
-        case $opt in
-            "Agree")
-                break
-                ;;
-            "Cancel")
-                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-                exit_message
-                ;;
-            *)
-                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-                exit_message
-                ;;
-        esac
-    done
-
-    echo -e "${NC}\n\n\n\n"
 }
 
 function choose_or_cancel() {
@@ -401,6 +381,28 @@ function verify_xcode_path() {
     fi
 }
 
+# call functions that are always used
+initial_greeting
+
+options=("Agree" "Cancel")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Agree")
+            break
+            ;;
+        "Cancel")
+            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
+            exit_message
+            ;;
+        *)
+            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
+            exit_message
+            ;;
+    esac
+done
+
+echo -e "${NC}\n\n\n\n"
 
 ############################################################
 # End of functions used by script

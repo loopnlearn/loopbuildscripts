@@ -20,7 +20,7 @@ STARTING_DIR="${PWD}"
 
 # If CUSTOM_CONFIG_PATH is not set or empty, source build_functions.sh from GitHub
 if [ -z "$LOCAL_BUILD_FUNCTIONS_PATH" ]; then
-  source <(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh)
+  source /dev/stdin <<< "$(curl -fsSL -o /dev/stdout https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh)"
 else
   # Source the local build_functions.sh when CUSTOM_CONFIG_PATH is set
   echo -e "Using local build_functions.sh\n"
