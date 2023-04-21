@@ -21,7 +21,7 @@ NC='\033[0m'
 # FRESH_CLONE
 #   Default value is 1, which means:
 #     Download fresh clone every time script is run
-FRESH_CLONE=1
+: ${FRESH_CLONE:="1"}
 
 # CLONE_OBTAINED is used as a flag
 #   if the script goes through the process to download a clone
@@ -33,8 +33,6 @@ CLONE_OBTAINED=0
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
 # BUILD_DIR=~/Downloads/"BuildLoop"
-# SCRIPT_DIR="${BUILD_DIR}/Scripts"
-
 # OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
@@ -175,6 +173,7 @@ function ios16_warning() {
     echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
+# This is no longer used by BuildLoop.sh, kept here until it has been removed from all the build scripts
 function clone_download_error_check() {
     # indicate that a clone was created
     CLONE_OBTAINED=1
@@ -330,6 +329,55 @@ function check_config_override_existence_offer_to_configure() {
                 esac
             done
         fi
+    fi
+}
+
+function verify_xcode_path() {
+    section_separator
+
+    echo -e "Verifying xcode-select path...\n"
+
+    # Get the path set by xcode-select
+    xcode_path=$(xcode-select -p)
+
+    # Check if the path contains "Xcode.app"
+    if [[ "$xcode_path" == *Xcode.app* ]]; then
+        echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
+        echo -e "Continuing the script..."
+        sleep 2
+    else
+        echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path. It is set to: $xcode_path${NC}"
+        echo -e "Please choose an option below to proceed:\n"
+        options=("Correct xcode-select path" "Skip" "Quit Script")
+        select opt in "${options[@]}"
+        do
+            case $opt in
+                "Correct xcode-select path")
+                    echo -e "You will be prompted for your password to set the correct Xcode path."
+                    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+                    # Check if the path was corrected successfully
+                    xcode_path=$(xcode-select -p)
+                    if [[ "$xcode_path" == *Xcode.app* ]]; then
+                        echo -e "✅ xcode-select path has been corrected."
+                        sleep 2
+                        break
+                    else
+                        echo -e "${RED}❌ Failed to set xcode-select path correctly.${NC}"
+                        exit_message
+                    fi
+                    ;;
+                "Skip")
+                    break
+                    ;;
+                "Quit Script")
+                    cancel_entry
+                    ;;
+                *) # Invalid option
+                    invalid_entry
+                    ;;
+            esac
+        done
     fi
 }
 
