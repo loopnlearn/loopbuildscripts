@@ -73,7 +73,6 @@ When testing in a different branch, prior to merging into main, use the followin
 ```
 export SCRIPT_BRANCH="main"&&/bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh)"
-
 ```
 
 When testing locally, there are other test variables you can configure. Be sure to read these two files:
