@@ -71,7 +71,7 @@ When these scripts are being modified and tested, the developers use some specia
 When testing in a different branch, prior to merging into main, use the following command format where you replace "main" with the branch name you are testing.
 
 ```
-export SCRIPT_BRANCH="main"&&/bin/bash -c "$(curl -fsSL \
+export SCRIPT_BRANCH="main" && /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh)"
 ```
 
