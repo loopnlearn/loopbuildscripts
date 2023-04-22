@@ -211,6 +211,19 @@ function clone_download_error_check() {
     echo -e "   If you see the word error in the download, Cancel and resolve the problem."
     choose_or_cancel
 }
+# new function to use for all Build scripts - will take time to convert
+function automated_clone_download_error_check() {
+    # Check if the clone was successful
+    if [ $clone_exit_status -eq 0 ]; then
+        # Use this flag to modify exit_message
+        CLONE_OBTAINED=1
+        echo -e "✅ Successful Download. Proceed to the next step..."
+        return_when_ready
+    else
+        echo -e "${RED}❌ An error occurred during download. Please investigate the issue.${NC}"
+        exit_message
+    fi
+}
 
 function before_final_return_message() {
     echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
