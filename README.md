@@ -10,8 +10,8 @@ There are several build scripts for specific code.
 
 This is documented in
 
-* https://www.loopandlearn.org/build-select
-* https://loopkit.github.io/loopdocs/build/step14
+* [LnL: Build-Select](https://www.loopandlearn.org/build-select)
+* LoopDocs: Build-Select](https://loopkit.github.io/loopdocs/build/step14/#download-loop)
 
 1. Open terminal
 2. Copy/Paste this code into terminal (use copy icon, bottom right): 
@@ -25,7 +25,7 @@ This is documented in
 
 ### Other Scripts
 
-The other script can be run with the following commands
+The other scripts can be run with the following commands
 
 1. Open terminal
 2. Copy/Paste selected code into terminal (use copy icon, bottom right):
@@ -34,12 +34,12 @@ The other script can be run with the following commands
 #### BuildLoopCaregiver.sh - be sure to read about [LoopCaregiver](https://loopkit.github.io/loopdocs/nightscout/remote-overrides/#loopcaregiver)
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFixedDev.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopCaregiver.sh)"
 ```
 
 #### BuildFreeAPS.sh - this version is based on Loop 2.2.x and is not being updated
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFixedDev.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
 ```
 
 #### BuildLoopFixedDev.sh - not being updated frequently (see details below)
