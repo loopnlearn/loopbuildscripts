@@ -41,7 +41,8 @@ The other scripts can be run with the following commands
 
 #### BuildFreeAPS.sh - this version is based on Loop 2.2.x and is not being updated
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
+/bin/bash -c "$(curl -fsSL 
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
 ```
 
 #### BuildLoopFixedDev.sh - not being updated frequently (see details below)
