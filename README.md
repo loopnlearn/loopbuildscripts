@@ -11,13 +11,14 @@ There are several build scripts for specific code.
 This is documented in
 
 * [LnL: Build-Select](https://www.loopandlearn.org/build-select)
-* LoopDocs: Build-Select](https://loopkit.github.io/loopdocs/build/step14/#download-loop)
+* [LoopDocs: Build-Select](https://loopkit.github.io/loopdocs/build/step14/#download-loop)
 
 1. Open terminal
 2. Copy/Paste this code into terminal (use copy icon, bottom right): 
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh)"
+/bin/bash -c "$(curl -fsSL \
+https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh)"
 ```
 
 3. Hit Enter and follow prompts
