@@ -129,15 +129,8 @@ if [ "$WHICH" = "Loop" ]; then
         clone_exit_status=${CLONE_STATUS}
     fi
 
-    # Check if the clone was successful
-    if [ $clone_exit_status -eq 0 ]; then
-        echo -e "Repository cloned successfully. Proceed to the next step..."
-        return_when_ready
-    else
-        echo -e "${RED}❌ An error occurred during the cloning process. Please investigate the issue.${NC}"
-        exit_message
-    fi
-    #
+    automated_clone_download_error_check
+
     cd LoopWorkspace
     if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
         check_config_override_existence_offer_to_configure
