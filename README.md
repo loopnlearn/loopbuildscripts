@@ -18,7 +18,7 @@ This is documented in
 
 ```
 /bin/bash -c "$(curl -fsSL \
-https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh)"
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh)"
 ```
 
 3. Hit Enter and follow prompts
@@ -35,7 +35,8 @@ The other scripts can be run with the following commands
 #### BuildLoopCaregiver.sh - be sure to read about [LoopCaregiver](https://loopkit.github.io/loopdocs/nightscout/remote-overrides/#loopcaregiver)
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopCaregiver.sh)"
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopCaregiver.sh)"
 ```
 
 #### BuildFreeAPS.sh - this version is based on Loop 2.2.x and is not being updated
@@ -45,7 +46,8 @@ The other scripts can be run with the following commands
 
 #### BuildLoopFixedDev.sh - not being updated frequently (see details below)
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFixedDev.sh)"
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFixedDev.sh)"
 ```
 * BuildLoopFixedDev.sh was used a lot prior to the release of Loop 3
   * It clones the development branch for Loop
@@ -68,7 +70,8 @@ When these scripts are being modified and tested, the developers use some specia
 When testing in a different branch, prior to merging into main, use the following command format where you replace "main" with the branch name you are testing - this must be modified in 2 places.
 
 ```
-export SCRIPT_BRANCH="main"&&/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh)"
+export SCRIPT_BRANCH="main"&&/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoop.sh)"
 
 ```
 
