@@ -47,6 +47,8 @@ else
     source ~/Downloads/ManualClones/lnl/loopbuildscripts/build_functions.sh
 fi
 
+initial_greeting
+
 ############################################################
 # The rest of this is specific to  BuildLoopCaregiver.sh
 ############################################################

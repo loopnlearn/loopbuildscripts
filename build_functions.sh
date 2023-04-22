@@ -21,7 +21,10 @@ NC='\033[0m'
 # FRESH_CLONE
 #   Default value is 1, which means:
 #     Download fresh clone every time script is run
-FRESH_CLONE=1
+: ${FRESH_CLONE:="1"}
+# CLONE_STATUS used to test error messages
+#   Default value is 0, which means no errors with clone
+: ${CLONE_STATUS:="0"}
 
 # CLONE_OBTAINED is used as a flag
 #   if the script goes through the process to download a clone
@@ -33,8 +36,6 @@ CLONE_OBTAINED=0
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
 # BUILD_DIR=~/Downloads/"BuildLoop"
-# SCRIPT_DIR="${BUILD_DIR}/Scripts"
-
 # OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
@@ -97,6 +98,26 @@ function initial_greeting() {
     echo -e "  Hold down the CMD key and hit + (-)"
     echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
     echo -e "\n--------------------------------\n${NC}"
+
+    options=("Agree" "Cancel")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "Agree")
+                break
+                ;;
+            "Cancel")
+                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
+                exit_message
+                ;;
+            *)
+                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
+                exit_message
+                ;;
+        esac
+    done
+
+    echo -e "${NC}\n\n\n\n"
 }
 
 function choose_or_cancel() {
@@ -124,7 +145,7 @@ function exit_message() {
     echo -e "    and return to repeat script from beginning.\n\n"
     if [[ -z ${LOOP_DIR} ]]; then
         exit 0
-    else
+    elif [ $clone_exit_status -eq 0 ]; then
         echo -e "To configure this terminal to LoopWorkspace folder of new download;"
         echo -e " copy and paste the following line into the terminal\n"
         echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
@@ -134,6 +155,7 @@ function exit_message() {
         echo -e "  After pasting the cd ... LoopWorkspace command"
         exit 0
     fi
+    exit 0
 }
 
 function return_when_ready() {
@@ -175,6 +197,7 @@ function ios16_warning() {
     echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
+# This is no longer used by BuildLoop.sh, kept here until it has been removed from all the build scripts
 function clone_download_error_check() {
     # indicate that a clone was created
     CLONE_OBTAINED=1
@@ -187,6 +210,19 @@ function clone_download_error_check() {
     echo -e "   If there are no errors listed, code has successfully downloaded, Continue."
     echo -e "   If you see the word error in the download, Cancel and resolve the problem."
     choose_or_cancel
+}
+# new function to use for all Build scripts - will take time to convert
+function automated_clone_download_error_check() {
+    # Check if the clone was successful
+    if [ $clone_exit_status -eq 0 ]; then
+        # Use this flag to modify exit_message
+        CLONE_OBTAINED=1
+        echo -e "✅ Successful Download. Proceed to the next step..."
+        return_when_ready
+    else
+        echo -e "${RED}❌ An error occurred during download. Please investigate the issue.${NC}"
+        exit_message
+    fi
 }
 
 function before_final_return_message() {
@@ -333,28 +369,59 @@ function check_config_override_existence_offer_to_configure() {
     fi
 }
 
+function verify_xcode_path() {
+    section_separator
+
+    echo -e "Verifying xcode-select path...\n"
+
+    # Get the path set by xcode-select
+    xcode_path=$(xcode-select -p)
+
+    # Check if the path contains "Xcode.app"
+    if [[ "$xcode_path" == *Xcode.app* ]]; then
+        echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
+        echo -e "Continuing the script..."
+        sleep 2
+    else
+        echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path."
+        echo -e "     It is set to: $xcode_path${NC}"
+        echo -e "Please choose an option below to proceed:\n"
+        options=("Correct xcode-select path" "Skip" "Quit Script")
+        select opt in "${options[@]}"
+        do
+            case $opt in
+                "Correct xcode-select path")
+                    echo -e "You might be prompted for your password."
+                    echo -e "  Use the password for logging into your Mac."
+                    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+                    # Check if the path was corrected successfully
+                    xcode_path=$(xcode-select -p)
+                    if [[ "$xcode_path" == *Xcode.app* ]]; then
+                        echo -e "✅ xcode-select path has been corrected."
+                        return_when_ready
+                        break
+                    else
+                        echo -e "${RED}❌ Failed to set xcode-select path correctly.${NC}"
+                        exit_message
+                    fi
+                    ;;
+                "Skip")
+                    break
+                    ;;
+                "Quit Script")
+                    cancel_entry
+                    ;;
+                *) # Invalid option
+                    invalid_entry
+                    ;;
+            esac
+        done
+    fi
+}
+
 # call functions that are always used
-initial_greeting
-
-options=("Agree" "Cancel")
-select opt in "${options[@]}"
-do
-    case $opt in
-        "Agree")
-            break
-            ;;
-        "Cancel")
-            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-            exit_message
-            ;;
-        *)
-            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-            exit_message
-            ;;
-    esac
-done
-
-echo -e "${NC}\n\n\n\n"
+# initial_greeting
 
 ############################################################
 # End of functions used by script

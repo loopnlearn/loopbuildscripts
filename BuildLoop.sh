@@ -6,53 +6,32 @@
 
 BUILD_DIR=~/Downloads/"BuildLoop"
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
-SCRIPT_DIR="${BUILD_DIR}/Scripts"
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
 fi
-if [ ! -d "${SCRIPT_DIR}" ]; then
-    mkdir "${SCRIPT_DIR}"
-fi
 
 STARTING_DIR="${PWD}"
 
-# change directory to $SCRIPT_DIR before curl calls
-cd "${SCRIPT_DIR}"
+# Set default values only if they haven't been defined as environment variables
+: ${SCRIPT_BRANCH:="main"}
+: ${LOCAL_BUILD_FUNCTIONS_PATH:=""}
 
-# define branch (to make it easier when updating)
-# typically branch is main
-SCRIPT_BRANCH=main
-
-# store a copy of build_functions.sh in script directory
-curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
-
-# Verify build_functions.sh was downloaded.
-if [ ! -f ./build_functions.sh ]; then
-    echo -e "\n *** Error *** build_functions.sh not downloaded "
-    echo -e "Please attempt to download manually"
-    echo -e "  Copy the following line and paste into terminal\n"
-    echo -e "curl -SLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
-    echo -e ""
-    exit
-fi
-
-# This brings in functions from build_functions.sh
-#   When testing update to build_functions.sh, set to 1 for testing only
-DEBUG_FLAG=0
-if [ ${DEBUG_FLAG} == 0 ]; then
-    source ./build_functions.sh
+# If CUSTOM_CONFIG_PATH is not set or empty, source build_functions.sh from GitHub
+if [ -z "$LOCAL_BUILD_FUNCTIONS_PATH" ]; then
+  source /dev/stdin <<< "$(curl -fsSL -o /dev/stdout https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh)"
 else
-    source ~/Downloads/ManualClones/lnl/loopbuildscripts/build_functions.sh
+  # Source the local build_functions.sh when CUSTOM_CONFIG_PATH is set
+  echo -e "Using local build_functions.sh\n"
+  source "$LOCAL_BUILD_FUNCTIONS_PATH"
 fi
+
+initial_greeting
 
 ############################################################
 # The rest of this is specific to BuildLoop.sh
 ############################################################
-
-# store a copy of this script.sh in script directory
-curl -fsSLo ./BuildLoop.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh
 
 section_separator
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
@@ -138,47 +117,36 @@ if [ "$WHICH" = "Loop" ]; then
     fi
     cd "${LOOP_DIR}"
     section_separator
+    verify_xcode_path
     if [ ${FRESH_CLONE} == 1 ]; then
         echo -e " -- Downloading ${FORK_NAME} ${BRANCH} to your Downloads folder --"
         echo -e "      ${LOOP_DIR}\n"
         echo -e "Issuing this command:"
         echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
         git clone --branch=$BRANCH --recurse-submodules $REPO
+        clone_exit_status=$?
+    else
+        clone_exit_status=${CLONE_STATUS}
     fi
-    #
-    clone_download_error_check
-    options=("Continue" "Cancel")
-    select opt in "${options[@]}"
-    do
-        section_separator
-        case $opt in
-            "Continue")
-                cd LoopWorkspace
-                if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-                    check_config_override_existence_offer_to_configure
-                fi
-                section_separator
-                ensure_a_year
-                section_separator
-                echo -e "The following item will open (when you are ready)"
-                echo -e "* Xcode ready to prep your current download for build"
-                before_final_return_message
-                echo -e "\n${RED}${BOLD}As of Loop 3.2${NC}, LoopWorkspace is already configured."
-                echo -e "LoopWorkspace shows up in 2 places at top of Xcode."
-                echo -e "LoopDocs graphics will be updated soon.\n"
-                return_when_ready
-                xed .
-                exit_message
-                break
-                ;;
-            "Cancel")
-                cancel_entry
-                ;;
-            *)
-                invalid_entry
-                ;;
-        esac
-    done
+
+    automated_clone_download_error_check
+
+    cd LoopWorkspace
+    if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
+        check_config_override_existence_offer_to_configure
+    fi
+    section_separator
+    ensure_a_year
+    section_separator
+    echo -e "The following item will open (when you are ready)"
+    echo -e "* Xcode ready to prep your current download for build"
+    before_final_return_message
+    echo -e "\n${RED}${BOLD}As of Loop 3.2${NC}, LoopWorkspace is already configured."
+    echo -e "LoopWorkspace shows up in 2 places at top of Xcode."
+    echo -e "LoopDocs graphics will be updated soon.\n"
+    return_when_ready
+    xed .
+    exit_message
 
 elif [ "$WHICH" = "LoopFollow" ]
 then
