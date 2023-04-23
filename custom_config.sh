@@ -13,7 +13,7 @@ unset CLONE_STATUS
 # To Test build_functions.sh as they exist on github
 # SCRIPT_BRANCH is the branch build_functions.sh will be sourced from
 #   Uncomment line and replace main with branch you are testing
-#export SCRIPT_BRANCH="main"
+#export SCRIPT_BRANCH="patch-select"
 
 # To Test build_functions.sh as they exist on your local clone
 # LOCAL_BUILD_FUNCTIONS_PATH lets you test build_functions.sh locally
@@ -30,3 +30,8 @@ unset CLONE_STATUS
 #   Uncomment only to trigger an error in the clone check
 #   Pair this with FRESH_CLONE="0"
 #export CLONE_STATUS="1"
+
+# SKIP_INITIAL_GREETING can be set to 1 to skip the initial greeting
+#   Uncomment the line
+#   Set the value to 1 to skip the initial greeting dialog
+#export SKIP_INITIAL_GREETING="1"

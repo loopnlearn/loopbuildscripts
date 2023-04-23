@@ -121,6 +121,7 @@ function add_patch() {
     name+=("$1")
     file+=("$2")
     folder+=("$3")
+    url+=("$4")
 }
 
 # Deletes the temp directory
@@ -161,62 +162,116 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     #Declare all patches
     #Using simple arrays since bash 3 which is shipped with mac does not support associative arrays
-    name=()
-    file=()
-    folder=()
+    name=() #Displayed name
+    file=() #File to retrieve (optional)
+    folder=() #Optional folder if the patch is not workspace level
+    url=() #Optional url to patch, it will be stored as "file"-name
 
-    add_patch "Omnipod (Eros & Dash) Site Change" "cage" ""
+    add_patch "Configure future carbs to 4 hours" "future_carbs_4h" "Loop" "https://github.com/loopnlearn/Loop/commit/a974b6749ef4506ca679a0061c260dabcfbf9ee2.patch"
+    add_patch "Limit Loop Cycle Time" "limit_loop_cycle_time" "Loop" "https://github.com/loopnlearn/Loop/commit/414588c5e7dc36f692c8bbcf2d97adde1861072a.patch"
+    add_patch "Modify Carb Limit and Warning: Low Carb" "low_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/d9939c65a6b2fc088ee5acdf0d9dc247ad30986c.patch"
+    add_patch "Modify Carb Limit and Warning: High Carb" "high_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/a79482ac638736c2b3b8c5057b48e3097323a522.patch"
+    add_patch "Disable Authentication Requirement" "no_auth" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/77ee44534dd16154d910cfb11dea240cf8a23262.patch"
+    add_patch "Modify Override Sensitivity" "override_sens" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/f35654104f70b7dc70f750d129fbb338b9a4cee0.patch"
+    add_patch "CAGE: Upload Eros/DASH Start to Nightscout" "cage" "" ""
+    add_patch "SAGE: Upload G6 Sensor Start to Nightscout" "sage" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/777c7e36de64bdc060973a6628a02add0917520e.patch"
+    add_patch "Change Default to Upload G6 Readings" "upload_readings" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/b9638cc7cef74b1da74c950c0dbb3525f157e11f.patch"
 
     echo "Downloading patches, please wait..."
     cd $mytmpdir
     for i in ${!name[@]}
     do
-        curl -fsSLOJ "https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/patch/${file[$i]}.patch"
+        if [ -z "${url[$i]}" ]; then
+            curl -fsSLOJ "https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/patch/${file[$i]}.patch"
+        else
+            curl -fsSL --output "${file[$i]}.patch" "${url[$i]}"
+        fi
     done
     tput cuu1 && tput el
     cd $workingdir
 
     while true; do
         echo
-        echo "Select a patch you want to apply:"
-#        echo "a) Apply all patches"
+        echo "Select a patch to apply:"
         for i in ${!name[@]}
         do
-            menu "${i}) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
+            menu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
         done        
 
-        echo "r) Revert a patch"
-        echo "q) Quit"
+        echo "$((${#name[@]}+1))) Revert a patch"
+        echo "$((${#name[@]}+2))) Quit"
 
         read -p "Enter your choice: " choice
-        if [[ $choice =~ ^[0-9]+$ && $choice -ge 0 && $choice -lt ${#name[@]} ]]; then
-            apply "${name[$choice]}" "${file[$choice]}" "${folder[$choice]}";
-        elif [[ $choice == "r" ]]; then
-            section_separator
-            echo "Select a patch to revert:"
-            for i in ${!name[@]}
-            do
-                revertmenu "${i}) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
-            done        
-            echo "*) Any other key will exit to last menu"
-            read -p "Enter your choice: " choice
-            if [[ $choice =~ ^[0-9]+$ && $choice -ge 0 && $choice -lt ${#name[@]} ]]; then
-                revert "${name[$choice]}" "${file[$choice]}" "${folder[$choice]}";
+        if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $((${#name[@]}+2)) ]]; then
+            if [[ $choice -le ${#name[@]} ]]; then
+                index=$(($choice-1))
+                apply "${name[$index]}" "${file[$index]}" "${folder[$index]}";
+                return_when_ready
+            elif [[ $choice -eq $((${#name[@]}+1)) ]]; then
+                section_separator
+                echo "Select a patch to revert:"
+                for i in ${!name[@]}
+                do
+                    revertmenu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
+                done        
+                echo "*) Any other key will exit to last menu"
+                read -p "Enter your choice: " choice
+                if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le ${#name[@]} ]]; then
+                    index=$(($choice-1))
+                    revert "${name[$index]}" "${file[$index]}" "${folder[$index]}";
+                    return_when_ready
+                fi
+            elif [[ $choice -eq $((${#name[@]}+2)) ]]; then
+                exit 0
             fi
-        # elif [[ $choice == "a" ]]; then
-        #     for i in ${!name[@]}
-        #     do
-        #         apply "${name[$i]}" "${file[$i]}" "${folder[$i]}";
-        #     done        
-        elif [[ $choice == "q" ]]; then
-            exit 0
         else
             echo
-            echo "Invalid choice. Try again."
+            echo "Invalid choice."
+            return_when_ready
         fi
-        return_when_ready
         section_separator
     done
+
+    # while true; do
+    #     echo
+    #     echo "Select a patch you want to apply:"
+    #     for i in ${!name[@]}
+    #     do
+    #         menu "${i}) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
+    #     done        
+
+    #     echo "r) Revert a patch"
+    #     echo "q) Quit"
+
+    #     read -p "Enter your choice: " choice
+    #     if [[ $choice =~ ^[0-9]+$ && $choice -ge 0 && $choice -lt ${#name[@]} ]]; then
+    #         apply "${name[$choice]}" "${file[$choice]}" "${folder[$choice]}";
+    #     elif [[ $choice == "r" ]]; then
+    #         section_separator
+    #         echo "Select a patch to revert:"
+    #         for i in ${!name[@]}
+    #         do
+    #             revertmenu "${i}) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
+    #         done        
+    #         echo "*) Any other key will exit to last menu"
+    #         read -p "Enter your choice: " choice
+    #         if [[ $choice =~ ^[0-9]+$ && $choice -ge 0 && $choice -lt ${#name[@]} ]]; then
+    #             revert "${name[$choice]}" "${file[$choice]}" "${folder[$choice]}";
+    #         fi
+    #     # elif [[ $choice == "a" ]]; then
+    #     #     for i in ${!name[@]}
+    #     #     do
+    #     #         apply "${name[$i]}" "${file[$i]}" "${folder[$i]}";
+    #     #     done        
+    #     elif [[ $choice == "q" ]]; then
+    #         exit 0
+    #     else
+    #         echo
+    #         echo "Invalid choice. Try again."
+    #     fi
+    #     return_when_ready
+    #     section_separator
+    # done
 else
     exit 1
 fi

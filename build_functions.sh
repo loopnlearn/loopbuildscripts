@@ -84,6 +84,10 @@ function section_divider() {
 }
 
 function initial_greeting() {
+    if [ "$SKIP_INITIAL_GREETING" == "1" ]; then
+        return
+    fi
+
     section_separator
     echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
     echo -e "${BOLD}This project is:${RED}${BOLD}"
