@@ -148,7 +148,7 @@ function cleanup {
   echo "Deleting temp working directory $mytmpdir"
   rm -r "$mytmpdir"
   tput cuu1 && tput el
-  echo -e "⬆️  You can press the up arrow on the keyboard followed by the Enter key to start the script from the beginning.\n\n";
+  echo -e "\n⬆️  You can press the up arrow on the keyboard followed by the Enter key to start the script from the beginning.\n\n";
 }
 
 section_separator
@@ -212,7 +212,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     while true; do
         echo
-        echo "The patches are documented on the Loop and Learn web site: https://www.loopandlearn.org/custom-code/#patch-toc"
+        echo "The patches are documented on the Loop and Learn web site"
+        echo "  https://www.loopandlearn.org/custom-code/#patch-toc"
         echo
         echo "Select a patch to apply:"
         for i in ${!name[@]}
