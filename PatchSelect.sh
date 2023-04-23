@@ -192,6 +192,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     while true; do
         echo
+        echo "The patches are documented on the Loop and Learn web site: https://www.loopandlearn.org/custom-code/#patch-toc"
+        echo
         echo "Select a patch to apply:"
         for i in ${!name[@]}
         do
@@ -231,47 +233,6 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         fi
         section_separator
     done
-
-    # while true; do
-    #     echo
-    #     echo "Select a patch you want to apply:"
-    #     for i in ${!name[@]}
-    #     do
-    #         menu "${i}) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
-    #     done        
-
-    #     echo "r) Revert a patch"
-    #     echo "q) Quit"
-
-    #     read -p "Enter your choice: " choice
-    #     if [[ $choice =~ ^[0-9]+$ && $choice -ge 0 && $choice -lt ${#name[@]} ]]; then
-    #         apply "${name[$choice]}" "${file[$choice]}" "${folder[$choice]}";
-    #     elif [[ $choice == "r" ]]; then
-    #         section_separator
-    #         echo "Select a patch to revert:"
-    #         for i in ${!name[@]}
-    #         do
-    #             revertmenu "${i}) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
-    #         done        
-    #         echo "*) Any other key will exit to last menu"
-    #         read -p "Enter your choice: " choice
-    #         if [[ $choice =~ ^[0-9]+$ && $choice -ge 0 && $choice -lt ${#name[@]} ]]; then
-    #             revert "${name[$choice]}" "${file[$choice]}" "${folder[$choice]}";
-    #         fi
-    #     # elif [[ $choice == "a" ]]; then
-    #     #     for i in ${!name[@]}
-    #     #     do
-    #     #         apply "${name[$i]}" "${file[$i]}" "${folder[$i]}";
-    #     #     done        
-    #     elif [[ $choice == "q" ]]; then
-    #         exit 0
-    #     else
-    #         echo
-    #         echo "Invalid choice. Try again."
-    #     fi
-    #     return_when_ready
-    #     section_separator
-    # done
 else
     exit 1
 fi
