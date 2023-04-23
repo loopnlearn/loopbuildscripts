@@ -7,6 +7,7 @@
 BUILD_DIR=~/Downloads/"BuildLoop"
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
+SCRIPT_DIR="${BUILD_DIR}/Scripts"
 
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
