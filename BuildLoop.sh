@@ -117,6 +117,7 @@ if [ "$WHICH" = "Loop" ]; then
     fi
     cd "${LOOP_DIR}"
     section_separator
+    verify_xcode_path
     if [ ${FRESH_CLONE} == 1 ]; then
         echo -e " -- Downloading ${FORK_NAME} ${BRANCH} to your Downloads folder --"
         echo -e "      ${LOOP_DIR}\n"
@@ -124,23 +125,18 @@ if [ "$WHICH" = "Loop" ]; then
         echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
         git clone --branch=$BRANCH --recurse-submodules $REPO
         clone_exit_status=$?
-
-        # Check if the clone was successful
-        if [ $clone_exit_status -eq 0 ]; then
-            echo -e "Repository cloned successfully. Proceed to the next step..."
-        else
-            echo -e "${RED}❌ An error occurred during the cloning process. Please investigate the issue.${NC}"
-            exit_message
-        fi
+    else
+        clone_exit_status=${CLONE_STATUS}
     fi
-    #
+
+    automated_clone_download_error_check
+
     cd LoopWorkspace
     if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
         check_config_override_existence_offer_to_configure
     fi
     section_separator
     ensure_a_year
-    verify_xcode_path
     section_separator
     echo -e "The following item will open (when you are ready)"
     echo -e "* Xcode ready to prep your current download for build"
