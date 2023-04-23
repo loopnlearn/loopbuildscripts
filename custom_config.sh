@@ -13,7 +13,7 @@ unset CLONE_STATUS
 # To Test build_functions.sh as they exist on github
 # SCRIPT_BRANCH is the branch build_functions.sh will be sourced from
 #   Uncomment line and replace main with branch you are testing
-#export SCRIPT_BRANCH="patch-select"
+#export SCRIPT_BRANCH="main"
 
 # To Test build_functions.sh as they exist on your local clone
 # LOCAL_BUILD_FUNCTIONS_PATH lets you test build_functions.sh locally
