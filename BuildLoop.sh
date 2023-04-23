@@ -198,7 +198,7 @@ else
     echo -e "    Always a good idea to reboot your computer after Xcode Cleanup.\n"
     echo -e "3 ➡️  Clean Profiles:\n"
     echo -e "    Incorporated in the BuildLoop section"
-    echo -e "    No longer needed as a stand-alone step."
+    echo -e "    No longer needed as a stand-alone step.\n"
     echo -e "4 ➡️  Apply Patches to Loop:\n"
     echo -e "    The patches are documented here:"
     echo -e "    https://www.loopandlearn.org/custom-code/#patch-toc"
