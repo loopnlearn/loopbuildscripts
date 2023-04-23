@@ -39,6 +39,7 @@ if [ -z "$LOCAL_BUILD_FUNCTIONS_PATH" ]; then
         echo -e ""
         exit
     fi
+    source ./build_functions.sh
 else
   # Source the local build_functions.sh when CUSTOM_CONFIG_PATH is set
   echo -e "Using local build_functions.sh\n"
