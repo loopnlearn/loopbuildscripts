@@ -84,6 +84,11 @@ function section_divider() {
 }
 
 function initial_greeting() {
+    #Skip innitial greeting if already displayed or opted out using env variable
+    if [ "${SKIP_INITIAL_GREETING}" = "1" ]; then return; fi
+
+    SKIP_INITIAL_GREETING=1
+
     section_separator
     echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
     echo -e "${BOLD}This project is:${RED}${BOLD}"

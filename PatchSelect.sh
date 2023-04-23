@@ -148,6 +148,7 @@ function cleanup {
   echo "Deleting temp working directory $mytmpdir"
   rm -r "$mytmpdir"
   tput cuu1 && tput el
+  echo -e "⬆️  You can press the up arrow on the keyboard followed by the Enter key to start the script from the beginning.\n\n";
 }
 
 section_separator

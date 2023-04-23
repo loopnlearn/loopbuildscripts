@@ -237,8 +237,9 @@ else
                 echo -e "\n--------------------------------\n"
                 echo -e "Downloading Script: PatchSelect.sh"
                 echo -e "\n--------------------------------\n"
-                curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/PatchSelect.sh
+                curl -fsSLOJ https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/PatchSelect.sh
                 source ./PatchSelect.sh
+                echo "hello world"
                 break
                 ;;            
             "Cancel")
