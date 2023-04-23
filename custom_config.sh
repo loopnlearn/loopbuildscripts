@@ -18,7 +18,7 @@ unset CLONE_STATUS
 # To Test build_functions.sh as they exist on your local clone
 # LOCAL_BUILD_FUNCTIONS_PATH lets you test build_functions.sh locally
 #   Uncomment line; path should be your local clone of loopbuildscripts
-#export LOCAL_BUILD_FUNCTIONS_PATH="$HOME/projects/loopbuildscripts/build_functions.sh"
+export LOCAL_BUILD_FUNCTIONS_PATH="$HOME/projects/loopbuildscripts/build_functions.sh"
 #export LOCAL_BUILD_FUNCTIONS_PATH="/Users/marion/Downloads/ManualClones/lnl/loopbuildscripts/build_functions.sh"
 
 # FRESH_CLONE (of 0) lets you use an existing LoopWorkspace clone (saves time)

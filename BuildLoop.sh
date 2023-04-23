@@ -11,6 +11,9 @@ DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
 fi
+if [ ! -d "${SCRIPT_DIR}" ]; then
+    mkdir "${SCRIPT_DIR}"
+fi
 
 STARTING_DIR="${PWD}"
 
@@ -20,7 +23,21 @@ STARTING_DIR="${PWD}"
 
 # If CUSTOM_CONFIG_PATH is not set or empty, source build_functions.sh from GitHub
 if [ -z "$LOCAL_BUILD_FUNCTIONS_PATH" ]; then
-  source /dev/stdin <<< "$(curl -fsSL -o /dev/stdout https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh)"
+    # change directory to $SCRIPT_DIR before curl calls
+    cd "${SCRIPT_DIR}"
+
+    # store a copy of build_functions.sh in script directory
+    curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
+
+    # Verify build_functions.sh was downloaded.
+    if [ ! -f ./build_functions.sh ]; then
+        echo -e "\n *** Error *** build_functions.sh not downloaded "
+        echo -e "Please attempt to download manually"
+        echo -e "  Copy the following line and paste into terminal\n"
+        echo -e "curl -SLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
+        echo -e ""
+        exit
+    fi
 else
   # Source the local build_functions.sh when CUSTOM_CONFIG_PATH is set
   echo -e "Using local build_functions.sh\n"
@@ -180,10 +197,13 @@ else
     echo -e "3 ➡️  Clean Profiles:\n"
     echo -e "    Incorporated in the BuildLoop section"
     echo -e "    No longer needed as a stand-alone step."
+    echo -e "4 ➡️  Apply Patches to Loop:\n"
+    echo -e "    The patches are documented here:"
+    echo -e "    https://www.loopandlearn.org/custom-code/#patch-toc"
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
     choose_or_cancel
-    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Cancel")
+    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Patches to Loop" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -211,6 +231,14 @@ else
                 source ./CleanProfiles.sh
                 break
                 ;;
+            "Apply Patches to Loop")
+                echo -e "\n--------------------------------\n"
+                echo -e "Downloading Script: PatchSelect.sh"
+                echo -e "\n--------------------------------\n"
+                curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/PatchSelect.sh
+                source ./PatchSelect.sh
+                break
+                ;;            
             "Cancel")
                 cancel_entry
                 ;;
