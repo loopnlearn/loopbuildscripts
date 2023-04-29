@@ -194,7 +194,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     add_patch "Modify Carb Warning and Limit: Low Carb (49, 99)" "low_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/d9939c65a6b2fc088ee5acdf0d9dc247ad30986c.patch"
     add_patch "Modify Carb Warning and Limit: High Carb (201, 300)" "high_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/a79482ac638736c2b3b8c5057b48e3097323a522.patch"
     add_patch "Disable Authentication Requirement" "no_auth" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/77ee44534dd16154d910cfb11dea240cf8a23262.patch"
-    add_patch "Modify Override Sensitivity" "override_sens" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/f35654104f70b7dc70f750d129fbb338b9a4cee0.patch"
+    add_patch "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/f35654104f70b7dc70f750d129fbb338b9a4cee0.patch"
     add_patch "CAGE: Upload Eros/DASH Start to Nightscout" "cage" "" ""
     add_patch "SAGE: Upload G6 Sensor Start to Nightscout" "sage" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/777c7e36de64bdc060973a6628a02add0917520e.patch"
     add_patch "Change Default to Upload G6 Readings" "upload_readings" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/b9638cc7cef74b1da74c950c0dbb3525f157e11f.patch"
