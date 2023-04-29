@@ -16,7 +16,8 @@ if [ ! -d "${SCRIPT_DIR}" ]; then
     mkdir "${SCRIPT_DIR}"
 fi
 
-STARTING_DIR="${PWD}"
+: ${STARTING_DIR:="${PWD}"}
+
 
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
@@ -154,12 +155,13 @@ function cleanup {
 section_separator
 echo "Loop patch selection"
 
+cd "$STARTING_DIR"
+
 if [ "$(basename "$PWD")" != "LoopWorkspace" ]; then
     target_dir="$(find /Users/$USER/Downloads/BuildLoop -maxdepth 2 -type d -name LoopWorkspace -exec dirname {} \; -exec stat -f "%B %N" {} \; | sort -rn | awk '{print $2}' | head -n 1)"
     if [ -z "$target_dir" ]; then
         echo "Error: No folder containing LoopWorkspace found."
     else
-        echo "Navigating to $target_dir"
         cd "$target_dir"
     fi
 fi
@@ -214,6 +216,9 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo
         echo "The patches are documented on the Loop and Learn web site"
         echo "  https://www.loopandlearn.org/custom-code/#patch-toc"
+        echo
+        echo "Working directory:"
+        echo "  $workingdir"
         echo
         echo "Select a patch to apply:"
         for i in ${!name[@]}
