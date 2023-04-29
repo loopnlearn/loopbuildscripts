@@ -103,11 +103,11 @@ function revertmenu() {
 
     # Check if the patch has already been applied
     if git apply --reverse --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-        echo "${name}" # - Patch can be reverted
+        echo "${name} *** Patch is applied ***" # - Patch can be reverted
     else
         # Try to apply the patch
         if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-            echo "${name} *** Patch is not applied ***"
+            echo "${name}" # *** Patch is not applied ***
         else
             echo "${name} !!! Reverting or applying the patch is not possible !!!"
         fi
