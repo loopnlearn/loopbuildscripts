@@ -191,8 +191,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     add_patch "Configure future carbs to 4 hours" "future_carbs_4h" "Loop" "https://github.com/loopnlearn/Loop/commit/a974b6749ef4506ca679a0061c260dabcfbf9ee2.patch"
     add_patch "Limit Loop Cycle Time" "limit_loop_cycle_time" "Loop" "https://github.com/loopnlearn/Loop/commit/414588c5e7dc36f692c8bbcf2d97adde1861072a.patch"
-    add_patch "Modify Carb Limit and Warning: Low Carb" "low_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/d9939c65a6b2fc088ee5acdf0d9dc247ad30986c.patch"
-    add_patch "Modify Carb Limit and Warning: High Carb" "high_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/a79482ac638736c2b3b8c5057b48e3097323a522.patch"
+    add_patch "Modify Carb Warning and Limit: Low Carb (49, 99)" "low_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/d9939c65a6b2fc088ee5acdf0d9dc247ad30986c.patch"
+    add_patch "Modify Carb Warning and Limit: High Carb (201, 300)" "high_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/a79482ac638736c2b3b8c5057b48e3097323a522.patch"
     add_patch "Disable Authentication Requirement" "no_auth" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/77ee44534dd16154d910cfb11dea240cf8a23262.patch"
     add_patch "Modify Override Sensitivity" "override_sens" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/f35654104f70b7dc70f750d129fbb338b9a4cee0.patch"
     add_patch "CAGE: Upload Eros/DASH Start to Nightscout" "cage" "" ""
