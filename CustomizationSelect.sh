@@ -226,7 +226,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
             menu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
         done        
 
-        echo "$((${#name[@]}+1))) Revert a patch"
+        echo "$((${#name[@]}+1))) Revert a customization"
         echo "$((${#name[@]}+2))) Quit"
 
         read -p "Enter your choice: " choice
