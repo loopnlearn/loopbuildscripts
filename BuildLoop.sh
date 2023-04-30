@@ -233,7 +233,7 @@ else
                 source ./CleanProfiles.sh
                 break
                 ;;
-            "Apply Patches to Loop")
+            "Apply Customizations to Loop")
                 echo -e "\n--------------------------------\n"
                 echo -e "Downloading Script: CustomizationSelect.sh"
                 echo -e "\n--------------------------------\n"
