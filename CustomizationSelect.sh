@@ -109,7 +109,7 @@ function revertmenu() {
         if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
             echo "${name}" # *** Patch is not applied ***
         else
-            echo "${name} !!! Reverting or applying the customization is not possible !!!"
+            echo "${name} !!! Removing or applying the customization is not possible !!!"
         fi
     fi
 }
@@ -120,7 +120,7 @@ function revert() {
     local directory="$3"
     echo 
     if git apply --reverse --check "${patch_file}" --directory="${directory}" >/dev/null 2>&1; then
-        echo "${name} - Reversing..."
+        echo "${name} - Removing..."
         git apply --reverse "${patch_file}" --directory="${directory}"
         exit_code=$?
         if [ $exit_code -eq 0 ]; then
@@ -132,7 +132,7 @@ function revert() {
         if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
             echo "${name} *** Customization is not applied ***"
         else
-            echo "${name} !!! Reverting or applying the customization is not possible !!!"
+            echo "${name} !!! Removing or applying the customization is not possible !!!"
         fi
     fi
 }
@@ -217,7 +217,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo "The Prepared Customizations are documented on the Loop and Learn web site"
         echo "  https://www.loopandlearn.org/custom-code/#patch-toc"
         echo
-        echo "Working directory:"
+        echo "Directory where customizations will be applied:"
         echo "  $workingdir"
         echo
         echo "Select a customization to apply:"
@@ -226,7 +226,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
             menu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
         done        
 
-        echo "$((${#name[@]}+1))) Revert a customization"
+        echo "$((${#name[@]}+1))) Remove a customization"
         echo "$((${#name[@]}+2))) Quit"
 
         read -p "Enter your choice: " choice
@@ -237,7 +237,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
                 return_when_ready
             elif [[ $choice -eq $((${#name[@]}+1)) ]]; then
                 section_separator
-                echo "Select a customization to revert:"
+                echo "Select a customization to remove:"
                 for i in ${!name[@]}
                 do
                     revertmenu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
