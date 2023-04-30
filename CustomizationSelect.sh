@@ -215,7 +215,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     while true; do
         echo
         echo "The Prepared Customizations are documented on the Loop and Learn web site"
-        echo "  https://www.loopandlearn.org/custom-code/#patch-toc"
+        echo "  https://stage.loopandlearn.org/custom-code/#custom-list"
         echo
         echo "Directory where customizations will be applied:"
         echo "  $workingdir"
