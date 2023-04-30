@@ -1,4 +1,4 @@
-#!/bin/bash # script PatchSelect.sh
+#!/bin/bash # script CustomizationSelect.sh
 
 ############################################################
 # this code must be repeated in any build script that uses build_functions.sh
@@ -50,7 +50,7 @@ fi
 initial_greeting
 
 ############################################################
-# The rest of this is specific to PatchSelect.sh
+# The rest of this is specific to CustomizationSelect.sh
 ############################################################
 
 function menu() {
@@ -60,13 +60,13 @@ function menu() {
 
     # Check if the patch has already been applied
     if git apply --reverse --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-        echo "${name} *** Patch is applied ***"
+        echo "${name} *** Customization is applied ***"
     else
         # Try to apply the patch
         if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
             echo "${name}" # - Patch can be applied
         else
-            echo "${name} !!! Patch can't be applied !!!"
+            echo "${name} !!! Customization can't be applied !!!"
         fi
     fi
 }
@@ -78,7 +78,7 @@ function apply() {
     echo 
     # Check if the patch has already been applied
     if git apply --reverse --check "${patch_file}" --directory="${directory}" >/dev/null 2>&1; then
-        echo "${name} *** Patch is applied ***"
+        echo "${name} *** Customization is applied ***"
     else
         # Try to apply the patch
         if git apply --check "${patch_file}" --directory="${directory}" >/dev/null 2>&1; then
@@ -91,7 +91,7 @@ function apply() {
                 echo "Failed!"
             fi
         else
-            echo "${name} !!! Patch can't be applied !!!"
+            echo "${name} !!! Customization can't be applied !!!"
         fi
     fi
 }
@@ -103,13 +103,13 @@ function revertmenu() {
 
     # Check if the patch has already been applied
     if git apply --reverse --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-        echo "${name} *** Patch is applied ***" # - Patch can be reverted
+        echo "${name} *** Customization is applied ***" # - Patch can be reverted
     else
         # Try to apply the patch
         if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
             echo "${name}" # *** Patch is not applied ***
         else
-            echo "${name} !!! Reverting or applying the patch is not possible !!!"
+            echo "${name} !!! Reverting or applying the customization is not possible !!!"
         fi
     fi
 }
@@ -130,9 +130,9 @@ function revert() {
         fi
     else
         if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-            echo "${name} *** Patch is not applied ***"
+            echo "${name} *** Customization is not applied ***"
         else
-            echo "${name} !!! Reverting or applying the patch is not possible !!!"
+            echo "${name} !!! Reverting or applying the customization is not possible !!!"
         fi
     fi
 }
@@ -153,7 +153,7 @@ function cleanup {
 }
 
 section_separator
-echo "Loop patch selection"
+echo "Loop Prepared Customizations Selection"
 
 cd "$STARTING_DIR"
 
@@ -199,7 +199,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     add_patch "SAGE: Upload G6 Sensor Start to Nightscout" "sage" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/777c7e36de64bdc060973a6628a02add0917520e.patch"
     add_patch "Change Default to Upload G6 Readings" "upload_readings" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/b9638cc7cef74b1da74c950c0dbb3525f157e11f.patch"
 
-    echo "Downloading patches, please wait..."
+    echo "Downloading customizations, please wait..."
     cd $mytmpdir
     for i in ${!name[@]}
     do
@@ -214,13 +214,13 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     while true; do
         echo
-        echo "The patches are documented on the Loop and Learn web site"
+        echo "The Prepared Customizations are documented on the Loop and Learn web site"
         echo "  https://www.loopandlearn.org/custom-code/#patch-toc"
         echo
         echo "Working directory:"
         echo "  $workingdir"
         echo
-        echo "Select a patch to apply:"
+        echo "Select a customization to apply:"
         for i in ${!name[@]}
         do
             menu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
@@ -237,7 +237,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
                 return_when_ready
             elif [[ $choice -eq $((${#name[@]}+1)) ]]; then
                 section_separator
-                echo "Select a patch to revert:"
+                echo "Select a customization to revert:"
                 for i in ${!name[@]}
                 do
                     revertmenu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";

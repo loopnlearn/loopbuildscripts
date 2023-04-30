@@ -199,8 +199,8 @@ else
     echo -e "3 ➡️  Clean Profiles:\n"
     echo -e "    Incorporated in the BuildLoop section"
     echo -e "    No longer needed as a stand-alone step.\n"
-    echo -e "4 ➡️  Apply Patches to Loop:\n"
-    echo -e "    The patches are documented here:"
+    echo -e "4 ➡️  Apply Customizations to Loop:\n"
+    echo -e "    The customizations are documented here:"
     echo -e "    https://www.loopandlearn.org/custom-code/#patch-toc"
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
@@ -235,10 +235,10 @@ else
                 ;;
             "Apply Patches to Loop")
                 echo -e "\n--------------------------------\n"
-                echo -e "Downloading Script: PatchSelect.sh"
+                echo -e "Downloading Script: CustomizationSelect.sh"
                 echo -e "\n--------------------------------\n"
-                curl -fsSLOJ https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/PatchSelect.sh
-                source ./PatchSelect.sh
+                curl -fsSLOJ https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CustomizationSelect.sh
+                source ./CustomizationSelect.sh
                 break
                 ;;            
             "Cancel")
