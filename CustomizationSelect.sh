@@ -228,9 +228,10 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
         echo "$((${#name[@]}+1))) Remove a customization"
         echo "$((${#name[@]}+2))) Quit"
+        echo "$((${#name[@]}+3))) Quit and open Xcode"
 
         read -p "Enter your choice: " choice
-        if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $((${#name[@]}+2)) ]]; then
+        if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $((${#name[@]}+3)) ]]; then
             if [[ $choice -le ${#name[@]} ]]; then
                 index=$(($choice-1))
                 apply "${name[$index]}" "${file[$index]}" "${folder[$index]}";
@@ -250,6 +251,10 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
                     return_when_ready
                 fi
             elif [[ $choice -eq $((${#name[@]}+2)) ]]; then
+                exit 0
+            elif [[ $choice -eq $((${#name[@]}+3)) ]]; then
+                echo "Starting Xcode, please wait..."
+                xed .
                 exit 0
             fi
         else
