@@ -205,7 +205,7 @@ else
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
     choose_or_cancel
-    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Patches to Loop" "Cancel")
+    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Customizations to Loop" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
