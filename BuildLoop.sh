@@ -7,9 +7,13 @@
 BUILD_DIR=~/Downloads/"BuildLoop"
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
+SCRIPT_DIR="${BUILD_DIR}/Scripts"
 
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
+fi
+if [ ! -d "${SCRIPT_DIR}" ]; then
+    mkdir "${SCRIPT_DIR}"
 fi
 
 STARTING_DIR="${PWD}"
@@ -20,7 +24,22 @@ STARTING_DIR="${PWD}"
 
 # If CUSTOM_CONFIG_PATH is not set or empty, source build_functions.sh from GitHub
 if [ -z "$LOCAL_BUILD_FUNCTIONS_PATH" ]; then
-  source /dev/stdin <<< "$(curl -fsSL -o /dev/stdout https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh)"
+    # change directory to $SCRIPT_DIR before curl calls
+    cd "${SCRIPT_DIR}"
+
+    # store a copy of build_functions.sh in script directory
+    curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
+
+    # Verify build_functions.sh was downloaded.
+    if [ ! -f ./build_functions.sh ]; then
+        echo -e "\n *** Error *** build_functions.sh not downloaded "
+        echo -e "Please attempt to download manually"
+        echo -e "  Copy the following line and paste into terminal\n"
+        echo -e "curl -SLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
+        echo -e ""
+        exit
+    fi
+    source ./build_functions.sh
 else
   # Source the local build_functions.sh when CUSTOM_CONFIG_PATH is set
   echo -e "Using local build_functions.sh\n"
@@ -179,11 +198,14 @@ else
     echo -e "    Always a good idea to reboot your computer after Xcode Cleanup.\n"
     echo -e "3 ➡️  Clean Profiles:\n"
     echo -e "    Incorporated in the BuildLoop section"
-    echo -e "    No longer needed as a stand-alone step."
+    echo -e "    No longer needed as a stand-alone step.\n"
+    echo -e "4 ➡️  Apply Customizations to Loop:\n"
+    echo -e "    The customizations are documented here:"
+    echo -e "    https://www.loopandlearn.org/custom-code/#patch-toc"
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
     choose_or_cancel
-    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Cancel")
+    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Customizations to Loop" "Cancel")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -211,6 +233,14 @@ else
                 source ./CleanProfiles.sh
                 break
                 ;;
+            "Apply Customizations to Loop")
+                echo -e "\n--------------------------------\n"
+                echo -e "Downloading Script: CustomizationSelect.sh"
+                echo -e "\n--------------------------------\n"
+                curl -fsSLOJ https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CustomizationSelect.sh
+                source ./CustomizationSelect.sh
+                break
+                ;;            
             "Cancel")
                 cancel_entry
                 ;;
