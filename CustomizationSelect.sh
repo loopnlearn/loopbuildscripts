@@ -158,7 +158,8 @@ echo "Loop Prepared Customizations Selection"
 cd "$STARTING_DIR"
 
 if [ "$(basename "$PWD")" != "LoopWorkspace" ]; then
-    target_dir="$(find /Users/$USER/Downloads/BuildLoop -type d -name LoopWorkspace -exec sh -c 'case "$(basename "$(dirname "$1")")" in Loop[-_]lnl[-_]patches-*|Loop-*) echo "$1" ;; esac' _ {} \; | sort -rn | head -n 1)"
+    target_dir=$(find /Users/$USER/Downloads/BuildLoop -maxdepth 1 -type d -name "Loop*" -exec [ -d "{}"/LoopWorkspace ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk '{print $2"/LoopWorkspace"}')
+
     if [ -z "$target_dir" ]; then
         echo "Error: No folder containing LoopWorkspace found in ~/Downloads/BuildLoop."
     else
