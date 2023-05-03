@@ -167,7 +167,6 @@ echo "Loop Prepared Customizations Selection"
 cd "$STARTING_DIR"
 
 if [ "$(basename "$PWD")" != "LoopWorkspace" ]; then
-
     target_dir=$(find ${BUILD_DIR/#\~/$HOME} -maxdepth 1 -type d -name "Loop*" -exec [ -d "{}"/LoopWorkspace ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk '{print $2"/LoopWorkspace"}')
     if [ -z "$target_dir" ]; then
         echo "Error: No folder containing LoopWorkspace found in"
