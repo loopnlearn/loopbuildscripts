@@ -29,17 +29,12 @@ if [ -z "$LOCAL_BUILD_FUNCTIONS_PATH" ]; then
     cd "${SCRIPT_DIR}"
 
     # store a copy of build_functions.sh in script directory
-    curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh
-
-    # Verify build_functions.sh was downloaded.
-    if [ ! -f ./build_functions.sh ]; then
-        echo -e "\n *** Error *** build_functions.sh not downloaded "
-        echo -e "Please attempt to download manually"
-        echo -e "  Copy the following line and paste into terminal\n"
-        echo -e "curl -SLo ~/Downloads/BuildLoop/Scripts/build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/build_functions.sh"
+    if ! curl -fsSLo ./build_functions.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/build_functions.sh; then
+        echo -e "\033[0;31m❌ An error occurred during download of build_functions.sh.\n   Please investigate the issue.\033[0m"
         echo -e ""
-        exit
+        exit 1
     fi
+
     source ./build_functions.sh
 else
   # Source the local build_functions.sh when CUSTOM_CONFIG_PATH is set
@@ -102,7 +97,9 @@ function apply() {
     echo 
     # Check if the patch has already been applied
     if git apply --reverse --check "${patch_file}" --directory="${directory}" >/dev/null 2>&1; then
-        echo "${name} *** Customization is applied ***"
+        echo "Requested Customization"
+        echo "${name}"
+        echo "is already applied."
     else
         # Try to apply the patch
         if git apply --check "${patch_file}" --directory="${directory}" >/dev/null 2>&1; then
@@ -115,7 +112,9 @@ function apply() {
                 echo "Failed!"
             fi
         else
-            echo "${name} !!! Customization can't be applied !!!"
+            echo "Requested Customization"
+            echo "${name}"
+            echo "cannot be applied."
         fi
     fi
 }
@@ -136,9 +135,13 @@ function revert() {
         fi
     else
         if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-            echo "${name} *** Customization is not applied ***"
+            echo "Requested Customization"
+            echo "${name}"
+            echo "is not applied."            
         else
-            echo "${name} !!! Removing or applying the customization is not possible !!!"
+            echo "Requested Customization"
+            echo "${name}"
+            echo "cannot be removed."
         fi
     fi
 }
@@ -164,10 +167,11 @@ echo "Loop Prepared Customizations Selection"
 cd "$STARTING_DIR"
 
 if [ "$(basename "$PWD")" != "LoopWorkspace" ]; then
-    target_dir=$(find /Users/$USER/Downloads/BuildLoop -maxdepth 1 -type d -name "Loop*" -exec [ -d "{}"/LoopWorkspace ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk '{print $2"/LoopWorkspace"}')
 
+    target_dir=$(find ${BUILD_DIR/#\~/$HOME} -maxdepth 1 -type d -name "Loop*" -exec [ -d "{}"/LoopWorkspace ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk '{print $2"/LoopWorkspace"}')
     if [ -z "$target_dir" ]; then
-        echo "Error: No folder containing LoopWorkspace found in ~/Downloads/BuildLoop."
+        echo "Error: No folder containing LoopWorkspace found in"
+        echo "$BUILD_DIR"
     else
         cd "$target_dir"
     fi
@@ -225,7 +229,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo "  https://www.loopandlearn.org/custom-code/#custom-list"
         echo
         echo "Directory where customizations will be applied:"
-        echo "  $workingdir"
+        echo "  ${workingdir/$HOME/~}"
         echo
 
         display_applied_patches
