@@ -53,22 +53,46 @@ initial_greeting
 # The rest of this is specific to CustomizationSelect.sh
 ############################################################
 
-function menu() {
-    local name="$1"
-    local patch_file="$2"
-    local directory="$3"
-
-    # Check if the patch has already been applied
-    if git apply --reverse --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-        echo "${name} *** Customization is applied ***"
-    else
-        # Try to apply the patch
-        if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-            echo "${name}" # - Patch can be applied
-        else
-            echo "${name} !!! Customization can't be applied !!!"
+function display_applied_patches() {
+    has_applied_patches=false
+    for i in ${!name[@]}; do
+        if git apply --reverse --check "${mytmpdir}/${file[$i]}.patch" --directory="${folder[$i]}" >/dev/null 2>&1; then
+            if [ "$has_applied_patches" = false ]; then
+                echo "Currently applied customizations:"
+                has_applied_patches=true
+            fi
+            echo "* ${name[$i]}"
         fi
+    done
+    if [ "$has_applied_patches" = true ]; then
+        echo
     fi
+}
+
+function display_unapplicable_patches() {
+    local has_unapplicable_patches=false
+    for i in ${!name[@]}; do
+        if ! git apply --check "${mytmpdir}/${file[$i]}.patch" --directory="${folder[$i]}" >/dev/null 2>&1 && \
+           ! git apply --reverse --check "${mytmpdir}/${file[$i]}.patch" --directory="${folder[$i]}" >/dev/null 2>&1; then
+            if [ "$has_unapplicable_patches" = false ]; then
+                echo "Unavailable customizations due to conflicts:"
+                has_unapplicable_patches=true
+            fi
+            echo "* ${name[$i]}"
+        fi
+    done
+    if [ "$has_unapplicable_patches" = true ]; then
+        echo
+    fi
+}
+
+function has_available_customizations() {
+    for i in ${!name[@]}; do
+        if git apply --check "${mytmpdir}/${file[$i]}.patch" --directory="${folder[$i]}" >/dev/null 2>&1; then
+            return 0
+        fi
+    done
+    return 1
 }
 
 function apply() {
@@ -92,24 +116,6 @@ function apply() {
             fi
         else
             echo "${name} !!! Customization can't be applied !!!"
-        fi
-    fi
-}
-
-function revertmenu() {
-    local name="$1"
-    local patch_file="$2"
-    local directory="$3"
-
-    # Check if the patch has already been applied
-    if git apply --reverse --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-        echo "${name} *** Customization is applied ***" # - Patch can be reverted
-    else
-        # Try to apply the patch
-        if git apply --check "${mytmpdir}/${patch_file}.patch" --directory="${directory}" >/dev/null 2>&1; then
-            echo "${name}" # *** Patch is not applied ***
-        else
-            echo "${name} !!! Removing or applying the customization is not possible !!!"
         fi
     fi
 }
@@ -221,13 +227,24 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo "Directory where customizations will be applied:"
         echo "  $workingdir"
         echo
-        echo "Select a customization to apply:"
-        for i in ${!name[@]}
-        do
-            menu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
-        done        
 
-        echo "$((${#name[@]}+1))) Remove a customization"
+        display_applied_patches
+        display_unapplicable_patches
+
+        if has_available_customizations; then
+            echo "Select a customization to apply or another option in the list:"
+        else
+            echo "There are no available customizations. Select an option in the list:"
+        fi
+        for i in ${!name[@]}; do
+            if git apply --check "${mytmpdir}/${file[$i]}.patch" --directory="${folder[$i]}" >/dev/null 2>&1; then
+                echo "$((${i}+1))) ${name[$i]}"
+            fi
+        done
+
+        if [ "$has_applied_patches" = true ]; then
+            echo "$((${#name[@]}+1))) Remove a customization"
+        fi
         echo "$((${#name[@]}+2))) Quit"
         echo "$((${#name[@]}+3))) Quit and open Xcode"
 
@@ -240,10 +257,13 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
             elif [[ $choice -eq $((${#name[@]}+1)) ]]; then
                 section_separator
                 echo "Select a customization to remove:"
-                for i in ${!name[@]}
-                do
-                    revertmenu "$((${i}+1))) ${name[$i]}" "${file[$i]}" "${folder[$i]}";
-                done        
+
+                for i in ${!name[@]}; do
+                    if git apply --reverse --check "${mytmpdir}/${file[$i]}.patch" --directory="${folder[$i]}" >/dev/null 2>&1; then
+                        echo "$((${i}+1))) ${name[$i]}"
+                    fi
+                done
+
                 echo "*) Any other key will exit to last menu"
                 read -p "Enter your choice: " choice
                 if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le ${#name[@]} ]]; then
