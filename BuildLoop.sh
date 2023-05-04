@@ -201,7 +201,7 @@ else
     echo -e "    No longer needed as a stand-alone step.\n"
     echo -e "4 ➡️  Apply Customizations to Loop:\n"
     echo -e "    The customizations are documented here:"
-    echo -e "    https://www.loopandlearn.org/custom-code/#patch-toc"
+    echo -e "    https://www.loopandlearn.org/custom-code/#custom-list"
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
     choose_or_cancel
