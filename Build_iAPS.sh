@@ -140,6 +140,7 @@ OVERRIDE_FULLPATH="${LOCAL_DIR}/iAPS/ConfigOverride.xcconfig"
 
 cd "${LOCAL_DIR}"
 section_separator
+verify_xcode_path
 if [ ${FRESH_CLONE} == 1 ]; then
     echo -e " -- Downloading ${REPO_NAME} ${BRANCH} to your Downloads folder --"
     echo -e "      ${LOCAL_DIR}\n"
@@ -154,8 +155,6 @@ fi
 automated_clone_download_error_check
 
 cd iAPS
-
-echo -e "${PWD}"
 check_config_override_existence_offer_to_configure
 section_separator
 ensure_a_year
