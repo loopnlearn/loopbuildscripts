@@ -298,7 +298,7 @@ function create_persistent_config_override() {
         echo -e "Creating ${OVERRIDE_FULLPATH}"
         echo -e "   with your Apple Developer ID\n"
         # For Loop, copy the file and add developer ID
-        # For LoopFollow, will create file and add developer ID
+        # For other apps, create file with developer ID
         if [ -f ${OVERRIDE_FILE} ]; then
             cp -p "${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
         fi
