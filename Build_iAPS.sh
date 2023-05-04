@@ -42,7 +42,50 @@ else
   source "$LOCAL_BUILD_FUNCTIONS_PATH"
 fi
 
-initial_greeting
+#initial_greeting
+# use different greeting for iAPS:
+function iaps_greeting() {
+    #Skip innitial greeting if already displayed or opted out using env variable
+    if [ "${SKIP_INITIAL_GREETING}" = "1" ]; then return; fi
+
+    SKIP_INITIAL_GREETING=1
+
+    section_separator
+    echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
+    echo -e "${BOLD}This project is:${RED}${BOLD}"
+    echo -e "  Open Source software"
+    echo -e "  Not \"approved\" for therapy\n"
+    echo -e "  You take full responsibility for reading and"
+    echo -e "  understanding the documenation before building"
+    echo -e "  or using this system, and"
+    echo -e "  you do so at your own risk.${NC}\n"
+    echo -e "To increase (decrease) font size"
+    echo -e "  Hold down the CMD key and hit + (-)"
+    echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
+    echo -e "\n--------------------------------\n${NC}"
+
+    options=("Agree" "Cancel")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "Agree")
+                break
+                ;;
+            "Cancel")
+                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
+                exit_message
+                ;;
+            *)
+                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
+                exit_message
+                ;;
+        esac
+    done
+
+    echo -e "${NC}\n\n\n\n"
+}
+
+iaps_greeting
 
 ############################################################
 # The rest of this is specific to  Build_iAPS.sh
@@ -56,6 +99,8 @@ echo -e "Please select which branch of iAPS to download and build."
 echo -e "Most people should choose main branch"
 echo -e ""
 echo -e "Documentation is found at:"
+echo -e "  https://github.com/Artificial-Pancreas/iAPS#iaps"
+echo -e "       and"
 echo -e "  https://iaps.readthedocs.io/en/latest/"
 echo -e ""
 choose_or_cancel
@@ -65,13 +110,13 @@ do
     case $opt in
         "iAPS main")
             REPO_NAME=iAPS
-            REPO=https://github.com/Artificial-Pancreas/iAPS
+            REPO=https://github.com/Artificial-Pancreas/iAPS.git
             BRANCH=main
             break
             ;;
         "iAPS dev")
             REPO_NAME=iAPS
-            REPO=https://github.com/Artificial-Pancreas/iAPS
+            REPO=https://github.com/Artificial-Pancreas/iAPS.git
             BRANCH=dev
             break
             ;;
@@ -101,30 +146,28 @@ if [ ${FRESH_CLONE} == 1 ]; then
     echo -e "Issuing this command:"
     echo -e "    git clone --branch=${BRANCH} ${REPO}"
     git clone --branch=$BRANCH $REPO
+    clone_exit_status=$?
+else
+    clone_exit_status=${CLONE_STATUS}
 fi
-#
-clone_download_error_check
-options=("Continue" "Cancel")
-select opt in "${options[@]}"
-do
-    case $opt in
-        "Continue")
-            cd iAPS
-            check_config_override_existence_offer_to_configure
-            section_separator
-            echo -e "The following item will open (when you are ready)"
-            echo -e "* Xcode ready to prep your current download for build"
-            before_final_return_message
-            return_when_ready
-            xed .
-            exit_message
-            break
-            ;;
-        "Cancel")
-            cancel_entry
-            ;;
-        *)
-            invalid_entry
-            ;;
-    esac
-done
+
+automated_clone_download_error_check
+
+cd iAPS
+
+echo -e "${PWD}"
+check_config_override_existence_offer_to_configure
+section_separator
+ensure_a_year
+section_separator
+echo -e "The following item will open (when you are ready)"
+echo -e "* Xcode ready to prep your current download for build"
+before_final_return_message
+echo -e ""
+# needed for main but not dev - remove when no longer required
+echo -e "Check to make sure FreeAPS X is selected before building"
+echo -e "  top middle of Xcode - next to phone"
+return_when_ready
+xed .
+exit_message
+
