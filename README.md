@@ -78,3 +78,14 @@ export SCRIPT_BRANCH="main" && /bin/bash -c "$(curl -fsSL \
 When testing locally, there are other test variables you can configure. Be sure to read these two files:
 * custom_config.sh
 * clear_custom_config.sh
+
+### Inlining Scripts
+This project uses a script inlining system to generate executable scripts from source files. The source files for each script are located in the src directory, and the generated scripts are output to the root directory.
+
+To modify a script, simply edit the corresponding source file in the src directory, and then run the build script to regenerate the output file. The build script will inline any required files and generate the final executable script.
+
+For example, if you want to modify the BuildLoop.sh script, you would edit the src/BuildLoop.sh file, and then run the build.sh script. The build.sh script will then generate the BuildLoop.sh file in the root directory, which can be executed.
+
+Note that the build system uses special comments to indicate which files should be inlined. Any line in a script that starts with #!inline will be replaced with the contents of the specified file. The build system will inline files up to a maximum depth of 10, to prevent infinite recursion.
+
+To learn more about the inlining process and how it works, please see the comments in the build.sh script.

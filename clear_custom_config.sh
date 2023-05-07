@@ -5,7 +5,8 @@
 # For example: source clear_custom_config.sh&&./BuildLoop.sh
 
 unset SCRIPT_BRANCH
-unset LOCAL_BUILD_FUNCTIONS_PATH
 unset FRESH_CLONE
 unset CLONE_STATUS
 unset SKIP_INITIAL_GREETING
+unset CUSTOM URL
+unset CUSTOM_BRANCH
