@@ -92,7 +92,7 @@ then
     echo -e "\n\n--------------------------------\n\n"
     echo -e "Downloading Loop Follow Script\n"
     echo -e "\n--------------------------------\n\n"
-    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFollow.sh
+    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh
     echo -e "\n\n\n\n"
     source ./BuildLoopFollow.sh
 else
@@ -100,7 +100,7 @@ else
         echo -e "\n--------------------------------\n"
         echo -e "Downloading Script: CleanDerived.sh"
         echo -e "\n--------------------------------\n"
-        curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanDerived.sh
+        curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CleanDerived.sh
         source ./CleanDerived.sh
     }
 
@@ -108,7 +108,7 @@ else
         echo -e "\n--------------------------------\n"
         echo -e "Downloading Script: XcodeClean.sh"
         echo -e "\n--------------------------------\n"
-        curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/XcodeClean.sh
+        curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/XcodeClean.sh
         source ./XcodeClean.sh
     }
 
@@ -116,7 +116,7 @@ else
         echo -e "\n--------------------------------\n"
         echo -e "Downloading Script: CleanProfiles.sh"
         echo -e "\n--------------------------------\n"
-        curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfiles.sh
+        curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CleanProfiles.sh
         source ./CleanProfiles.sh
     }
 
