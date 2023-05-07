@@ -13,27 +13,33 @@ generated_comment="# -----------------------------------------------------------
 # directory and then run the build script to regenerate this output file.\n\
 # -----------------------------------------------------------------------------"
 
-# Function to inline the specified file
 inline_file() {
   local input_file=$1
   local output_file=$2
+  local depth=$3
+  local max_depth=10
+
+  if [[ $depth -gt $max_depth ]]; then
+    echo "Max inline depth reached. Skipping the line: $line"
+    return
+  fi
 
   # Copy the shebang (first line) from the input file to the output file
-  head -n 1 "$input_file" > "$output_file"
-
-  # Append the generated comment to the output file
-  echo -e "$generated_comment" >> "$output_file"
+  if [[ $depth -eq 1 ]]; then
+    head -n 1 "$input_file" > "$output_file"
+    echo -e "$generated_comment" >> "$output_file"
+  fi
 
   # Process the rest of the input file and inline the specified files
-  tail -n +2 "$input_file" | while IFS= read -r line
+  while IFS= read -r line || [[ -n $line ]]
   do
     if [[ $line == "#!inline "* ]]; then
       COMMON_FILE=${line#*#!inline }
-      cat "$SRC_DIR/$COMMON_FILE" >> "$output_file"
+      inline_file "$SRC_DIR/$COMMON_FILE" "$output_file" $((depth+1))
     else
       echo "$line" >> "$output_file"
     fi
-  done
+  done < <(if [[ $depth -eq 1 ]]; then tail -n +2 "$input_file"; else cat "$input_file"; fi)
 }
 
 # Process each script
@@ -54,8 +60,8 @@ for script in "${SCRIPTS[@]}"; do
     rm "$output_file"
   fi
 
-  # Inline the specified file into the script
-  inline_file "$input_file" "$output_file"
+  # Inline the specified file into the script with the depth of 1
+  inline_file "$input_file" "$output_file" 1
   chmod +x "$output_file"
   echo "Done. Created $output_file."
 done

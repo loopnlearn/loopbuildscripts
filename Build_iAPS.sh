@@ -58,12 +58,6 @@ NC='\033[0m'
 #   Default value is 0, which means no errors with clone
 : ${CLONE_STATUS:="0"}
 
-# CLONE_OBTAINED is used as a flag
-#   if the script goes through the process to download a clone
-#   this is set to 1, and the exit_message is updated to
-#   inform the user how to cd to LOOP_DIR / LoopWorkspace
-CLONE_OBTAINED=0
-
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
@@ -71,7 +65,6 @@ DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 # OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
-# Considering removing this code since we use env variables instead.
 function usage() {
     echo -e "Allowed arguments:"
     echo -e "  -h or --help : print this help message"
@@ -101,7 +94,7 @@ while [ "$1" != "" ]; do
     shift
 done
 
-sleep 1
+#sleep 1
 
 ############################################################
 # Define the rest of the functions (usage defined above):
@@ -187,16 +180,16 @@ function exit_message() {
     echo -e "   or"
     echo -e " * You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n"
-    if [[ -z ${LOOP_DIR} ]]; then
+    if [[ -z ${LOCAL_DIR} ]]; then
         exit 0
     elif [ $clone_exit_status -eq 0 ]; then
-        echo -e "To configure this terminal to LoopWorkspace folder of new download;"
+        echo -e "To configure this terminal to $REPO_NAME folder of new download;"
         echo -e " copy and paste the following line into the terminal\n"
-        echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
-        echo -e "  If you need to reopen Xcode while in the LoopWorkspace folder"
+        echo -e "cd ${LOCAL_DIR}/$REPO_NAME\n"
+        echo -e "  If you need to reopen Xcode while in the $REPO_NAME folder"
         echo -e "  Type or copy"
         echo -e "xed ."
-        echo -e "  After pasting the cd ... LoopWorkspace command"
+        echo -e "  After pasting the cd ... $REPO_NAME command"
         exit 0
     fi
     exit 0
@@ -243,25 +236,13 @@ function ios16_warning() {
     echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
-# This is no longer used by BuildLoop.sh, kept here until it has been removed from all the build scripts
-function clone_download_error_check() {
-    # indicate that a clone was created
-    CLONE_OBTAINED=1
-    echo -e "--------------------------------\n"
-    echo -e "🛑 Check for successful Download\n"
-    echo -e "   Please scroll up and look for the word ${BOLD}error${NC} in the window above."
-    echo -e "   OR use the Find command for terminal, hold down CMD key and tap F,"
-    echo -e "      then type error (in new row, top of terminal) and hit return"
-    echo -e "      Be sure to click in terminal again if you use CMD-F"
-    echo -e "   If there are no errors listed, code has successfully downloaded, Continue."
-    echo -e "   If you see the word error in the download, Cancel and resolve the problem."
-    choose_or_cancel
-}
-
-# New generic clone function
 function clone_repo() {
     section_separator
-    LOCAL_DIR="${BUILD_DIR}/${REPO_NAME}-${BRANCH}-${DOWNLOAD_DATE}"
+    if [ "$SUPPRESS_BRANCH" == "true" ]; then
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
+    else
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${BRANCH}-${DOWNLOAD_DATE}"
+    fi
     if [ ${FRESH_CLONE} == 1 ]; then
         mkdir "${LOCAL_DIR}"
     else
@@ -269,23 +250,25 @@ function clone_repo() {
     fi
     cd "${LOCAL_DIR}"
     if [ ${FRESH_CLONE} == 1 ]; then
-        echo -e " -- Downloading ${REPO_NAME} ${BRANCH} to your Downloads folder --"
+        if [ "$SUPPRESS_BRANCH" == "true" ]; then
+            echo -e " -- Downloading ${APP_NAME} to your Downloads folder --"
+        else
+            echo -e " -- Downloading ${APP_NAME} ${BRANCH} to your Downloads folder --"
+        fi
         echo -e "      ${LOCAL_DIR}\n"
         echo -e "Issuing this command:"
-        echo -e "    git clone --branch=${BRANCH} ${REPO}"
-        git clone --branch=$BRANCH $REPO
+        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
+        git clone --branch=$BRANCH --recurse-submodules $REPO
         clone_exit_status=$?
     else
         clone_exit_status=${CLONE_STATUS}
     fi
 }
 
-# new function to use for all Build scripts - will take time to convert
 function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
         # Use this flag to modify exit_message
-        CLONE_OBTAINED=1
         echo -e "✅ Successful Download. Proceed to the next step..."
         return_when_ready
     else
@@ -301,6 +284,13 @@ function before_final_return_message() {
     echo -e " *** Optional (New Apple Watch - never built Loop on it)"
     echo -e "              Paired to phone, on your wrist and unlocked"
     echo -e "              Trust computer if asked"
+    ios16_warning
+}
+
+function before_final_return_message_without_watch() {
+    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e " *** Unlock your phone and plug it into your computer"
+    echo -e "     Trust computer if asked"
     ios16_warning
 }
 
@@ -515,7 +505,7 @@ function confirm_delete_old_downloads() {
 
     # List all top-level folders below $BUILD_DIR
     echo "These folders will be deleted in $BUILD_DIR:"
-    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" -exec basename {} \; | while read -r folder; do
+    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" -exec basename {} \; | while read -r folder; do
         echo "  - $folder"
     done
     echo ""
@@ -526,13 +516,13 @@ function confirm_delete_old_downloads() {
     echo "Do you want to delete the listed folders?"
     menu_select "${options[@]}" "${actions[@]}"
 
-    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" -exec rm -rf {} +
+    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" -exec rm -rf {} +
 }
 
 function delete_old_downloads() {
-    if [ $(find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" | wc -l) -gt 0 ]; then
+    if [ $(find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" | wc -l) -gt 0 ]; then
         section_separator
-        echo -e "Would you like to delete prior downloads of $REPO_NAME before proceeding?\n"
+        echo -e "Would you like to delete prior downloads of $APP_NAME before proceeding?\n"
         echo -e "Type 1 and hit enter to delete.\nType 2 and hit enter to continue without deleting"
 
         options=("Delete old downloads" "Do not delete old downloads" "Cancel")
@@ -541,83 +531,85 @@ function delete_old_downloads() {
     fi
 }
 
+function branch_select() {
+    local url=$1
+    local branch=$2
+    local repo_name=$(basename $url .git)
+    local app_name=${3:-$(basename $url .git)}
+    local suppress_branch=${3:+true}
+
+    REPO=$url
+    BRANCH=$branch
+    REPO_NAME=$repo_name
+    APP_NAME=$app_name
+    SUPPRESS_BRANCH=$suppress_branch
+}
+
 ############################################################
 # End of functions used by script
 #    - end of build_functions.sh common code
 ############################################################
 
-initial_greeting
 
 ############################################################
 # The rest of this is specific to  Build_iAPS.sh
 ############################################################
 
-section_separator
-echo -e "\n ${RED}${BOLD}You are running the script to build iAPS${NC}"
-echo -e "Before you continue, please ensure"
-echo -e "  you have Xcode and Xcode command line tools installed\n"
-echo -e "Please select which branch of iAPS to download and build."
-echo -e "Most people should choose main branch"
-echo -e ""
-echo -e "Documentation is found at:"
-echo -e "  https://github.com/Artificial-Pancreas/iAPS#iaps"
-echo -e "       and"
-echo -e "  https://iaps.readthedocs.io/en/latest/"
-echo -e ""
-choose_or_cancel
-options=("iAPS main" "iAPS dev" "Cancel")
-select opt in "${options[@]}"
-do
-    case $opt in
-        "iAPS main")
-            REPO_NAME=iAPS
-            REPO=https://github.com/Artificial-Pancreas/iAPS.git
-            BRANCH=main
-            break
-            ;;
-        "iAPS dev")
-            REPO_NAME=iAPS
-            REPO=https://github.com/Artificial-Pancreas/iAPS.git
-            BRANCH=dev
-            break
-            ;;
-        "Cancel")
-            cancel_entry
-            ;;
-        *)
-            invalid_entry
-            ;;
-    esac
-done
+initial_greeting
 
-LOCAL_DIR="${BUILD_DIR}/${REPO_NAME}-${BRANCH}-${DOWNLOAD_DATE}"
-if [ ${FRESH_CLONE} == 1 ]; then
-    mkdir "${LOCAL_DIR}"
+
+############################################################
+# Welcome & Branch Selection
+############################################################
+
+
+function select_iaps_main() {
+    branch_select https://github.com/Artificial-Pancreas/iAPS.git main
+}
+
+function select_iaps_dev() {
+    branch_select https://github.com/Artificial-Pancreas/iAPS.git dev
+}
+
+if [ -z "$CUSTOM_BRANCH" ]; then
+    section_separator
+    echo -e "\n ${RED}${BOLD}You are running the script to build iAPS${NC}"
+    echo -e "Before you continue, please ensure"
+    echo -e "  you have Xcode and Xcode command line tools installed\n"
+    echo -e "Please select which branch of iAPS to download and build."
+    echo -e "Most people should choose main branch"
+    echo -e ""
+    echo -e "Documentation is found at:"
+    echo -e "  https://github.com/Artificial-Pancreas/iAPS#iaps"
+    echo -e "       and"
+    echo -e "  https://iaps.readthedocs.io/en/latest/"
+    echo -e ""
+
+    options=("iAPS main" "iAPS dev" "Cancel")
+    actions=("select_iaps_main" "select_iaps_dev" "cancel_entry")
+    menu_select "${options[@]}" "${actions[@]}"
 else
-    LOCAL_DIR="${STARTING_DIR}"
+    branch_select https://github.com/Artificial-Pancreas/iAPS.git $CUSTOM_BRANCH
 fi
+
+############################################################
+# Standard Build train
+############################################################
+
+delete_old_downloads
+verify_xcode_path
+clone_repo
+automated_clone_download_error_check
 # special for iAPS:
 OVERRIDE_FULLPATH="${LOCAL_DIR}/iAPS/ConfigOverride.xcconfig"
-
-cd "${LOCAL_DIR}"
-section_separator
-verify_xcode_path
-if [ ${FRESH_CLONE} == 1 ]; then
-    echo -e " -- Downloading ${REPO_NAME} ${BRANCH} to your Downloads folder --"
-    echo -e "      ${LOCAL_DIR}\n"
-    echo -e "Issuing this command:"
-    echo -e "    git clone --branch=${BRANCH} ${REPO}"
-    git clone --branch=$BRANCH $REPO
-    clone_exit_status=$?
-else
-    clone_exit_status=${CLONE_STATUS}
-fi
-
-automated_clone_download_error_check
-
-cd iAPS
 check_config_override_existence_offer_to_configure
 ensure_a_year
+
+
+############################################################
+# Open Xcode
+############################################################
+
 section_separator
 echo -e "The following item will open (when you are ready)"
 echo -e "* Xcode ready to prep your current download for build"
@@ -627,4 +619,6 @@ echo -e ""
 echo -e "Check to make sure FreeAPS X is selected before building"
 echo -e "  top middle of Xcode - next to phone"
 return_when_ready
-xed .
+cd $REPO_NAME
+xed . 
+exit_message

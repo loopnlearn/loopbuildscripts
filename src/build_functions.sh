@@ -41,12 +41,6 @@ NC='\033[0m'
 #   Default value is 0, which means no errors with clone
 : ${CLONE_STATUS:="0"}
 
-# CLONE_OBTAINED is used as a flag
-#   if the script goes through the process to download a clone
-#   this is set to 1, and the exit_message is updated to
-#   inform the user how to cd to LOOP_DIR / LoopWorkspace
-CLONE_OBTAINED=0
-
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
@@ -54,7 +48,6 @@ DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 # OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
-# Considering removing this code since we use env variables instead.
 function usage() {
     echo -e "Allowed arguments:"
     echo -e "  -h or --help : print this help message"
@@ -84,7 +77,7 @@ while [ "$1" != "" ]; do
     shift
 done
 
-sleep 1
+#sleep 1
 
 ############################################################
 # Define the rest of the functions (usage defined above):
@@ -170,16 +163,16 @@ function exit_message() {
     echo -e "   or"
     echo -e " * You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n"
-    if [[ -z ${LOOP_DIR} ]]; then
+    if [[ -z ${LOCAL_DIR} ]]; then
         exit 0
     elif [ $clone_exit_status -eq 0 ]; then
-        echo -e "To configure this terminal to LoopWorkspace folder of new download;"
+        echo -e "To configure this terminal to $REPO_NAME folder of new download;"
         echo -e " copy and paste the following line into the terminal\n"
-        echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
-        echo -e "  If you need to reopen Xcode while in the LoopWorkspace folder"
+        echo -e "cd ${LOCAL_DIR}/$REPO_NAME\n"
+        echo -e "  If you need to reopen Xcode while in the $REPO_NAME folder"
         echo -e "  Type or copy"
         echo -e "xed ."
-        echo -e "  After pasting the cd ... LoopWorkspace command"
+        echo -e "  After pasting the cd ... $REPO_NAME command"
         exit 0
     fi
     exit 0
@@ -226,25 +219,13 @@ function ios16_warning() {
     echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
-# This is no longer used by BuildLoop.sh, kept here until it has been removed from all the build scripts
-function clone_download_error_check() {
-    # indicate that a clone was created
-    CLONE_OBTAINED=1
-    echo -e "--------------------------------\n"
-    echo -e "🛑 Check for successful Download\n"
-    echo -e "   Please scroll up and look for the word ${BOLD}error${NC} in the window above."
-    echo -e "   OR use the Find command for terminal, hold down CMD key and tap F,"
-    echo -e "      then type error (in new row, top of terminal) and hit return"
-    echo -e "      Be sure to click in terminal again if you use CMD-F"
-    echo -e "   If there are no errors listed, code has successfully downloaded, Continue."
-    echo -e "   If you see the word error in the download, Cancel and resolve the problem."
-    choose_or_cancel
-}
-
-# New generic clone function
 function clone_repo() {
     section_separator
-    LOCAL_DIR="${BUILD_DIR}/${REPO_NAME}-${BRANCH}-${DOWNLOAD_DATE}"
+    if [ "$SUPPRESS_BRANCH" == "true" ]; then
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
+    else
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${BRANCH}-${DOWNLOAD_DATE}"
+    fi
     if [ ${FRESH_CLONE} == 1 ]; then
         mkdir "${LOCAL_DIR}"
     else
@@ -252,23 +233,25 @@ function clone_repo() {
     fi
     cd "${LOCAL_DIR}"
     if [ ${FRESH_CLONE} == 1 ]; then
-        echo -e " -- Downloading ${REPO_NAME} ${BRANCH} to your Downloads folder --"
+        if [ "$SUPPRESS_BRANCH" == "true" ]; then
+            echo -e " -- Downloading ${APP_NAME} to your Downloads folder --"
+        else
+            echo -e " -- Downloading ${APP_NAME} ${BRANCH} to your Downloads folder --"
+        fi
         echo -e "      ${LOCAL_DIR}\n"
         echo -e "Issuing this command:"
-        echo -e "    git clone --branch=${BRANCH} ${REPO}"
-        git clone --branch=$BRANCH $REPO
+        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
+        git clone --branch=$BRANCH --recurse-submodules $REPO
         clone_exit_status=$?
     else
         clone_exit_status=${CLONE_STATUS}
     fi
 }
 
-# new function to use for all Build scripts - will take time to convert
 function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
         # Use this flag to modify exit_message
-        CLONE_OBTAINED=1
         echo -e "✅ Successful Download. Proceed to the next step..."
         return_when_ready
     else
@@ -287,136 +270,14 @@ function before_final_return_message() {
     ios16_warning
 }
 
-function report_persistent_config_override() {
-    echo -e "Your Apple Developer ID was found automatically:"
-    grep "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}
-    echo -e "\nIf that is correct your app will be automatically signed\n"
-    options=("ID is OK" "Editing Instructions" "Quit Scipt")
-    select opt in "${options[@]}"
-    do
-        case $opt in
-            "ID is OK")
-                break
-                ;;
-            "Editing Instructions")
-                echo -e "    Edit the ${OVERRIDE_FILE} before hitting return"
-                echo -e "     step 1: open finder, navigate to ${BUILD_DIR#*Users/*/}"
-                echo -e "     step 2: locate and double click on "${OVERRIDE_FILE}""
-                echo -e "             this will open that file in Xcode"
-                echo -e "     step 3: edit in Xcode and save file\n"
-                echo -e "  When ready to proceed, hit return"
-                return_when_ready
-                break
-                ;;
-            "Quit Scipt")
-                cancel_entry
-                ;;
-            *) # Invalid option
-                invalid_entry
-                ;;
-        esac
-    done
+function before_final_return_message_without_watch() {
+    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e " *** Unlock your phone and plug it into your computer"
+    echo -e "     Trust computer if asked"
+    ios16_warning
 }
 
-function how_to_find_your_id() {
-    echo -e "Your Apple Developer ID is the 10-character Team ID"
-    echo -e "  found on the Membership page after logging into your account at:"
-    echo -e "   https://developer.apple.com/account/#!/membership\n"
-    echo -e "It may be necessary to click on the Membership Details icon"
-}
-
-function create_persistent_config_override() {
-    section_separator
-    echo -e "The Apple Developer page will open when you hit return\n"
-    how_to_find_your_id
-    echo -e "That page will be opened for you."
-    echo -e "  Once you get your ID, you will enter it in this terminal window"
-    return_when_ready
-    #
-    open "https://developer.apple.com/account/#!/membership"
-    echo -e "\n *** \nClick in terminal window so you can"
-    read -p "Enter the ID and return: " devID
-    #
-    section_separator
-    if [ ${#devID} -ne 10 ]; then
-        echo -e "Something was wrong with the entry"
-        echo -e "You can manually sign each target in Xcode"
-    else 
-        echo -e "Creating ${OVERRIDE_FULLPATH}"
-        echo -e "   with your Apple Developer ID\n"
-        # For Loop, copy the file and add developer ID
-        # For other apps, create file with developer ID
-        set_development_team $devID
-        report_persistent_config_override
-        echo -e "\nXcode uses the permanent file to automatically sign your targets"
-    fi
-}
-
-set_development_team() {
-    team_id="$1"
-    if [ -f ${OVERRIDE_FILE} ]; then
-        cp -p "${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
-    fi
-    echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
-}
-
-function check_config_override_existence_offer_to_configure() {
-    section_separator
-
-    # Automatic signing functionality:
-    # 1) Use existing Override file
-    # 2) Copy team from latest provisioning profile
-    # 3) Enter team manually with option to skip
-    if [ -f ${OVERRIDE_FULLPATH} ] && grep -q "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}; then
-        # how_to_find_your_id
-        report_persistent_config_override
-    else
-        PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-
-        if [ -d "${PROFILES_DIR}" ]; then
-            latest_file=$(find "${PROFILES_DIR}" -type f -name "*.mobileprovision" -print0 | xargs -0 ls -t | head -n1)
-            if [ -n "$latest_file" ]; then
-                # Decode the .mobileprovision file using the security command
-                decoded_xml=$(security cms -D -i "$latest_file")
-
-                # Extract the Team ID from the XML
-                DEVELOPMENT_TEAM=$(echo "$decoded_xml" | awk -F'[<>]' '/<key>TeamIdentifier<\/key>/ { getline; getline; print $3 }')
-            fi
-        fi
-
-        if [ -n "$DEVELOPMENT_TEAM" ]; then
-            echo -e "Using TeamIdentifier from the latest provisioning profile\n"
-            set_development_team "$DEVELOPMENT_TEAM"
-            report_persistent_config_override
-        else
-            echo -e "Choose 1 to Sign Automatically or "
-            echo -e "       2 to Sign Manually (later in Xcode)"
-            echo -e "\nIf you choose Sign Automatically, script guides you"
-            echo -e "  to create a permanent signing file"
-            echo -e "  containing your Apple Developer ID"
-            choose_or_cancel
-            options=("Sign Automatically" "Sign Manually" "Cancel")
-            select opt in "${options[@]}"
-            do
-                case $opt in
-                    "Sign Automatically")
-                        create_persistent_config_override
-                        break
-                        ;;
-                    "Sign Manually")
-                        break
-                        ;;
-                    "Cancel")
-                        cancel_entry
-                        ;;
-                    *) # Invalid option
-                        invalid_entry
-                        ;;
-                esac
-            done
-        fi
-    fi
-}
+#!inline config_override.sh
 
 function verify_xcode_path() {
     section_separator
@@ -493,35 +354,20 @@ function menu_select() {
     done
 }
 
-function confirm_delete_old_downloads() {
-    section_separator
+#!inline delete_old_downloads.sh
 
-    # List all top-level folders below $BUILD_DIR
-    echo "These folders will be deleted in $BUILD_DIR:"
-    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" -exec basename {} \; | while read -r folder; do
-        echo "  - $folder"
-    done
-    echo ""
+function branch_select() {
+    local url=$1
+    local branch=$2
+    local repo_name=$(basename $url .git)
+    local app_name=${3:-$(basename $url .git)}
+    local suppress_branch=${3:+true}
 
-    # Ask the user for confirmation
-    options=("Continue" "Cancel")
-    actions=("do_continue" "cancel_entry")
-    echo "Do you want to delete the listed folders?"
-    menu_select "${options[@]}" "${actions[@]}"
-
-    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" -exec rm -rf {} +
-}
-
-function delete_old_downloads() {
-    if [ $(find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" | wc -l) -gt 0 ]; then
-        section_separator
-        echo -e "Would you like to delete prior downloads of $REPO_NAME before proceeding?\n"
-        echo -e "Type 1 and hit enter to delete.\nType 2 and hit enter to continue without deleting"
-
-        options=("Delete old downloads" "Do not delete old downloads" "Cancel")
-        actions=("confirm_delete_old_downloads" "do_continue" "cancel_entry")
-        menu_select "${options[@]}" "${actions[@]}"
-    fi
+    REPO=$url
+    BRANCH=$branch
+    REPO_NAME=$repo_name
+    APP_NAME=$app_name
+    SUPPRESS_BRANCH=$suppress_branch
 }
 
 ############################################################

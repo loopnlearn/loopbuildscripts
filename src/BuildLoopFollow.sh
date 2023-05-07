@@ -19,19 +19,15 @@ initial_greeting
 
 
 ############################################################
-# Branch Selection
+# Welcome & Branch Selection
 ############################################################
 
 function choose_main_branch() {
-    REPO_NAME="LoopFollow"
-    REPO="https://github.com/jonfawcett/LoopFollow"
-    BRANCH="Main"
+    branch_select https://github.com/jonfawcett/LoopFollow.git Main
 }
 
 function choose_dev_branch() {
-    REPO_NAME="LoopFollow"
-    REPO="https://github.com/jonfawcett/LoopFollow"
-    BRANCH="dev"
+    branch_select https://github.com/jonfawcett/LoopFollow.git dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
@@ -44,13 +40,12 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/...."
+    
     options=("Main Branch" "Dev Branch" "Cancel")
     actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    REPO_NAME="LoopFollow"
-    REPO="https://github.com/jonfawcett/LoopFollow"
-    BRANCH="$CUSTOM_BRANCH"
+    branch_select https://github.com/jonfawcett/LoopFollow.git $CUSTOM_BRANCH
 fi
 
 
@@ -70,12 +65,12 @@ ensure_a_year
 # Open Xcode
 ############################################################
 
-cd LoopFollow
 section_separator
 echo -e "The following item will open (when you are ready)"
 echo -e "* Xcode ready to prep your current download for build"
-before_final_return_message
+before_final_return_message_without_watch
 echo -e ""
 return_when_ready
-xed .
+cd $REPO_NAME
+xed . 
 exit_message

@@ -9,7 +9,7 @@
 # this code must be repeated in any build script that uses build_functions.sh
 ############################################################
 
-BUILD_DIR=~/Downloads/"BuildLoop"
+BUILD_DIR=~/Downloads/BuildLoop
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
@@ -56,12 +56,6 @@ NC='\033[0m'
 #   Default value is 0, which means no errors with clone
 : ${CLONE_STATUS:="0"}
 
-# CLONE_OBTAINED is used as a flag
-#   if the script goes through the process to download a clone
-#   this is set to 1, and the exit_message is updated to
-#   inform the user how to cd to LOOP_DIR / LoopWorkspace
-CLONE_OBTAINED=0
-
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
@@ -69,7 +63,6 @@ DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 # OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
-# Considering removing this code since we use env variables instead.
 function usage() {
     echo -e "Allowed arguments:"
     echo -e "  -h or --help : print this help message"
@@ -99,7 +92,7 @@ while [ "$1" != "" ]; do
     shift
 done
 
-sleep 1
+#sleep 1
 
 ############################################################
 # Define the rest of the functions (usage defined above):
@@ -185,16 +178,16 @@ function exit_message() {
     echo -e "   or"
     echo -e " * You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n"
-    if [[ -z ${LOOP_DIR} ]]; then
+    if [[ -z ${LOCAL_DIR} ]]; then
         exit 0
     elif [ $clone_exit_status -eq 0 ]; then
-        echo -e "To configure this terminal to LoopWorkspace folder of new download;"
+        echo -e "To configure this terminal to $REPO_NAME folder of new download;"
         echo -e " copy and paste the following line into the terminal\n"
-        echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
-        echo -e "  If you need to reopen Xcode while in the LoopWorkspace folder"
+        echo -e "cd ${LOCAL_DIR}/$REPO_NAME\n"
+        echo -e "  If you need to reopen Xcode while in the $REPO_NAME folder"
         echo -e "  Type or copy"
         echo -e "xed ."
-        echo -e "  After pasting the cd ... LoopWorkspace command"
+        echo -e "  After pasting the cd ... $REPO_NAME command"
         exit 0
     fi
     exit 0
@@ -241,25 +234,13 @@ function ios16_warning() {
     echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
-# This is no longer used by BuildLoop.sh, kept here until it has been removed from all the build scripts
-function clone_download_error_check() {
-    # indicate that a clone was created
-    CLONE_OBTAINED=1
-    echo -e "--------------------------------\n"
-    echo -e "🛑 Check for successful Download\n"
-    echo -e "   Please scroll up and look for the word ${BOLD}error${NC} in the window above."
-    echo -e "   OR use the Find command for terminal, hold down CMD key and tap F,"
-    echo -e "      then type error (in new row, top of terminal) and hit return"
-    echo -e "      Be sure to click in terminal again if you use CMD-F"
-    echo -e "   If there are no errors listed, code has successfully downloaded, Continue."
-    echo -e "   If you see the word error in the download, Cancel and resolve the problem."
-    choose_or_cancel
-}
-
-# New generic clone function
 function clone_repo() {
     section_separator
-    LOCAL_DIR="${BUILD_DIR}/${REPO_NAME}-${BRANCH}-${DOWNLOAD_DATE}"
+    if [ "$SUPPRESS_BRANCH" == "true" ]; then
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
+    else
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${BRANCH}-${DOWNLOAD_DATE}"
+    fi
     if [ ${FRESH_CLONE} == 1 ]; then
         mkdir "${LOCAL_DIR}"
     else
@@ -267,23 +248,25 @@ function clone_repo() {
     fi
     cd "${LOCAL_DIR}"
     if [ ${FRESH_CLONE} == 1 ]; then
-        echo -e " -- Downloading ${REPO_NAME} ${BRANCH} to your Downloads folder --"
+        if [ "$SUPPRESS_BRANCH" == "true" ]; then
+            echo -e " -- Downloading ${APP_NAME} to your Downloads folder --"
+        else
+            echo -e " -- Downloading ${APP_NAME} ${BRANCH} to your Downloads folder --"
+        fi
         echo -e "      ${LOCAL_DIR}\n"
         echo -e "Issuing this command:"
-        echo -e "    git clone --branch=${BRANCH} ${REPO}"
-        git clone --branch=$BRANCH $REPO
+        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
+        git clone --branch=$BRANCH --recurse-submodules $REPO
         clone_exit_status=$?
     else
         clone_exit_status=${CLONE_STATUS}
     fi
 }
 
-# new function to use for all Build scripts - will take time to convert
 function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
         # Use this flag to modify exit_message
-        CLONE_OBTAINED=1
         echo -e "✅ Successful Download. Proceed to the next step..."
         return_when_ready
     else
@@ -299,6 +282,13 @@ function before_final_return_message() {
     echo -e " *** Optional (New Apple Watch - never built Loop on it)"
     echo -e "              Paired to phone, on your wrist and unlocked"
     echo -e "              Trust computer if asked"
+    ios16_warning
+}
+
+function before_final_return_message_without_watch() {
+    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e " *** Unlock your phone and plug it into your computer"
+    echo -e "     Trust computer if asked"
     ios16_warning
 }
 
@@ -513,7 +503,7 @@ function confirm_delete_old_downloads() {
 
     # List all top-level folders below $BUILD_DIR
     echo "These folders will be deleted in $BUILD_DIR:"
-    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" -exec basename {} \; | while read -r folder; do
+    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" -exec basename {} \; | while read -r folder; do
         echo "  - $folder"
     done
     echo ""
@@ -524,13 +514,13 @@ function confirm_delete_old_downloads() {
     echo "Do you want to delete the listed folders?"
     menu_select "${options[@]}" "${actions[@]}"
 
-    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" -exec rm -rf {} +
+    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" -exec rm -rf {} +
 }
 
 function delete_old_downloads() {
-    if [ $(find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${REPO_NAME}-*" | wc -l) -gt 0 ]; then
+    if [ $(find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" | wc -l) -gt 0 ]; then
         section_separator
-        echo -e "Would you like to delete prior downloads of $REPO_NAME before proceeding?\n"
+        echo -e "Would you like to delete prior downloads of $APP_NAME before proceeding?\n"
         echo -e "Type 1 and hit enter to delete.\nType 2 and hit enter to continue without deleting"
 
         options=("Delete old downloads" "Do not delete old downloads" "Cancel")
@@ -539,15 +529,36 @@ function delete_old_downloads() {
     fi
 }
 
+function branch_select() {
+    local url=$1
+    local branch=$2
+    local repo_name=$(basename $url .git)
+    local app_name=${3:-$(basename $url .git)}
+    local suppress_branch=${3:+true}
+
+    REPO=$url
+    BRANCH=$branch
+    REPO_NAME=$repo_name
+    APP_NAME=$app_name
+    SUPPRESS_BRANCH=$suppress_branch
+}
+
 ############################################################
 # End of functions used by script
 #    - end of build_functions.sh common code
 ############################################################
 
+
 ############################################################
 # The rest of this is specific to BuildLoop.sh
 ############################################################
+
 initial_greeting "https://loopdocs.org"
+
+
+############################################################
+# Welcome & What to do selection
+############################################################
 
 section_separator
 echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
@@ -557,102 +568,50 @@ echo -e "  2 Download and build LoopFollow"
 echo -e "  3 Prepare your computer using a Utility Script"
 echo -e "     when updating your computer or an app"
 echo -e "\nRun the script again to choose a different task"
-choose_or_cancel
-options=("Build Loop" "Build LoopFollow" "Utility Scripts" "Cancel")
-select opt in "${options[@]}"
-do
-    case $opt in
-        "Build Loop")
-            WHICH=Loop
-            break
-            ;;
-        "Build LoopFollow")
-            WHICH=LoopFollow
-            break
-            ;;
-        "Utility Scripts")
-            WHICH=UtilityScripts
-            break
-            ;;
-        "Cancel")
-            cancel_entry
-            ;;
-        *)
-            invalid_entry
-            ;;
-    esac
-done
 
-echo -e "\n\n\n\n"
+options=("Build Loop" "Build LoopFollow" "Utility Scripts" "Cancel")
+actions=("WHICH=Loop" "WHICH=LoopFollow" "WHICH=UtilityScripts" "cancel_entry")
+menu_select "${options[@]}" "${actions[@]}"
 
 if [ "$WHICH" = "Loop" ]; then
-    section_separator
-    echo -e "Before you continue, please ensure"
-    echo -e "  you have Xcode and Xcode command line tools installed\n"
-    echo -e "Please select which version of Loop to download and build."
-    echo -e "\n  Loop:"
-    echo -e "      This is always the current released version"
-    echo -e "      More info at https://github.com/LoopKit/Loop/releases"
-    echo -e "\n  Loop with Patches:"
-    echo -e "      adds 2 CGM options, CustomTypeOne LoopPatches, new Logo"
-    echo -e "      More info at https://www.loopandlearn.org/main-lnl-patches"
-    BRANCH_LOOP=main
-    BRANCH_PATCHES=main_lnl_patches
-    LOOPCONFIGOVERRIDE_VALID=1
-    choose_or_cancel
-    options=("Loop" "Loop with Patches" "Cancel")
-    select opt in "${options[@]}"
-    do
-        case $opt in
-            "Loop")
-                FORK_NAME=Loop
-                REPO=https://github.com/LoopKit/LoopWorkspace
-                BRANCH=$BRANCH_LOOP
-                break
-                ;;
-            "Loop with Patches")
-                FORK_NAME=Loop_lnl_patches
-                REPO=https://github.com/loopnlearn/LoopWorkspace
-                BRANCH=$BRANCH_PATCHES
-                break
-                ;;
-            "Cancel")
-                cancel_entry
-                ;;
-            *)
-                invalid_entry
-                ;;
-        esac
-    done
+    if [ -z "$CUSTOM_URL" ] || [ -z "$CUSTOM_BRANCH" ] || [ -z "$CUSTOM_REPO" ]; then
+        function choose_loop() {
+            branch_select https://github.com/LoopKit/LoopWorkspace.git main Loop
+        }
 
-    LOOP_DIR="${BUILD_DIR}/${FORK_NAME}-${DOWNLOAD_DATE}"
-    if [ ${FRESH_CLONE} == 1 ]; then
-        mkdir "${LOOP_DIR}"
+        function choose_loop_with_patches() {
+            branch_select https://github.com/loopnlearn/LoopWorkspace.git main_lnl_patches Loop_lnl_patches
+        }
+        
+        section_separator
+        echo -e "Before you continue, please ensure"
+        echo -e "  you have Xcode and Xcode command line tools installed\n"
+        echo -e "Please select which version of Loop to download and build."
+        echo -e "\n  Loop:"
+        echo -e "      This is always the current released version"
+        echo -e "      More info at https://github.com/LoopKit/Loop/releases"
+        echo -e "\n  Loop with Patches:"
+        echo -e "      adds 2 CGM options, CustomTypeOne LoopPatches, new Logo"
+        echo -e "      More info at https://www.loopandlearn.org/main-lnl-patches"
+
+        options=("Loop" "Loop with Patches" "Cancel")
+        actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
+        menu_select "${options[@]}" "${actions[@]}"
     else
-        LOOP_DIR="${STARTING_DIR}"
+        branch_select $CUSTOM_URL $CUSTOM_BRANCH $CUSTOM_REPO
     fi
-    cd "${LOOP_DIR}"
-    section_separator
+
+    ############################################################
+    # Standard Build train
+    ############################################################
+
+    delete_old_downloads
     verify_xcode_path
-    if [ ${FRESH_CLONE} == 1 ]; then
-        echo -e " -- Downloading ${FORK_NAME} ${BRANCH} to your Downloads folder --"
-        echo -e "      ${LOOP_DIR}\n"
-        echo -e "Issuing this command:"
-        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
-        git clone --branch=$BRANCH --recurse-submodules $REPO
-        clone_exit_status=$?
-    else
-        clone_exit_status=${CLONE_STATUS}
-    fi
-
+    clone_repo
     automated_clone_download_error_check
-
-    cd LoopWorkspace
-    if [ ${LOOPCONFIGOVERRIDE_VALID} == 1 ]; then
-        check_config_override_existence_offer_to_configure
-    fi
-    section_separator
+    check_config_override_existence_offer_to_configure
     ensure_a_year
+
     section_separator
     echo -e "The following item will open (when you are ready)"
     echo -e "* Xcode ready to prep your current download for build"
@@ -661,20 +620,52 @@ if [ "$WHICH" = "Loop" ]; then
     echo -e "LoopWorkspace shows up in 2 places at top of Xcode."
     echo -e "LoopDocs graphics will be updated soon.\n"
     return_when_ready
+    cd $REPO_NAME
     xed .
     exit_message
 
 elif [ "$WHICH" = "LoopFollow" ]
 then
-    # Note that BuildLoopFollow.sh has a warning about Xcode and phone, not needed here
     cd $SCRIPT_DIR
     echo -e "\n\n--------------------------------\n\n"
     echo -e "Downloading Loop Follow Script\n"
     echo -e "\n--------------------------------\n\n"
-    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/jonfawcett/LoopFollow/Main/BuildLoopFollow.sh
+    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFollow.sh
     echo -e "\n\n\n\n"
     source ./BuildLoopFollow.sh
 else
+    function choose_clean_derived() {
+        echo -e "\n--------------------------------\n"
+        echo -e "Downloading Script: CleanDerived.sh"
+        echo -e "\n--------------------------------\n"
+        curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanDerived.sh
+        source ./CleanDerived.sh
+    }
+
+    function choose_xcode_cleanup() {
+        echo -e "\n--------------------------------\n"
+        echo -e "Downloading Script: XcodeClean.sh"
+        echo -e "\n--------------------------------\n"
+        curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/XcodeClean.sh
+        source ./XcodeClean.sh
+    }
+
+    function choose_clean_profiles() {
+        echo -e "\n--------------------------------\n"
+        echo -e "Downloading Script: CleanProfiles.sh"
+        echo -e "\n--------------------------------\n"
+        curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfiles.sh
+        source ./CleanProfiles.sh
+    }
+
+    function choose_customizations() {
+        echo -e "\n--------------------------------\n"
+        echo -e "Downloading Script: CustomizationSelect.sh"
+        echo -e "\n--------------------------------\n"
+        curl -fsSLOJ https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CustomizationSelect.sh
+        source ./CustomizationSelect.sh
+    }
+
     cd $SCRIPT_DIR
     echo -e "\n\n\n\n"
     echo -e "\n--------------------------------\n"
@@ -701,50 +692,9 @@ else
     echo -e "    https://www.loopandlearn.org/custom-code/#custom-list"
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
-    choose_or_cancel
+
     options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Customizations to Loop" "Cancel")
-    select opt in "${options[@]}"
-    do
-        case $opt in
-            "Clean Derived Data")
-                echo -e "\n--------------------------------\n"
-                echo -e "Downloading Script: CleanDerived.sh"
-                echo -e "\n--------------------------------\n"
-                curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanDerived.sh
-                source ./CleanDerived.sh
-                break
-                ;;
-            "Xcode Cleanup (The Big One)")
-                echo -e "\n--------------------------------\n"
-                echo -e "Downloading Script: XcodeClean.sh"
-                echo -e "\n--------------------------------\n"
-                curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/XcodeClean.sh
-                source ./XcodeClean.sh
-                break
-                ;;
-            "Clean Profiles")
-                echo -e "\n--------------------------------\n"
-                echo -e "Downloading Script: CleanProfiles.sh"
-                echo -e "\n--------------------------------\n"
-                curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfiles.sh
-                source ./CleanProfiles.sh
-                break
-                ;;
-            "Apply Customizations to Loop")
-                echo -e "\n--------------------------------\n"
-                echo -e "Downloading Script: CustomizationSelect.sh"
-                echo -e "\n--------------------------------\n"
-                curl -fsSLOJ https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CustomizationSelect.sh
-                source ./CustomizationSelect.sh
-                break
-                ;;            
-            "Cancel")
-                cancel_entry
-                ;;
-            *)
-                invalid_entry
-                ;;
-        esac
-    done
+    actions=("choose_clean_derived" "choose_xcode_cleanup" "choose_clean_profiles" "choose_customizations" "cancel_entry")
+    menu_select "${options[@]}" "${actions[@]}"
 fi
 
