@@ -574,7 +574,7 @@ actions=("WHICH=Loop" "WHICH=LoopFollow" "WHICH=UtilityScripts" "cancel_entry")
 menu_select "${options[@]}" "${actions[@]}"
 
 if [ "$WHICH" = "Loop" ]; then
-    if [ -z "$CUSTOM_URL" ] || [ -z "$CUSTOM_BRANCH" ] || [ -z "$CUSTOM_REPO" ]; then
+    if [ -z "$CUSTOM_URL" ] || [ -z "$CUSTOM_BRANCH" ]; then
         function choose_loop() {
             branch_select https://github.com/LoopKit/LoopWorkspace.git main Loop
         }
@@ -598,7 +598,7 @@ if [ "$WHICH" = "Loop" ]; then
         actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
         menu_select "${options[@]}" "${actions[@]}"
     else
-        branch_select $CUSTOM_URL $CUSTOM_BRANCH $CUSTOM_REPO
+        branch_select $CUSTOM_URL $CUSTOM_BRANCH
     fi
 
     ############################################################
@@ -630,7 +630,7 @@ then
     echo -e "\n\n--------------------------------\n\n"
     echo -e "Downloading Loop Follow Script\n"
     echo -e "\n--------------------------------\n\n"
-    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFollow.sh
+    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh
     echo -e "\n\n\n\n"
     source ./BuildLoopFollow.sh
 else
@@ -638,7 +638,7 @@ else
         echo -e "\n--------------------------------\n"
         echo -e "Downloading Script: CleanDerived.sh"
         echo -e "\n--------------------------------\n"
-        curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanDerived.sh
+        curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CleanDerived.sh
         source ./CleanDerived.sh
     }
 
@@ -646,7 +646,7 @@ else
         echo -e "\n--------------------------------\n"
         echo -e "Downloading Script: XcodeClean.sh"
         echo -e "\n--------------------------------\n"
-        curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/XcodeClean.sh
+        curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/XcodeClean.sh
         source ./XcodeClean.sh
     }
 
@@ -654,7 +654,7 @@ else
         echo -e "\n--------------------------------\n"
         echo -e "Downloading Script: CleanProfiles.sh"
         echo -e "\n--------------------------------\n"
-        curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CleanProfiles.sh
+        curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CleanProfiles.sh
         source ./CleanProfiles.sh
     }
 
