@@ -266,8 +266,8 @@ function before_final_return_message() {
     echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
-    echo -e " *** Optional (New Apple Watch - never built app on it)"
-    echo -e "              Paired to phone, on your wrist and unlocked"
+    echo -e " *** Optional: For Apple Watch - if you never built app on it"
+    echo -e "              Pair watch to phone, unlocked and on your wrist"
     echo -e "              Trust computer if asked"
     ios16_warning
 }
@@ -564,7 +564,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "Most people should choose main branch"
     echo -e ""
     echo -e "Documentation is found at:"
-    echo -e "  https://www.loopandlearn.org/...."
+    echo -e "  https://www.loopandlearn.org/loop-follow/"
     
     options=("Main Branch" "Dev Branch" "Cancel")
     actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
