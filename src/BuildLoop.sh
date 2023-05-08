@@ -151,11 +151,13 @@ else
     echo -e "4 ➡️  Apply Customizations to Loop:\n"
     echo -e "    The customizations are documented here:"
     echo -e "    https://www.loopandlearn.org/custom-code/#custom-list"
+    echo -e "5 ➡️  Delete old downloads :\n"
+    echo -e "    TODO: Describe this feature..."
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
 
-    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Customizations to Loop" "Cancel")
-    actions=("choose_clean_derived" "choose_xcode_cleanup" "choose_clean_profiles" "choose_customizations" "cancel_entry")
+    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Customizations to Loop" "Delete old downloads" "Cancel")
+    actions=("choose_clean_derived" "choose_xcode_cleanup" "choose_clean_profiles" "choose_customizations" "delete_old_downloads" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 fi
 

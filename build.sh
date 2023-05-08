@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define the source and destination directories
-SRC_DIR="."
-DEST_DIR=".."
+SRC_DIR="src"
+DEST_DIR="."
 
 # List of scripts to process
 SCRIPTS=("BuildLoop.sh" "Build_iAPS.sh" "BuildLoopCaregiver.sh" \
