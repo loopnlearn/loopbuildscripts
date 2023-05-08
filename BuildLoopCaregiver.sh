@@ -63,37 +63,6 @@ DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 # OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
-function usage() {
-    echo -e "Allowed arguments:"
-    echo -e "  -h or --help : print this help message"
-    echo -e "  -t or --test : sets FRESH_CLONE=0"
-    echo -e "      To test script, execute while in folder "
-    echo -e "          between BuildLoop and LoopWorkspace"
-}
-
-############################################################
-# Process flags, input options as positional parameters
-############################################################
-while [ "$1" != "" ]; do
-    case $1 in
-        -h | --help ) # usage function for help
-            usage
-            exit
-            ;;
-        -t | --test )  # Do not download clone - useful for testing
-            echo -e "  -t or --test selected, sets FRESH_CLONE=0"
-            FRESH_CLONE=0
-            ;;
-        * )  # argument not recognized
-            echo -e "\n${RED}${BOLD}Input argument not recognized${NC}\n"
-            usage
-            exit 1
-    esac
-    shift
-done
-
-#sleep 1
-
 ############################################################
 # Define the rest of the functions (usage defined above):
 ############################################################
