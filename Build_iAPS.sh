@@ -237,9 +237,9 @@ function before_final_return_message() {
     echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
-    echo -e " *** Optional (New Apple Watch - never built app on it)"
-    echo -e "              Paired to phone, on your wrist and unlocked"
-    echo -e "              Trust computer if asked"
+    echo -e " *** Optional: For Apple Watch - if you never built app on it"
+    echo -e "               Pair watch to phone, unlocked and on your wrist"
+    echo -e "               Trust computer if asked"
     ios16_warning
 }
 
