@@ -238,13 +238,8 @@ function before_final_return_message() {
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     echo -e " *** Optional: For Apple Watch - if you never built app on it"
-<<<<<<< HEAD
-    echo -e "              Pair watch to phone, unlocked and on your wrist"
-    echo -e "              Trust computer if asked"
-=======
     echo -e "               Pair watch to phone, unlocked and on your wrist"
     echo -e "               Trust computer if asked"
->>>>>>> new_buildfunctions
     ios16_warning
 }
 

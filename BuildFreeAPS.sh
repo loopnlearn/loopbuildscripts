@@ -63,37 +63,6 @@ DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 # OVERRIDE_FILE=LoopConfigOverride.xcconfig
 OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 
-function usage() {
-    echo -e "Allowed arguments:"
-    echo -e "  -h or --help : print this help message"
-    echo -e "  -t or --test : sets FRESH_CLONE=0"
-    echo -e "      To test script, execute while in folder "
-    echo -e "          between BuildLoop and LoopWorkspace"
-}
-
-############################################################
-# Process flags, input options as positional parameters
-############################################################
-while [ "$1" != "" ]; do
-    case $1 in
-        -h | --help ) # usage function for help
-            usage
-            exit
-            ;;
-        -t | --test )  # Do not download clone - useful for testing
-            echo -e "  -t or --test selected, sets FRESH_CLONE=0"
-            FRESH_CLONE=0
-            ;;
-        * )  # argument not recognized
-            echo -e "\n${RED}${BOLD}Input argument not recognized${NC}\n"
-            usage
-            exit 1
-    esac
-    shift
-done
-
-#sleep 1
-
 ############################################################
 # Define the rest of the functions (usage defined above):
 ############################################################
@@ -267,8 +236,8 @@ function before_final_return_message() {
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     echo -e " *** Optional: For Apple Watch - if you never built app on it"
-    echo -e "              Pair watch to phone, unlocked and on your wrist"
-    echo -e "              Trust computer if asked"
+    echo -e "               Pair watch to phone, unlocked and on your wrist"
+    echo -e "               Trust computer if asked"
     ios16_warning
 }
 
@@ -485,35 +454,61 @@ function menu_select() {
     done
 }
 
-function confirm_delete_old_downloads() {
+function delete_folders_except_latest() {
+    local pattern="$1"
+    local folders=($(ls -dt ~/Downloads/$pattern))
+    local total_size=0
+
     section_separator
+    if [ ${#folders[@]} -le 1 ]; then
+        echo "No folders to delete for pattern '$pattern'"
+        return
+    fi
 
-    # List all top-level folders below $BUILD_DIR
-    echo "These folders will be deleted in $BUILD_DIR:"
-    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" -exec basename {} \; | while read -r folder; do
-        echo "  - $folder"
+    echo "Preserved folder for pattern '$pattern':"
+    echo "${folders[0]}"
+    echo
+
+    echo "Folders to delete for pattern '$pattern':"
+    for folder in "${folders[@]:1}"; do
+        echo "$folder"
+        total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
     done
-    echo ""
 
-    # Ask the user for confirmation
-    options=("Continue" "Cancel")
-    actions=("do_continue" "cancel_entry")
-    echo "Do you want to delete the listed folders?"
+    total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
+    echo "Total size to be deleted: $total_size_mb MB"
+
+    options=("Delete" "Keep" "Quit")
+    actions=("delete_selected_folders \"$pattern\"" "return" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
+}
 
-    find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" -exec rm -rf {} +
+function delete_selected_folders() {
+    local pattern="$1"
+    local folders=($(ls -dt ~/Downloads/$pattern))
+
+    for folder in "${folders[@]:1}"; do
+        #rm -rf "$folder"
+        echo "now this folder would have been removed with: rm -rf $folder"
+    done
+
+    echo "Folders deleted."
 }
 
 function delete_old_downloads() {
-    if [ $(find $BUILD_DIR -mindepth 1 -maxdepth 1 -type d -name "${APP_NAME}-*" | wc -l) -gt 0 ]; then
-        section_separator
-        echo -e "Would you like to delete prior downloads of $APP_NAME before proceeding?\n"
-        echo -e "Type 1 and hit enter to delete.\nType 2 and hit enter to continue without deleting"
+    patterns=(
+        "BuildLoopFollow/LoopFollow-*"
+        "Build_iAPS/iAPS-*"
+        "BuildLoop/Loop-*"
+        "BuildLoop/LoopCaregiver-*"
+        "BuildLoop/Loop_lnl_patches-*"
+    )
 
-        options=("Delete old downloads" "Do not delete old downloads" "Cancel")
-        actions=("confirm_delete_old_downloads" "do_continue" "cancel_entry")
-        menu_select "${options[@]}" "${actions[@]}"
-    fi
+    for pattern in "${patterns[@]}"; do
+        delete_folders_except_latest "$pattern"
+    done
+    
+    exit_message
 }
 
 function branch_select() {
