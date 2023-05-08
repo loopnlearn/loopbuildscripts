@@ -163,18 +163,6 @@ function exit_message() {
     echo -e "   or"
     echo -e " * You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n"
-    if [[ -z ${LOCAL_DIR} ]]; then
-        exit 0
-    elif [ $clone_exit_status -eq 0 ]; then
-        echo -e "To configure this terminal to $REPO_NAME folder of new download;"
-        echo -e " copy and paste the following line into the terminal\n"
-        echo -e "cd ${LOCAL_DIR}/$REPO_NAME\n"
-        echo -e "  If you need to reopen Xcode while in the $REPO_NAME folder"
-        echo -e "  Type or copy"
-        echo -e "xed ."
-        echo -e "  After pasting the cd ... $REPO_NAME command"
-        exit 0
-    fi
     exit 0
 }
 
