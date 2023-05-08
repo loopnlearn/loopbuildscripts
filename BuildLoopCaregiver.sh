@@ -228,10 +228,9 @@ function ensure_a_year() {
 }
 
 function ios16_warning() {
-    echo -e "\n${RED}${BOLD}  If you have iOS 16 (watchOS 9), you must enable Developer Mode${NC}"
+    echo -e "\n${RED}${BOLD}  If you have iOS 16, you must enable Developer Mode${NC}"
     echo -e "${RED}${BOLD}  Check in Phone Settings->Privacy & Security${NC}"
-    echo -e "  For more information:"
-    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
+    echo -e "    https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
 function clone_repo() {
@@ -279,7 +278,7 @@ function before_final_return_message() {
     echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
-    echo -e " *** Optional (New Apple Watch - never built Loop on it)"
+    echo -e " *** Optional (New Apple Watch - never built app on it)"
     echo -e "              Paired to phone, on your wrist and unlocked"
     echo -e "              Trust computer if asked"
     ios16_warning

@@ -228,10 +228,9 @@ function ensure_a_year() {
 }
 
 function ios16_warning() {
-    echo -e "\n${RED}${BOLD}  If you have iOS 16 (watchOS 9), you must enable Developer Mode${NC}"
+    echo -e "\n${RED}${BOLD}  If you have iOS 16, you must enable Developer Mode${NC}"
     echo -e "${RED}${BOLD}  Check in Phone Settings->Privacy & Security${NC}"
-    echo -e "  For more information:"
-    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
+    echo -e "    https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
 function clone_repo() {
@@ -279,7 +278,7 @@ function before_final_return_message() {
     echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
-    echo -e " *** Optional (New Apple Watch - never built Loop on it)"
+    echo -e " *** Optional (New Apple Watch - never built app on it)"
     echo -e "              Paired to phone, on your wrist and unlocked"
     echo -e "              Trust computer if asked"
     ios16_warning
@@ -565,8 +564,8 @@ echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
 echo -e "This script will help you to:"
 echo -e "  1 Download and build Loop"
 echo -e "  2 Download and build LoopFollow"
-echo -e "  3 Prepare your computer using a Utility Script"
-echo -e "     when updating your computer or an app"
+echo -e "  3 Select a Utility Script to assist when updating your computer"
+echo -e "     or Customizing Loop"
 echo -e "\nRun the script again to choose a different task"
 
 options=("Build Loop" "Build LoopFollow" "Utility Scripts" "Cancel")
