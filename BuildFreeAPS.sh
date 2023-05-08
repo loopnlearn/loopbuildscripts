@@ -236,7 +236,7 @@ function before_final_return_message() {
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     echo -e " *** Optional: For Apple Watch - if you never built app on it"
-    echo -e "               Pair watch to phone, unlocked and on your wrist"
+    echo -e "               Watch paired to phone and unlocked (on your wrist)"
     echo -e "               Trust computer if asked"
     ios16_warning
 }
@@ -456,41 +456,60 @@ function menu_select() {
 
 function delete_folders_except_latest() {
     local pattern="$1"
-    local folders=($(ls -dt ~/Downloads/$pattern))
     local total_size=0
+    local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
 
-    section_separator
-    if [ ${#folders[@]} -le 1 ]; then
-        echo "No folders to delete for pattern '$pattern'"
+    if [ ${#folders[@]} -eq 0 ]; then
         return
     fi
 
-    echo "Preserved folder for pattern '$pattern':"
-    echo "${folders[0]}"
+    section_divider
+
+    if [ ${#folders[@]} -le 1 ]; then
+        echo "No folders to delete for '$pattern'"
+        return
+    fi
+
+    echo "Folder to Keep:"
+    echo "  ${folders[0]/#$HOME/~}"
     echo
 
-    echo "Folders to delete for pattern '$pattern':"
+    echo "Folder(s) that can be deleted:"
     for folder in "${folders[@]:1}"; do
-        echo "$folder"
+        echo "  ${folder/#$HOME/~}"
         total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
     done
+
+    scripts_folder="$(dirname "${folders[0]}")/Scripts"
+    if [ -d "$scripts_folder" ]; then
+        echo "  ${scripts_folder/#$HOME/~}"
+        total_size=$(($total_size + $(du -s "$scripts_folder" | awk '{print $1}')))
+    else
+        scripts_folder=""
+    fi
 
     total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
     echo "Total size to be deleted: $total_size_mb MB"
 
-    options=("Delete" "Keep" "Quit")
-    actions=("delete_selected_folders \"$pattern\"" "return" "cancel_entry")
+    options=("Delete" "Cancel" "Quit")
+    actions=("delete_selected_folders \"$pattern\" \"$scripts_folder\"" "return" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 }
 
 function delete_selected_folders() {
     local pattern="$1"
+    local scripts_folder="$2"
     local folders=($(ls -dt ~/Downloads/$pattern))
 
     for folder in "${folders[@]:1}"; do
-        #rm -rf "$folder"
-        echo "now this folder would have been removed with: rm -rf $folder"
+        # rm -rf "$folder"
+        echo "xxx $folder"
     done
+
+    if [ -n "$scripts_folder" ]; then
+        # rm -rf "$scripts_folder"
+        echo "xxx $scripts_folder"
+    fi
 
     echo "Folders deleted."
 }
@@ -499,15 +518,22 @@ function delete_old_downloads() {
     patterns=(
         "BuildLoopFollow/LoopFollow-*"
         "Build_iAPS/iAPS-*"
+        "NonExistingApp/Loop-*"
         "BuildLoop/Loop-*"
         "BuildLoop/LoopCaregiver-*"
         "BuildLoop/Loop_lnl_patches-*"
     )
 
+    section_separator
+    echo "We will now go through all build folders and for each, "
+    echo "show the latest folder while giving you the option to "
+    echo "remove older folders, including the temporary "Scripts" folder."
+    echo 
+
     for pattern in "${patterns[@]}"; do
         delete_folders_except_latest "$pattern"
     done
-    
+
     exit_message
 }
 
@@ -546,10 +572,6 @@ function choose_main_branch() {
     branch_select https://github.com/loopnlearn/LoopWorkspace.git freeaps FreeAPS_main
 }
 
-function choose_dev_branch() {
-    branch_select https://github.com/loopnlearn/LoopWorkspace.git freeaps_dev FreeAPS_dev
-}
-
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "\n ${RED}${BOLD}You are running the script to build FreeAPS"
@@ -558,8 +580,8 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e " If you have not read this page - please review before continuing"
     echo -e "    https://www.loopandlearn.org/freeapsdoc"
 
-    options=("FreeAPS main" "FreeAPS dev" "Cancel")
-    actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
+    options=("Continue" "Cancel")
+    actions=("choose_main_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select https://github.com/loopnlearn/LoopWorkspace.git $CUSTOM_BRANCH
@@ -585,9 +607,6 @@ echo -e "The following item will open (when you are ready)"
 echo -e "* Xcode ready to prep your current download for build"
 before_final_return_message
 echo -e ""
-echo -e "AFTER you hit return:"
-echo -e " *** Do not forget to ${RED}${BOLD}select Loop(Workspace)${NC}"
-echo -e "     Top middle of Xcode, next to your phone"
 return_when_ready
 cd $REPO_NAME
 xed . 

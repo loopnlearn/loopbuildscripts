@@ -26,10 +26,6 @@ function choose_main_branch() {
     branch_select https://github.com/loopnlearn/LoopWorkspace.git freeaps FreeAPS_main
 }
 
-function choose_dev_branch() {
-    branch_select https://github.com/loopnlearn/LoopWorkspace.git freeaps_dev FreeAPS_dev
-}
-
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "\n ${RED}${BOLD}You are running the script to build FreeAPS"
@@ -38,8 +34,8 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e " If you have not read this page - please review before continuing"
     echo -e "    https://www.loopandlearn.org/freeapsdoc"
 
-    options=("FreeAPS main" "FreeAPS dev" "Cancel")
-    actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
+    options=("Continue" "Cancel")
+    actions=("choose_main_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select https://github.com/loopnlearn/LoopWorkspace.git $CUSTOM_BRANCH
@@ -65,9 +61,6 @@ echo -e "The following item will open (when you are ready)"
 echo -e "* Xcode ready to prep your current download for build"
 before_final_return_message
 echo -e ""
-echo -e "AFTER you hit return:"
-echo -e " *** Do not forget to ${RED}${BOLD}select Loop(Workspace)${NC}"
-echo -e "     Top middle of Xcode, next to your phone"
 return_when_ready
 cd $REPO_NAME
 xed . 
