@@ -27,8 +27,8 @@ echo -e "${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
 echo -e "This script will help you to:"
 echo -e "  1 Download and build Loop"
 echo -e "  2 Download and build LoopFollow"
-echo -e "  3 Prepare your computer using a Utility Script"
-echo -e "     when updating your computer or an app"
+echo -e "  3 Select a Utility Script to assist when updating your computer"
+echo -e "     or Customizing Loop"
 echo -e "\nRun the script again to choose a different task"
 
 options=("Build Loop" "Build LoopFollow" "Utility Scripts" "Cancel")
