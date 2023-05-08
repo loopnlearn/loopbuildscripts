@@ -583,7 +583,6 @@ fi
 # Standard Build train
 ############################################################
 
-delete_old_downloads
 verify_xcode_path
 clone_repo
 automated_clone_download_error_check
