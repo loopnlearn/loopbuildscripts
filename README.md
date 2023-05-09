@@ -92,7 +92,7 @@ To learn more about the inlining process and how it works, please see the commen
 
 ### New script commands
 
-Once you use an export command, that environment variable stays set and will be used by the script. To remove it, you can use the unset command:
+Once you use an export command, that environment variable stays set and will be used by the script. To clear that variable, you can use the unset command (or CMD-N while in any terminal window):
 
 ```
 unset CUSTOM_BRANCH
