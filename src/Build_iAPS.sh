@@ -1,7 +1,8 @@
 #!/bin/bash # script Build_iAPS.sh
 
 ############################################################
-# this code must be repeated in any build script that uses build_functions.sh
+# Required parameters for any build script that uses
+#   inline build_functions
 ############################################################
 
 BUILD_DIR=~/Downloads/"Build_iAPS"
@@ -14,7 +15,7 @@ DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
 
 
 ############################################################
-# The rest of this is specific to  Build_iAPS.sh
+# The rest of this is specific to the particular script
 ############################################################
 
 initial_greeting

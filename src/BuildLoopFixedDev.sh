@@ -13,9 +13,7 @@ DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 
 ############################################################
-# The rest of this is specific to the particular build script
-#   Note that initial_greeting has an optional parameter
-#     Provide documentation URL in quotes
+# The rest of this is specific to the particular script
 ############################################################
 
 initial_greeting

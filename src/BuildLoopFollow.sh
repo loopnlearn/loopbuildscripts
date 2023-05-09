@@ -1,7 +1,8 @@
 #!/bin/bash # script BuildLoopFollow.sh
 
 ############################################################
-# this code must be repeated in any build script that uses build_functions.sh
+# Required parameters for any build script that uses
+#   inline build_functions
 ############################################################
 
 BUILD_DIR=~/Downloads/BuildLoopFollow
@@ -12,7 +13,7 @@ DEV_TEAM_SETTING_NAME="LF_DEVELOPMENT_TEAM"
 
 
 ############################################################
-# The rest of this is specific to  BuildLoopFollow.sh
+# The rest of this is specific to the particular script
 ############################################################
 
 initial_greeting
