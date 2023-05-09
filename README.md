@@ -104,7 +104,7 @@ unset CUSTOM_BRANCH
 unset SCRIPT_BRANCH
 ```
 
-#### ***Build Select
+#### Build Select
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
@@ -114,7 +114,7 @@ export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
 * New option under Utility for deleting old code
 * The delete statements are commented out, for now, and the design is in development
 
-#### ***Loop dev***
+#### Loop dev
 
 You can choose dev or a lightly tested commit for dev.
 
@@ -133,28 +133,28 @@ export SCRIPT_BRANCH="new_buildfunctions" && \
 ```
 
 
-#### ***Loop Follow***
+#### Loop Follow
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh)"
 ```
 
-#### ***Loop Caregiver***
+#### Loop Caregiver
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopCaregiver.sh)"
 ```
 
-#### ***iAPS***
+#### iAPS
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/Build_iAPS.sh)"
 ```
 
-#### ***FreeAPS***
+#### FreeAPS
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
