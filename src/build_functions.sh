@@ -326,6 +326,8 @@ function branch_select() {
     SUPPRESS_BRANCH=$suppress_branch
 }
 
+#!inline verify_version.sh
+
 ############################################################
 # End of functions used by script
 #    - end of build_functions.sh common code
