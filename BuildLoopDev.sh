@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildLoopFixedDev.sh
+#!/bin/bash # script BuildLoopDev.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -667,7 +667,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("choose_dev_branch" "choose_fixed_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/loopnlearn/LoopWorkspace.git $CUSTOM_BRANCH
+    branch_select https://github.com/LoopKit/LoopWorkspace.git $CUSTOM_BRANCH
 fi
 
 ############################################################
