@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildLoopFixedDev.sh
+#!/bin/bash # script BuildLoopDev.sh
 
 ############################################################
 # Required parameters for any build script that uses
