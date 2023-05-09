@@ -6,10 +6,14 @@
 # -----------------------------------------------------------------------------
 
 ############################################################
-# this code must be repeated in any build script that uses build_functions.sh
+# Required parameters for any build script that uses
+#   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/"BuildLoop"
+BUILD_DIR=~/Downloads/BuildLoop
+# OVERRIDE_FILE only needed for fresh download/build
+# DEV_TEAM_SETTING_NAME only needed for fresh download/build
+
 
 ############################################################
 # Common functions used by multiple build scripts
@@ -556,7 +560,7 @@ function branch_select() {
 
 
 ############################################################
-# The rest of this is specific to BuildLoop.sh
+# The rest of this is specific to the particular script
 ############################################################
 
 initial_greeting
