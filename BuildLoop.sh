@@ -389,7 +389,7 @@ function verify_xcode_path() {
     xcode_path=$(xcode-select -p)
 
     # Check if the path contains "Xcode.app"
-    if [[ "$xcode_path" == *Xcode.app* ]]; then
+    if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
         echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
         sleep 2
@@ -633,7 +633,6 @@ function check_versions() {
 ############################################################
 # The rest of this is specific to the particular script
 ############################################################
-check_versions
 
 initial_greeting "https://loopdocs.org"
 
@@ -688,6 +687,7 @@ if [ "$WHICH" = "Loop" ]; then
     ############################################################
 
     verify_xcode_path
+    check_versions
     clone_repo
     automated_clone_download_error_check
     check_config_override_existence_offer_to_configure

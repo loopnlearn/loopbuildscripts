@@ -68,8 +68,8 @@ if [ "$WHICH" = "Loop" ]; then
     # Standard Build train
     ############################################################
 
-    check_versions
     verify_xcode_path
+    check_versions
     clone_repo
     automated_clone_download_error_check
     check_config_override_existence_offer_to_configure

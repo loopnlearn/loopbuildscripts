@@ -390,7 +390,7 @@ function verify_xcode_path() {
     xcode_path=$(xcode-select -p)
 
     # Check if the path contains "Xcode.app"
-    if [[ "$xcode_path" == *Xcode.app* ]]; then
+    if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
         echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
         sleep 2
