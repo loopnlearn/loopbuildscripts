@@ -89,3 +89,55 @@ For example, if you want to modify the BuildLoop.sh script, you would edit the s
 Note that the build system uses special comments to indicate which files should be inlined. Any line in a script that starts with #!inline will be replaced with the contents of the specified file. The build system will inline files up to a maximum depth of 10, to prevent infinite recursion.
 
 To learn more about the inlining process and how it works, please see the comments in the build.sh script.
+
+#### New script commands
+
+The current branch `new_buildfunctions` provides these new options for test:
+
+***Build Select***
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh)"
+```
+
+* New option under Utility for deleting old code
+* The delete statements are commented out, for now, and the design is in development
+
+***Loop dev***
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopDev_.sh)"
+```
+
+Any branch of Loop, for example libre branch:
+
+```
+export SCRIPT_BRANCH="libre" && \
+export SCRIPT_BRANCH="new_buildfunctions" && \
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopDev.sh)"
+```
+
+
+***Loop Follow***
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh)"
+```
+
+***Loop Caregiver***
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopCaregiver.sh)"
+```
+
+***iAPS***
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/Build_iAPS_.sh)"
+```
