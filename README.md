@@ -39,13 +39,13 @@ The other scripts can be run with the following commands
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopCaregiver.sh)"
 ```
 
-#### BuildFreeAPS.sh - this version is based on Loop 2.2.x and is not being updated
+#### BuildFreeAPS.sh - this fork of Loop is based on version 2.2.x. [FreeAPS](https://www.loopandlearn.org/freeapsdoc)] is not being updated, but the build script is provided
 ```
 /bin/bash -c "$(curl -fsSL 
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
 ```
 
-#### BuildLoopFixedDev.sh - not being updated frequently (see details below)
+#### BuildLoopDev.sh - not being updated frequently (see details below)
 ```
 /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFixedDev.sh)"
@@ -106,15 +106,17 @@ export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
 
 ***Loop dev***
 
+You can choose dev or a lightly tested commit for dev.
+
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopDev_.sh)"
 ```
 
-Any branch of Loop, for example libre branch:
+Any branch of Loop, for example libre branch, use the CUSTOM_BRANCH keyword:
 
 ```
-export SCRIPT_BRANCH="libre" && \
+export CUSTOM_BRANCH="libre" && \
 export SCRIPT_BRANCH="new_buildfunctions" && \
 /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopDev.sh)"
@@ -139,5 +141,12 @@ export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/Build_iAPS_.sh)"
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/Build_iAPS.sh)"
+```
+
+***FreeAPS***
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildFreeAPS.sh)"
 ```
