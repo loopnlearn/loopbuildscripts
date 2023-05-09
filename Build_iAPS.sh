@@ -695,9 +695,6 @@ echo -e "The following item will open (when you are ready)"
 echo -e "* Xcode ready to prep your current download for build"
 before_final_return_message
 echo -e ""
-# needed for main but not dev - remove when no longer required
-echo -e "Check to make sure FreeAPS X is selected before building"
-echo -e "  top middle of Xcode - next to phone"
 return_when_ready
 cd $REPO_NAME
 xed . 
