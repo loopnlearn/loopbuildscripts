@@ -11,6 +11,8 @@ unset CLONE_STATUS
 unset SKIP_INITIAL_GREETING
 unset CUSTOM URL
 unset CUSTOM_BRANCH
+unset CUSTOM_MACOS_VER
+unset CUSTOM_XCODE_VER
 
 # To Test Scripts as they exist on github
 # SCRIPT_BRANCH is the branch build_functions.sh will be sourced from
@@ -41,3 +43,14 @@ unset CUSTOM_BRANCH
 #   Uncomment the line
 #   Set thre repo to be cloned
 #export CUSTOM_URL=https://github.com/bjorkert/LoopWorkspace.git
+
+# CUSTOM_XCODE_VER overrides the detected Xcode version
+#   Uncomment the line
+#   Set thre version to be simulated
+#export CUSTOM_XCODE_VER=14.1
+
+# CUSTOM_MACOS_VER overrides the detected macOS version
+#   Uncomment the line
+#   Set thre version to be simulated
+#export CUSTOM_MACOS_VER=12.9
+

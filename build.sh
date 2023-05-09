@@ -7,7 +7,7 @@ DEST_DIR="."
 # List of scripts to process
 SCRIPTS=("BuildLoop.sh" "Build_iAPS.sh" "BuildLoopCaregiver.sh" \
   "BuildLoopFollow.sh" "CustomizationSelect.sh" \
-  "BuildFreeAPS.sh")
+  "BuildFreeAPS.sh" "BuildLoopFixedDev.sh")
 
 generated_comment="# -----------------------------------------------------------------------------\n\
 # This file is GENERATED. DO NOT EDIT directly.\n\
