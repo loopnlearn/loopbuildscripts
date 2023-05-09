@@ -92,6 +92,8 @@ To learn more about the inlining process and how it works, please see the commen
 
 ### New script commands
 
+The current branch `new_buildfunctions` provides updated and new scripts for test. The commands below use `export` to set environment variables used by the script.
+
 Once you use an export command, that environment variable stays set in that terminal and will be used by the script. 
 
 * You can use the unset command to stay in the same terminal
@@ -102,9 +104,7 @@ unset CUSTOM_BRANCH
 unset SCRIPT_BRANCH
 ```
 
-The current branch `new_buildfunctions` provides these new options for test:
-
-***Build Select***
+#### ***Build Select
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
@@ -114,7 +114,7 @@ export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
 * New option under Utility for deleting old code
 * The delete statements are commented out, for now, and the design is in development
 
-***Loop dev***
+#### ***Loop dev***
 
 You can choose dev or a lightly tested commit for dev.
 
@@ -133,28 +133,28 @@ export SCRIPT_BRANCH="new_buildfunctions" && \
 ```
 
 
-***Loop Follow***
+#### ***Loop Follow***
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh)"
 ```
 
-***Loop Caregiver***
+#### ***Loop Caregiver***
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopCaregiver.sh)"
 ```
 
-***iAPS***
+#### ***iAPS***
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/Build_iAPS.sh)"
 ```
 
-***FreeAPS***
+#### ***FreeAPS***
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
