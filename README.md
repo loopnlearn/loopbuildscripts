@@ -90,7 +90,14 @@ Note that the build system uses special comments to indicate which files should 
 
 To learn more about the inlining process and how it works, please see the comments in the build.sh script.
 
-#### New script commands
+### New script commands
+
+Once you use an export command, that environment variable stays set and will be used by the script. To remove it, you can use the unset command:
+
+```
+unset CUSTOM_BRANCH
+unset SCRIPT_BRANCH
+```
 
 The current branch `new_buildfunctions` provides these new options for test:
 
@@ -110,7 +117,7 @@ You can choose dev or a lightly tested commit for dev.
 
 ```
 export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopDev_.sh)"
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopDev.sh)"
 ```
 
 Any branch of Loop, for example libre branch, use the CUSTOM_BRANCH keyword:
