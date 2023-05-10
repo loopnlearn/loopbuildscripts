@@ -14,49 +14,7 @@ BUILD_DIR=~/Downloads/BuildLoopFollow
 OVERRIDE_FILE=LoopFollowConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LF_DEVELOPMENT_TEAM"
 
-############################################################
-# Common functions used by multiple build scripts
-#    - Start of build_functions.sh common code
-############################################################
-
-SCRIPT_DIR="${BUILD_DIR}/Scripts"
-
-if [ ! -d "${BUILD_DIR}" ]; then
-    mkdir "${BUILD_DIR}"
-fi
-if [ ! -d "${SCRIPT_DIR}" ]; then
-    mkdir "${SCRIPT_DIR}"
-fi
-
 STARTING_DIR="${PWD}"
-
-# Set default values only if they haven't been defined as environment variables
-: ${SCRIPT_BRANCH:="main"}
-
-############################################################
-# set up nominal values
-#   these can be later overwritten by flags
-#   for convenience when testing (or for advanced usersS)
-############################################################
-
-# FRESH_CLONE
-#   Default value is 1, which means:
-#     Download fresh clone every time script is run
-: ${FRESH_CLONE:="1"}
-# CLONE_STATUS used to test error messages
-#   Default value is 0, which means no errors with clone
-: ${CLONE_STATUS:="0"}
-
-# Prepare date-time stamp for folder
-DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
-
-# BUILD_DIR=~/Downloads/"BuildLoop"
-# OVERRIDE_FILE=LoopConfigOverride.xcconfig
-OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
-
-############################################################
-# Define the rest of the functions (usage defined above):
-############################################################
 
 ############################################################
 # define some font styles and colors
@@ -68,7 +26,6 @@ PURPLE='\033[0;35m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-
 function section_divider() {
     echo -e "--------------------------------\n"
 }
@@ -77,6 +34,51 @@ function section_separator() {
     clear
     section_divider
 }
+
+function return_when_ready() {
+    echo -e "${RED}${BOLD}Return when ready to continue${NC}"
+    read -p "" dummy
+}
+
+# Variables definition
+variables=(
+    "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+    "FRESH_CLONE: Lets you use an existing clone (saves time)."
+    "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
+    "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
+    "CUSTOM_URL: Overrides the repo url."
+    "CUSTOM_BRANCH: Overrides the branch used for git clone."
+    "CUSTOM_MACOS_VER: Overrides the detected macOS version."
+    "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
+)
+
+# Flag to check if any variable is set
+any_variable_set=false
+
+# Iterate over each variable
+for var in "${variables[@]}"; do
+    # Split the variable name and description
+    IFS=":" read -r name description <<<"$var"
+
+    # Check if the variable is set
+    if [ -n "${!name}" ]; then
+        # If this is the first variable set, print the initial message
+        if ! $any_variable_set; then
+            section_separator
+            echo -e "For your information, you are running this script in customized mode"
+            echo -e "with environment variables set:"
+            any_variable_set=true
+        fi
+
+        # Print the variable name, value, and description
+        echo "  - $name: ${!name}"
+        echo "    $description"
+    fi
+done
+if $any_variable_set; then
+    echo -e "\nTo clear the values, close this terminal and start a new one."
+    return_when_ready
+fi
 
 function initial_greeting() {
     # Skip initial greeting if already displayed or opted out using env variable
@@ -106,20 +108,19 @@ function initial_greeting() {
     echo -e "\n--------------------------------\n${NC}"
 
     options=("Agree" "Cancel")
-    select opt in "${options[@]}"
-    do
+    select opt in "${options[@]}"; do
         case $opt in
-            "Agree")
-                break
-                ;;
-            "Cancel")
-                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-                exit_message
-                ;;
-            *)
-                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-                exit_message
-                ;;
+        "Agree")
+            break
+            ;;
+        "Cancel")
+            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n"
+            exit_message
+            ;;
+        *)
+            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n"
+            exit_message
+            ;;
         esac
     done
 
@@ -152,20 +153,15 @@ function exit_message() {
     exit 0
 }
 
-function return_when_ready() {
-    echo -e "${RED}${BOLD}Return when ready to continue${NC}"
-    read -p "" dummy
-}
-
 function do_continue() {
-  :
+    :
 }
 
 function menu_select() {
     choose_or_cancel
 
     local options=("${@:1:$#/2}")
-    local actions=("${@:$(($#+1))/2+1}")
+    local actions=("${@:$(($# + 1))/2+1}")
 
     while true; do
         select opt in "${options[@]}"; do
@@ -180,6 +176,50 @@ function menu_select() {
         done
     done
 }
+
+############################################################
+# Common functions used by multiple build scripts
+#    - Start of build_functions.sh common code
+############################################################
+
+SCRIPT_DIR="${BUILD_DIR}/Scripts"
+
+if [ ! -d "${BUILD_DIR}" ]; then
+    mkdir "${BUILD_DIR}"
+fi
+if [ ! -d "${SCRIPT_DIR}" ]; then
+    mkdir "${SCRIPT_DIR}"
+fi
+
+# Set default values only if they haven't been defined as environment variables
+: ${SCRIPT_BRANCH:="main"}
+
+############################################################
+# set up nominal values
+#   these can be later overwritten by flags
+#   for convenience when testing (or for advanced usersS)
+############################################################
+
+# FRESH_CLONE
+#   Default value is 1, which means:
+#     Download fresh clone every time script is run
+: ${FRESH_CLONE:="1"}
+# CLONE_STATUS used to test error messages
+#   Default value is 0, which means no errors with clone
+: ${CLONE_STATUS:="0"}
+
+# Prepare date-time stamp for folder
+DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
+
+# BUILD_DIR=~/Downloads/"BuildLoop"
+# OVERRIDE_FILE=LoopConfigOverride.xcconfig
+OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
+
+############################################################
+# Define the rest of the functions (usage defined above):
+############################################################
+
+
 function delete_folders_except_latest() {
     local pattern="$1"
     local total_size=0
@@ -630,6 +670,7 @@ function branch_select() {
     APP_NAME=$app_name
     SUPPRESS_BRANCH=$suppress_branch
 }
+
 
 ############################################################
 # End of functions used by script

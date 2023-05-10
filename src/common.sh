@@ -1,3 +1,5 @@
+STARTING_DIR="${PWD}"
+
 ############################################################
 # define some font styles and colors
 ############################################################
@@ -8,7 +10,6 @@ PURPLE='\033[0;35m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-
 function section_divider() {
     echo -e "--------------------------------\n"
 }
@@ -17,6 +18,51 @@ function section_separator() {
     clear
     section_divider
 }
+
+function return_when_ready() {
+    echo -e "${RED}${BOLD}Return when ready to continue${NC}"
+    read -p "" dummy
+}
+
+# Variables definition
+variables=(
+    "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+    "FRESH_CLONE: Lets you use an existing clone (saves time)."
+    "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
+    "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
+    "CUSTOM_URL: Overrides the repo url."
+    "CUSTOM_BRANCH: Overrides the branch used for git clone."
+    "CUSTOM_MACOS_VER: Overrides the detected macOS version."
+    "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
+)
+
+# Flag to check if any variable is set
+any_variable_set=false
+
+# Iterate over each variable
+for var in "${variables[@]}"; do
+    # Split the variable name and description
+    IFS=":" read -r name description <<<"$var"
+
+    # Check if the variable is set
+    if [ -n "${!name}" ]; then
+        # If this is the first variable set, print the initial message
+        if ! $any_variable_set; then
+            section_separator
+            echo -e "For your information, you are running this script in customized mode"
+            echo -e "with environment variables set:"
+            any_variable_set=true
+        fi
+
+        # Print the variable name, value, and description
+        echo "  - $name: ${!name}"
+        echo "    $description"
+    fi
+done
+if $any_variable_set; then
+    echo -e "\nTo clear the values, close this terminal and start a new one."
+    return_when_ready
+fi
 
 function initial_greeting() {
     # Skip initial greeting if already displayed or opted out using env variable
@@ -46,20 +92,19 @@ function initial_greeting() {
     echo -e "\n--------------------------------\n${NC}"
 
     options=("Agree" "Cancel")
-    select opt in "${options[@]}"
-    do
+    select opt in "${options[@]}"; do
         case $opt in
-            "Agree")
-                break
-                ;;
-            "Cancel")
-                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-                exit_message
-                ;;
-            *)
-                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-                exit_message
-                ;;
+        "Agree")
+            break
+            ;;
+        "Cancel")
+            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n"
+            exit_message
+            ;;
+        *)
+            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n"
+            exit_message
+            ;;
         esac
     done
 
@@ -92,20 +137,15 @@ function exit_message() {
     exit 0
 }
 
-function return_when_ready() {
-    echo -e "${RED}${BOLD}Return when ready to continue${NC}"
-    read -p "" dummy
-}
-
 function do_continue() {
-  :
+    :
 }
 
 function menu_select() {
     choose_or_cancel
 
     local options=("${@:1:$#/2}")
-    local actions=("${@:$(($#+1))/2+1}")
+    local actions=("${@:$(($# + 1))/2+1}")
 
     while true; do
         select opt in "${options[@]}"; do

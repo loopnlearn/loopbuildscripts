@@ -1,3 +1,5 @@
+#!inline common.sh
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
@@ -11,8 +13,6 @@ fi
 if [ ! -d "${SCRIPT_DIR}" ]; then
     mkdir "${SCRIPT_DIR}"
 fi
-
-STARTING_DIR="${PWD}"
 
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
@@ -42,8 +42,178 @@ OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 # Define the rest of the functions (usage defined above):
 ############################################################
 
-#!inline common.sh
-#!inline building.sh
+
+#!inline building_delete_old_downloads.sh
+#!inline building_verify_version.sh
+#!inline building_config_override.sh
+
+function standard_build_train() { 
+    verify_xcode_path
+    check_versions
+    clone_repo
+    automated_clone_download_error_check
+    check_config_override_existence_offer_to_configure
+    ensure_a_year
+}
+
+function ensure_a_year() {
+    section_separator
+
+    echo -e "${RED}${BOLD}Ensure a year by deleting old provisioning profiles${NC}"
+    echo -e "  Unless you have a specific reason, choose option 1\n"
+    options=("Ensure a Year" "Skip" "Quit Scipt")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "Ensure a Year")
+                rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
+                echo -e "✅ Profiles were cleaned"
+                echo -e "   Next app you build with Xcode will last a year"
+                return_when_ready
+                break
+                ;;
+            "Skip")
+                break
+                ;;
+            "Quit Scipt")
+                cancel_entry
+                ;;
+            *) # Invalid option
+                invalid_entry
+                ;;
+        esac
+    done
+}
+
+function ios16_warning() {
+    echo -e "\n${RED}${BOLD}If you have iOS 16, you must enable Developer Mode${NC}"
+    echo -e "${RED}${BOLD}  Phone Settings->Privacy & Security${NC}"
+    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
+}
+
+function clone_repo() {
+    section_separator
+    if [ "$SUPPRESS_BRANCH" == "true" ]; then
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
+    else
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}_${BRANCH}-${DOWNLOAD_DATE}"
+    fi
+    if [ ${FRESH_CLONE} == 1 ]; then
+        mkdir "${LOCAL_DIR}"
+    else
+        LOCAL_DIR="${STARTING_DIR}"
+    fi
+    cd "${LOCAL_DIR}"
+    if [ ${FRESH_CLONE} == 1 ]; then
+        if [ "$SUPPRESS_BRANCH" == "true" ]; then
+            echo -e " -- Downloading ${APP_NAME} to your Downloads folder --"
+        else
+            echo -e " -- Downloading ${APP_NAME} ${BRANCH} to your Downloads folder --"
+        fi
+        echo -e "      ${LOCAL_DIR}\n"
+        echo -e "Issuing this command:"
+        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
+        git clone --branch=$BRANCH --recurse-submodules $REPO
+        clone_exit_status=$?
+    else
+        clone_exit_status=${CLONE_STATUS}
+    fi
+}
+
+function automated_clone_download_error_check() {
+    # Check if the clone was successful
+    if [ $clone_exit_status -eq 0 ]; then
+        # Use this flag to modify exit_message
+        echo -e "✅ Successful Download. Proceed to the next step..."
+        return_when_ready
+    else
+        echo -e "${RED}❌ An error occurred during download. Please investigate the issue.${NC}"
+        exit_message
+    fi
+}
+
+function before_final_return_message() {
+    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e " *** Unlock your phone and plug it into your computer"
+    echo -e "     Trust computer if asked"
+    echo -e " *** Optional: For Apple Watch - if you never built app on it"
+    echo -e "               Watch paired to phone and unlocked (on your wrist)"
+    echo -e "               Trust computer if asked"
+    ios16_warning
+}
+
+function before_final_return_message_without_watch() {
+    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e " *** Unlock your phone and plug it into your computer"
+    echo -e "     Trust computer if asked"
+    ios16_warning
+}
+
+function verify_xcode_path() {
+    section_separator
+
+    echo -e "Verifying xcode-select path...\n"
+
+    # Get the path set by xcode-select
+    xcode_path=$(xcode-select -p)
+
+    # Check if the path contains "Xcode.app"
+    if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
+        echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
+        echo -e "Continuing the script..."
+        sleep 2
+    else
+        echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path."
+        echo -e "     It is set to: $xcode_path${NC}"
+        echo -e "Please choose an option below to proceed:\n"
+        options=("Correct xcode-select path" "Skip" "Quit Script")
+        select opt in "${options[@]}"
+        do
+            case $opt in
+                "Correct xcode-select path")
+                    echo -e "You might be prompted for your password."
+                    echo -e "  Use the password for logging into your Mac."
+                    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+                    # Check if the path was corrected successfully
+                    xcode_path=$(xcode-select -p)
+                    if [[ "$xcode_path" == *Xcode.app* ]]; then
+                        echo -e "✅ xcode-select path has been corrected."
+                        return_when_ready
+                        break
+                    else
+                        echo -e "${RED}❌ Failed to set xcode-select path correctly.${NC}"
+                        exit_message
+                    fi
+                    ;;
+                "Skip")
+                    break
+                    ;;
+                "Quit Script")
+                    cancel_entry
+                    ;;
+                *) # Invalid option
+                    invalid_entry
+                    ;;
+            esac
+        done
+    fi
+}
+
+function branch_select() {
+    local url=$1
+    local branch=$2
+    local repo_name=$(basename $url .git)
+    local app_name=${3:-$(basename $url .git)}
+    local suppress_branch=${3:+true}
+
+    REPO=$url
+    BRANCH=$branch
+    REPO_NAME=$repo_name
+    APP_NAME=$app_name
+    SUPPRESS_BRANCH=$suppress_branch
+}
+
 
 ############################################################
 # End of functions used by script

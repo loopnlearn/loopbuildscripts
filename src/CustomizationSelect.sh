@@ -1,16 +1,8 @@
 #!/bin/bash # script CustomizationSelect.sh
 
-############################################################
-# Required parameters for any build script that uses
-#   inline build_functions
-############################################################
-
 BUILD_DIR=~/Downloads/BuildLoop
-# OVERRIDE_FILE only needed for fresh download/build
-# DEV_TEAM_SETTING_NAME only needed for fresh download/build
 
-
-#!inline build_functions.sh
+#!inline common.sh
 
 
 ############################################################

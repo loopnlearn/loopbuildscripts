@@ -15,7 +15,7 @@ unset CUSTOM_MACOS_VER
 unset CUSTOM_XCODE_VER
 
 # To Test Scripts as they exist on github
-# SCRIPT_BRANCH is the branch build_functions.sh will be sourced from
+# SCRIPT_BRANCH is the branch scripts will be sourced from
 #   Uncomment line and replace main with branch you are testing
 #export SCRIPT_BRANCH="main"
 
