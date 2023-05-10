@@ -21,6 +21,8 @@ inline_file() {
   local depth=$3
   local max_depth=10
 
+  echo $input_file
+
   if [[ $depth -gt $max_depth ]]; then
     echo "Max inline depth reached. Skipping the line: $line"
     return

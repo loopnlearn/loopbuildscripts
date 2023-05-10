@@ -34,16 +34,6 @@ STARTING_DIR="${PWD}"
 : ${SCRIPT_BRANCH:="main"}
 
 ############################################################
-# define some font styles and colors
-############################################################
-
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-PURPLE='\033[0;35m'
-BOLD='\033[1m'
-NC='\033[0m'
-
-############################################################
 # set up nominal values
 #   these can be later overwritten by flags
 #   for convenience when testing (or for advanced usersS)
@@ -68,13 +58,24 @@ OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
 # Define the rest of the functions (usage defined above):
 ############################################################
 
-function section_separator() {
-    clear
-    echo -e "--------------------------------\n"
-}
+############################################################
+# define some font styles and colors
+############################################################
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+PURPLE='\033[0;35m'
+BOLD='\033[1m'
+NC='\033[0m'
+
 
 function section_divider() {
     echo -e "--------------------------------\n"
+}
+
+function section_separator() {
+    clear
+    section_divider
 }
 
 function initial_greeting() {
@@ -156,99 +157,182 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-function ensure_a_year() {
-    section_separator
+function do_continue() {
+  :
+}
 
-    echo -e "${RED}${BOLD}Ensure a year by deleting old provisioning profiles${NC}"
-    echo -e "  Unless you have a specific reason, choose option 1\n"
-    options=("Ensure a Year" "Skip" "Quit Scipt")
-    select opt in "${options[@]}"
-    do
-        case $opt in
-            "Ensure a Year")
-                rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
-                echo -e "✅ Profiles were cleaned"
-                echo -e "   Next app you build with Xcode will last a year"
-                return_when_ready
-                break
-                ;;
-            "Skip")
-                break
-                ;;
-            "Quit Scipt")
-                cancel_entry
-                ;;
-            *) # Invalid option
-                invalid_entry
-                ;;
-        esac
+function menu_select() {
+    choose_or_cancel
+
+    local options=("${@:1:$#/2}")
+    local actions=("${@:$(($#+1))/2+1}")
+
+    while true; do
+        select opt in "${options[@]}"; do
+            for i in $(seq 0 $((${#options[@]} - 1))); do
+                if [ "$opt" = "${options[$i]}" ]; then
+                    eval "${actions[$i]}"
+                    return
+                fi
+            done
+            invalid_entry
+            break
+        done
     done
 }
+function delete_folders_except_latest() {
+    local pattern="$1"
+    local total_size=0
+    local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
 
-function ios16_warning() {
-    echo -e "\n${RED}${BOLD}If you have iOS 16, you must enable Developer Mode${NC}"
-    echo -e "${RED}${BOLD}  Phone Settings->Privacy & Security${NC}"
-    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
+    if [ ${#folders[@]} -eq 0 ]; then
+        return
+    fi
+
+    section_divider
+
+    if [ ${#folders[@]} -le 1 ]; then
+        echo "No folders to delete for '$pattern'"
+        return
+    fi
+
+    echo "Folder to Keep:"
+    echo "  ${folders[0]/#$HOME/~}"
+    echo
+
+    echo "Folder(s) that can be deleted:"
+    for folder in "${folders[@]:1}"; do
+        echo "  ${folder/#$HOME/~}"
+        total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
+    done
+
+    scripts_folder="$(dirname "${folders[0]}")/Scripts"
+    if [ -d "$scripts_folder" ]; then
+        echo "  ${scripts_folder/#$HOME/~}"
+        total_size=$(($total_size + $(du -s "$scripts_folder" | awk '{print $1}')))
+    else
+        scripts_folder=""
+    fi
+
+    total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
+    echo "Total size to be deleted: $total_size_mb MB"
+
+    options=("Delete" "Cancel" "Quit")
+    actions=("delete_selected_folders \"$pattern\" \"$scripts_folder\"" "return" "cancel_entry")
+    menu_select "${options[@]}" "${actions[@]}"
 }
 
-function clone_repo() {
+function delete_selected_folders() {
+    local pattern="$1"
+    local scripts_folder="$2"
+    local folders=($(ls -dt ~/Downloads/$pattern))
+
+    for folder in "${folders[@]:1}"; do
+        # rm -rf "$folder"
+        echo "xxx $folder"
+    done
+
+    if [ -n "$scripts_folder" ]; then
+        # rm -rf "$scripts_folder"
+        echo "xxx $scripts_folder"
+    fi
+
+    echo "Folders deleted."
+}
+
+function delete_old_downloads() {
+    patterns=(
+        "BuildLoopFollow/LoopFollow-*"
+        "Build_iAPS/iAPS-*"
+        "NonExistingApp/Loop-*"
+        "BuildLoop/Loop-*"
+        "BuildLoop/LoopCaregiver-*"
+        "BuildLoop/Loop_lnl_patches-*"
+    )
+
     section_separator
-    if [ "$SUPPRESS_BRANCH" == "true" ]; then
-        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
-    else
-        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}_${BRANCH}-${DOWNLOAD_DATE}"
-    fi
-    if [ ${FRESH_CLONE} == 1 ]; then
-        mkdir "${LOCAL_DIR}"
-    else
-        LOCAL_DIR="${STARTING_DIR}"
-    fi
-    cd "${LOCAL_DIR}"
-    if [ ${FRESH_CLONE} == 1 ]; then
-        if [ "$SUPPRESS_BRANCH" == "true" ]; then
-            echo -e " -- Downloading ${APP_NAME} to your Downloads folder --"
-        else
-            echo -e " -- Downloading ${APP_NAME} ${BRANCH} to your Downloads folder --"
-        fi
-        echo -e "      ${LOCAL_DIR}\n"
-        echo -e "Issuing this command:"
-        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
-        git clone --branch=$BRANCH --recurse-submodules $REPO
-        clone_exit_status=$?
-    else
-        clone_exit_status=${CLONE_STATUS}
-    fi
+    echo "We will now go through all build folders and for each, "
+    echo "show the latest folder while giving you the option to "
+    echo "remove older folders, including the temporary "Scripts" folder."
+    echo 
+
+    for pattern in "${patterns[@]}"; do
+        delete_folders_except_latest "$pattern"
+    done
+
+    exit_message
+}
+#This should be the latest iOS version
+#This is the version we expect users to have on their iPhones
+LATEST_IOS_VER="16.4"
+
+#This should be the lowest xcode version required to build to LATEST_IOS_VER
+LOWEST_XCODE_VER="14.3"
+
+#This should be the latest known xcode version
+#LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
+LATEST_XCODE_VER="14.3"
+
+#This is the lowest version of macOS required to run LATEST_XCODE_VER
+LOWEST_MACOS_VER="13.0"
+
+# The compare_versions function takes two version strings as input arguments,
+# sorts them in ascending order using the sort command with the -V flag (version sorting),
+# and returns the first version (i.e., the lowest one) using head -n1.
+#
+# Example:
+# compare_versions "1.2.3" "1.1.0" will return "1.1.0"
+function compare_versions() {
+    printf '%s\n%s\n' "$1" "$2" | sort -V | head -n1
 }
 
-function automated_clone_download_error_check() {
-    # Check if the clone was successful
-    if [ $clone_exit_status -eq 0 ]; then
-        # Use this flag to modify exit_message
-        echo -e "✅ Successful Download. Proceed to the next step..."
-        return_when_ready
-    else
-        echo -e "${RED}❌ An error occurred during download. Please investigate the issue.${NC}"
+function check_versions() {
+    section_separator
+    echo "Verifying Xcode and macOS versions..."
+
+    if ! command -v xcodebuild >/dev/null; then
+        echo "Xcode not found. Please install Xcode and try again."
         exit_message
     fi
-}
 
-function before_final_return_message() {
-    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
-    echo -e " *** Unlock your phone and plug it into your computer"
-    echo -e "     Trust computer if asked"
-    echo -e " *** Optional: For Apple Watch - if you never built app on it"
-    echo -e "               Watch paired to phone and unlocked (on your wrist)"
-    echo -e "               Trust computer if asked"
-    ios16_warning
-}
+    if [ -n "$CUSTOM_XCODE_VER" ]; then
+        XCODE_VER="$CUSTOM_XCODE_VER"
+    else
+        XCODE_VER=$(xcodebuild -version | awk '/Xcode/{print $NF}')
+    fi
 
-function before_final_return_message_without_watch() {
-    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
-    echo -e " *** Unlock your phone and plug it into your computer"
-    echo -e "     Trust computer if asked"
-    ios16_warning
-}
+    if [ -n "$CUSTOM_MACOS_VER" ]; then
+        MACOS_VER="$CUSTOM_MACOS_VER"
+    else
+        MACOS_VER=$(sw_vers -productVersion)
+    fi
 
+    echo "Xcode found: Version $XCODE_VER"
+
+    # Check if Xcode version is greater than the latest known version
+    if [ "$(compare_versions "$XCODE_VER" "$LATEST_XCODE_VER")" = "$LATEST_XCODE_VER" ] && [ "$XCODE_VER" != "$LATEST_XCODE_VER" ]; then
+        echo "You have a newer Xcode version ($XCODE_VER) than the latest known by this script ($LATEST_XCODE_VER)."
+        echo "Please verify your versions using https://www.loopandlearn.org/version-updates/ and https://developer.apple.com/support/xcode/"
+
+        options=("Continue" "Exit")
+        actions=("return" "exit_message")
+        menu_select "${options[@]}" "${actions[@]}"
+    # Check if Xcode version is less than the lowest required version
+    elif [ "$(compare_versions "$XCODE_VER" "$LOWEST_XCODE_VER")" = "$XCODE_VER" ] && [ "$XCODE_VER" != "$LOWEST_XCODE_VER" ]; then
+        if [ "$(compare_versions "$MACOS_VER" "$LOWEST_MACOS_VER")" != "$LOWEST_MACOS_VER" ]; then
+            echo "Your macOS version ($MACOS_VER) is lower than $LOWEST_MACOS_VER. Please update macOS to version $LOWEST_MACOS_VER or later."
+            echo "If you can't update, follow the GitHub build option here: https://loopkit.github.io/loopdocs/gh-actions/gh-overview/"
+        fi
+
+        echo "You need to upgrade Xcode to version $LOWEST_XCODE_VER or later to build for iOS $LATEST_IOS_VER."
+
+        options=("Continue with lower iOS version" "Exit")
+        actions=("return" "exit_message")
+        menu_select "${options[@]}" "${actions[@]}"
+    else 
+        echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
+    fi
+}
 function report_persistent_config_override() {
     echo -e "Your Apple Developer ID was found automatically:"
     grep "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}
@@ -380,6 +464,108 @@ function check_config_override_existence_offer_to_configure() {
     fi
 }
 
+function standard_build_train() { 
+    verify_xcode_path
+    check_versions
+    clone_repo
+    automated_clone_download_error_check
+    check_config_override_existence_offer_to_configure
+    ensure_a_year
+}
+
+function ensure_a_year() {
+    section_separator
+
+    echo -e "${RED}${BOLD}Ensure a year by deleting old provisioning profiles${NC}"
+    echo -e "  Unless you have a specific reason, choose option 1\n"
+    options=("Ensure a Year" "Skip" "Quit Scipt")
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "Ensure a Year")
+                rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
+                echo -e "✅ Profiles were cleaned"
+                echo -e "   Next app you build with Xcode will last a year"
+                return_when_ready
+                break
+                ;;
+            "Skip")
+                break
+                ;;
+            "Quit Scipt")
+                cancel_entry
+                ;;
+            *) # Invalid option
+                invalid_entry
+                ;;
+        esac
+    done
+}
+
+function ios16_warning() {
+    echo -e "\n${RED}${BOLD}If you have iOS 16, you must enable Developer Mode${NC}"
+    echo -e "${RED}${BOLD}  Phone Settings->Privacy & Security${NC}"
+    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
+}
+
+function clone_repo() {
+    section_separator
+    if [ "$SUPPRESS_BRANCH" == "true" ]; then
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
+    else
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}_${BRANCH}-${DOWNLOAD_DATE}"
+    fi
+    if [ ${FRESH_CLONE} == 1 ]; then
+        mkdir "${LOCAL_DIR}"
+    else
+        LOCAL_DIR="${STARTING_DIR}"
+    fi
+    cd "${LOCAL_DIR}"
+    if [ ${FRESH_CLONE} == 1 ]; then
+        if [ "$SUPPRESS_BRANCH" == "true" ]; then
+            echo -e " -- Downloading ${APP_NAME} to your Downloads folder --"
+        else
+            echo -e " -- Downloading ${APP_NAME} ${BRANCH} to your Downloads folder --"
+        fi
+        echo -e "      ${LOCAL_DIR}\n"
+        echo -e "Issuing this command:"
+        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
+        git clone --branch=$BRANCH --recurse-submodules $REPO
+        clone_exit_status=$?
+    else
+        clone_exit_status=${CLONE_STATUS}
+    fi
+}
+
+function automated_clone_download_error_check() {
+    # Check if the clone was successful
+    if [ $clone_exit_status -eq 0 ]; then
+        # Use this flag to modify exit_message
+        echo -e "✅ Successful Download. Proceed to the next step..."
+        return_when_ready
+    else
+        echo -e "${RED}❌ An error occurred during download. Please investigate the issue.${NC}"
+        exit_message
+    fi
+}
+
+function before_final_return_message() {
+    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e " *** Unlock your phone and plug it into your computer"
+    echo -e "     Trust computer if asked"
+    echo -e " *** Optional: For Apple Watch - if you never built app on it"
+    echo -e "               Watch paired to phone and unlocked (on your wrist)"
+    echo -e "               Trust computer if asked"
+    ios16_warning
+}
+
+function before_final_return_message_without_watch() {
+    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e " *** Unlock your phone and plug it into your computer"
+    echo -e "     Trust computer if asked"
+    ios16_warning
+}
+
 function verify_xcode_path() {
     section_separator
 
@@ -431,113 +617,6 @@ function verify_xcode_path() {
     fi
 }
 
-function do_continue() {
-  :
-}
-
-function menu_select() {
-    choose_or_cancel
-
-    local options=("${@:1:$#/2}")
-    local actions=("${@:$(($#+1))/2+1}")
-
-    while true; do
-        select opt in "${options[@]}"; do
-            for i in $(seq 0 $((${#options[@]} - 1))); do
-                if [ "$opt" = "${options[$i]}" ]; then
-                    eval "${actions[$i]}"
-                    return
-                fi
-            done
-            invalid_entry
-            break
-        done
-    done
-}
-
-function delete_folders_except_latest() {
-    local pattern="$1"
-    local total_size=0
-    local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
-
-    if [ ${#folders[@]} -eq 0 ]; then
-        return
-    fi
-
-    section_divider
-
-    if [ ${#folders[@]} -le 1 ]; then
-        echo "No folders to delete for '$pattern'"
-        return
-    fi
-
-    echo "Folder to Keep:"
-    echo "  ${folders[0]/#$HOME/~}"
-    echo
-
-    echo "Folder(s) that can be deleted:"
-    for folder in "${folders[@]:1}"; do
-        echo "  ${folder/#$HOME/~}"
-        total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
-    done
-
-    scripts_folder="$(dirname "${folders[0]}")/Scripts"
-    if [ -d "$scripts_folder" ]; then
-        echo "  ${scripts_folder/#$HOME/~}"
-        total_size=$(($total_size + $(du -s "$scripts_folder" | awk '{print $1}')))
-    else
-        scripts_folder=""
-    fi
-
-    total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
-    echo "Total size to be deleted: $total_size_mb MB"
-
-    options=("Delete" "Cancel" "Quit")
-    actions=("delete_selected_folders \"$pattern\" \"$scripts_folder\"" "return" "cancel_entry")
-    menu_select "${options[@]}" "${actions[@]}"
-}
-
-function delete_selected_folders() {
-    local pattern="$1"
-    local scripts_folder="$2"
-    local folders=($(ls -dt ~/Downloads/$pattern))
-
-    for folder in "${folders[@]:1}"; do
-        # rm -rf "$folder"
-        echo "xxx $folder"
-    done
-
-    if [ -n "$scripts_folder" ]; then
-        # rm -rf "$scripts_folder"
-        echo "xxx $scripts_folder"
-    fi
-
-    echo "Folders deleted."
-}
-
-function delete_old_downloads() {
-    patterns=(
-        "BuildLoopFollow/LoopFollow-*"
-        "Build_iAPS/iAPS-*"
-        "NonExistingApp/Loop-*"
-        "BuildLoop/Loop-*"
-        "BuildLoop/LoopCaregiver-*"
-        "BuildLoop/Loop_lnl_patches-*"
-    )
-
-    section_separator
-    echo "We will now go through all build folders and for each, "
-    echo "show the latest folder while giving you the option to "
-    echo "remove older folders, including the temporary "Scripts" folder."
-    echo 
-
-    for pattern in "${patterns[@]}"; do
-        delete_folders_except_latest "$pattern"
-    done
-
-    exit_message
-}
-
 function branch_select() {
     local url=$1
     local branch=$2
@@ -550,78 +629,6 @@ function branch_select() {
     REPO_NAME=$repo_name
     APP_NAME=$app_name
     SUPPRESS_BRANCH=$suppress_branch
-}
-
-#This should be the latest iOS version
-#This is the version we expect users to have on their iPhones
-LATEST_IOS_VER="16.4"
-
-#This should be the lowest xcode version required to build to LATEST_IOS_VER
-LOWEST_XCODE_VER="14.3"
-
-#This should be the latest known xcode version
-#LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
-LATEST_XCODE_VER="14.3"
-
-#This is the lowest version of macOS required to run LATEST_XCODE_VER
-LOWEST_MACOS_VER="13.0"
-
-# The compare_versions function takes two version strings as input arguments,
-# sorts them in ascending order using the sort command with the -V flag (version sorting),
-# and returns the first version (i.e., the lowest one) using head -n1.
-#
-# Example:
-# compare_versions "1.2.3" "1.1.0" will return "1.1.0"
-function compare_versions() {
-    printf '%s\n%s\n' "$1" "$2" | sort -V | head -n1
-}
-
-function check_versions() {
-    section_separator
-    echo "Verifying Xcode and macOS versions..."
-
-    if ! command -v xcodebuild >/dev/null; then
-        echo "Xcode not found. Please install Xcode and try again."
-        exit_message
-    fi
-
-    if [ -n "$CUSTOM_XCODE_VER" ]; then
-        XCODE_VER="$CUSTOM_XCODE_VER"
-    else
-        XCODE_VER=$(xcodebuild -version | awk '/Xcode/{print $NF}')
-    fi
-
-    if [ -n "$CUSTOM_MACOS_VER" ]; then
-        MACOS_VER="$CUSTOM_MACOS_VER"
-    else
-        MACOS_VER=$(sw_vers -productVersion)
-    fi
-
-    echo "Xcode found: Version $XCODE_VER"
-
-    # Check if Xcode version is greater than the latest known version
-    if [ "$(compare_versions "$XCODE_VER" "$LATEST_XCODE_VER")" = "$LATEST_XCODE_VER" ] && [ "$XCODE_VER" != "$LATEST_XCODE_VER" ]; then
-        echo "You have a newer Xcode version ($XCODE_VER) than the latest known by this script ($LATEST_XCODE_VER)."
-        echo "Please verify your versions using https://www.loopandlearn.org/version-updates/ and https://developer.apple.com/support/xcode/"
-
-        options=("Continue" "Exit")
-        actions=("return" "exit_message")
-        menu_select "${options[@]}" "${actions[@]}"
-    # Check if Xcode version is less than the lowest required version
-    elif [ "$(compare_versions "$XCODE_VER" "$LOWEST_XCODE_VER")" = "$XCODE_VER" ] && [ "$XCODE_VER" != "$LOWEST_XCODE_VER" ]; then
-        if [ "$(compare_versions "$MACOS_VER" "$LOWEST_MACOS_VER")" != "$LOWEST_MACOS_VER" ]; then
-            echo "Your macOS version ($MACOS_VER) is lower than $LOWEST_MACOS_VER. Please update macOS to version $LOWEST_MACOS_VER or later."
-            echo "If you can't update, follow the GitHub build option here: https://loopkit.github.io/loopdocs/gh-actions/gh-overview/"
-        fi
-
-        echo "You need to upgrade Xcode to version $LOWEST_XCODE_VER or later to build for iOS $LATEST_IOS_VER."
-
-        options=("Continue with lower iOS version" "Exit")
-        actions=("return" "exit_message")
-        menu_select "${options[@]}" "${actions[@]}"
-    else 
-        echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
-    fi
 }
 
 ############################################################
