@@ -21,7 +21,7 @@ unset CUSTOM_XCODE_VER
 
 # FRESH_CLONE (of 0) lets you use an existing LoopWorkspace clone (saves time)
 #   Uncomment the line
-#   The terminal must be one level higher than an existing LoopWorkspace folder
+#   Terminal must be one level higher than an existing LoopWorkspace folder
 #export FRESH_CLONE="0"
 
 # CLONE_STATUS can be set to 0 for success (default) or 1 for error
@@ -41,16 +41,16 @@ unset CUSTOM_XCODE_VER
 
 # CUSTOM_URL overrides the repo url
 #   Uncomment the line
-#   Set thre repo to be cloned
+#   Set the repo to be cloned
 #export CUSTOM_URL=https://github.com/bjorkert/LoopWorkspace.git
 
 # CUSTOM_XCODE_VER overrides the detected Xcode version
 #   Uncomment the line
-#   Set thre version to be simulated
+#   Set the version to be simulated
 #export CUSTOM_XCODE_VER=14.1
 
 # CUSTOM_MACOS_VER overrides the detected macOS version
 #   Uncomment the line
-#   Set thre version to be simulated
+#   Set the version to be simulated
 #export CUSTOM_MACOS_VER=12.9
 
