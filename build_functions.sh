@@ -150,7 +150,7 @@ function exit_message() {
     echo -e "    and return to repeat script from beginning.\n\n"
     if [[ -z ${LOOP_DIR} ]]; then
         exit 0
-    elif [ $clone_exit_status -eq 0 ]; then
+    elif [ -n "$clone_exit_status" ] && [ "$clone_exit_status" -eq 0 ]; then
         echo -e "To configure this terminal to LoopWorkspace folder of new download;"
         echo -e " copy and paste the following line into the terminal\n"
         echo -e "cd ${LOOP_DIR}/LoopWorkspace\n"
