@@ -8,6 +8,7 @@
 BUILD_DIR=~/Downloads/BuildLoopFollow
 OVERRIDE_FILE=LoopFollowConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LF_DEVELOPMENT_TEAM"
+CLONE_SUB_MODULES="0"
 
 #!inline build_functions.sh
 

@@ -220,12 +220,12 @@ DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
 # Some projects does not use a override file in the BUILD_DIR, 
 # instead an override file is modified in the downloaded repo.
-# This beaviour is default set to off, set this to 1 before inlining buildfunction to enable.
+# This beaviour is default set to off, set this to 1 before inlining buildfunctions to enable.
 : ${USE_OVERRIDE_IN_REPO:="0"}
 
-# Some projext does not use sub modules, to avoid confusion CLONE_SUB_MODULES
+# Some projects does not use sub modules, to avoid confusion CLONE_SUB_MODULES
 # can be set to 0, then --recurse-submodules will not be used.
-# Set this value before inlining buildfunction to enable.
+# Set this value before inlining buildfunctions to enable.
 : ${CLONE_SUB_MODULES:="1"}
 
 
