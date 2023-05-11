@@ -47,6 +47,12 @@ DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 # Set this value before inlining buildfunctions to enable.
 : ${CLONE_SUB_MODULES:="1"}
 
+# If a branch name is provided as a command line argument to the script, 
+# it will be assigned to the variable CUSTOM_BRANCH.
+# If no argument is given, the value of the environment variable CUSTOM_BRANCH is used instead. 
+# If CUSTOM_BRANCH is not set as an environment variable and no argument is provided, 
+# CUSTOM_BRANCH will remain unset and the user can instead select a branch in the script
+CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 
 ############################################################
 # Define the rest of the functions (usage defined above):

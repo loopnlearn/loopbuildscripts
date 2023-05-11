@@ -37,7 +37,7 @@ actions=("WHICH=Loop" "WHICH=LoopFollow" "WHICH=UtilityScripts" "cancel_entry")
 menu_select "${options[@]}" "${actions[@]}"
 
 if [ "$WHICH" = "Loop" ]; then
-    if [ -z "$CUSTOM_URL" ] || [ -z "$CUSTOM_BRANCH" ]; then
+    if [ -z "$CUSTOM_BRANCH" ]; then
         function choose_loop() {
             branch_select https://github.com/LoopKit/LoopWorkspace.git main Loop
         }
@@ -61,7 +61,7 @@ if [ "$WHICH" = "Loop" ]; then
         actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
         menu_select "${options[@]}" "${actions[@]}"
     else
-        branch_select $CUSTOM_URL $CUSTOM_BRANCH
+        branch_select ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"} $CUSTOM_BRANCH
     fi
 
     ############################################################

@@ -31,44 +31,47 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-# Variables definition
-variables=(
-    "SCRIPT_BRANCH: The branch other scripts will be sourced from."
-    "FRESH_CLONE: Lets you use an existing clone (saves time)."
-    "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
-    "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
-    "CUSTOM_URL: Overrides the repo url."
-    "CUSTOM_BRANCH: Overrides the branch used for git clone."
-    "CUSTOM_MACOS_VER: Overrides the detected macOS version."
-    "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
-)
+# Inform the user about env variables set, but only once
+if [ -z ${any_variable_set+x} ]; then
+    # Variables definition
+    variables=(
+        "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+        "FRESH_CLONE: Lets you use an existing clone (saves time)."
+        "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
+        "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
+        "CUSTOM_URL: Overrides the repo url."
+        "CUSTOM_BRANCH: Overrides the branch used for git clone."
+        "CUSTOM_MACOS_VER: Overrides the detected macOS version."
+        "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
+    )
 
-# Flag to check if any variable is set
-any_variable_set=false
+    # Flag to check if any variable is set
+    any_variable_set=false
 
-# Iterate over each variable
-for var in "${variables[@]}"; do
-    # Split the variable name and description
-    IFS=":" read -r name description <<<"$var"
+    # Iterate over each variable
+    for var in "${variables[@]}"; do
+        # Split the variable name and description
+        IFS=":" read -r name description <<<"$var"
 
-    # Check if the variable is set
-    if [ -n "${!name}" ]; then
-        # If this is the first variable set, print the initial message
-        if ! $any_variable_set; then
-            section_separator
-            echo -e "For your information, you are running this script in customized mode"
-            echo -e "with environment variables set:"
-            any_variable_set=true
+        # Check if the variable is set
+        if [ -n "${!name}" ]; then
+            # If this is the first variable set, print the initial message
+            if ! $any_variable_set; then
+                section_separator
+                echo -e "For your information, you are running this script in customized mode"
+                echo -e "with environment variables set:"
+                any_variable_set=true
+            fi
+
+            # Print the variable name, value, and description
+            echo "  - $name: ${!name}"
+            echo "    $description"
         fi
-
-        # Print the variable name, value, and description
-        echo "  - $name: ${!name}"
-        echo "    $description"
+    done
+    if $any_variable_set; then
+        echo -e "\nTo clear the values, close this terminal and start a new one."
+        return_when_ready
     fi
-done
-if $any_variable_set; then
-    echo -e "\nTo clear the values, close this terminal and start a new one."
-    return_when_ready
 fi
 
 function initial_greeting() {
