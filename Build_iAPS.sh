@@ -388,9 +388,10 @@ function report_persistent_config_override() {
                 ;;
             "Editing Instructions")
                 echo -e "    Edit the automatic signing file before hitting return"
-                echo -e "     step 1: open finder"
-                echo -e "     step 2: locate and double click on "${OVERRIDE_FULLPATH}""
-                echo -e "             this will open that file in Xcode"
+                echo -e "     step 1: open finder, "
+                echo -e "     step 2: locate and double click on"
+                echo -e "  ${OVERRIDE_FULLPATH}"
+                echo -e "             to open that file in Xcode"
                 echo -e "     step 3: edit in Xcode and save file\n"
                 echo -e "  When ready to proceed, hit return"
                 return_when_ready
