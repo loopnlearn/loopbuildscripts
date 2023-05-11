@@ -2,6 +2,34 @@
 
 ############################################################
 # Common functions used by multiple build scripts
+#    - Explanation of variables, Default values
+############################################################
+
+# Variables set by BuildXXX script that calls this inline script
+#
+# Required: BUILD_DIR
+#    it is where the download folder will be created
+#    For example: BUILD_DIR=~/Downloads/BuildLoop
+#
+# Required: OVERRIDE_FILE
+#    name of the automatic signing file
+#    For example: OVERRIDE_FILE=LoopConfigOverride.xcconfig
+
+# Default: some projects create or use the override file in the BUILD_DIR
+# Some, like iAPS, use a file in the downloaded clone itself
+#    in that case, set USE_OVERRIDE_IN_REPO to 1 in the src/Build script
+: ${USE_OVERRIDE_IN_REPO:="0"}
+
+# Default: some projects use submodules (and need --recurse-submodule)
+# Some, like iAPS and LoopFollow, do not use submodules
+#    in that case, set CLONE_SUB_MODULES to 0 in the src/Build script
+: ${CLONE_SUB_MODULES:="1"}
+
+# Set default values only if they haven't been defined as environment variables
+: ${SCRIPT_BRANCH:="main"}
+
+############################################################
+# Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
 ############################################################
 
@@ -14,13 +42,10 @@ if [ ! -d "${SCRIPT_DIR}" ]; then
     mkdir "${SCRIPT_DIR}"
 fi
 
-# Set default values only if they haven't been defined as environment variables
-: ${SCRIPT_BRANCH:="main"}
-
 ############################################################
 # set up nominal values
 #   these can be later overwritten by flags
-#   for convenience when testing (or for advanced usersS)
+#   for convenience when testing (or for advanced users)
 ############################################################
 
 # FRESH_CLONE
@@ -34,30 +59,15 @@ fi
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
-# BUILD_DIR=~/Downloads/"BuildLoop"
-# OVERRIDE_FILE=LoopConfigOverride.xcconfig
-
-# Some projects does not use a override file in the BUILD_DIR, 
-# instead an override file is modified in the downloaded repo.
-# This beaviour is default set to off, set this to 1 before inlining buildfunctions to enable.
-: ${USE_OVERRIDE_IN_REPO:="0"}
-
-# Some projects does not use sub modules, to avoid confusion CLONE_SUB_MODULES
-# can be set to 0, then --recurse-submodules will not be used.
-# Set this value before inlining buildfunctions to enable.
-: ${CLONE_SUB_MODULES:="1"}
-
-# If a branch name is provided as a command line argument to the script, 
-# it will be assigned to the variable CUSTOM_BRANCH.
-# If no argument is given, the value of the environment variable CUSTOM_BRANCH is used instead. 
-# If CUSTOM_BRANCH is not set as an environment variable and no argument is provided, 
-# CUSTOM_BRANCH will remain unset and the user can instead select a branch in the script
+# This enables the selection of a custom branch via enviroment variable
+# It can also be passed in as argument $1
+#   If passed in, it overwrites the environment variable
+#   When CUSTOM_BRANCH is set, the menu which asks which branch is skipped
 CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 
 ############################################################
 # Define the rest of the functions (usage defined above):
 ############################################################
-
 
 #!inline building_delete_old_downloads.sh
 #!inline building_verify_version.sh
@@ -161,6 +171,8 @@ function before_final_return_message() {
     echo -e "               Watch paired to phone and unlocked (on your wrist)"
     echo -e "               Trust computer if asked"
     ios16_warning
+    echo -e ""
+    echo -e "* Xcode will open automatically, please wait"
 }
 
 function before_final_return_message_without_watch() {
@@ -168,6 +180,8 @@ function before_final_return_message_without_watch() {
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     ios16_warning
+    echo -e ""
+    echo -e "* Xcode will open automatically, please wait"
 }
 
 function verify_xcode_path() {
@@ -182,7 +196,6 @@ function verify_xcode_path() {
     if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
         echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
-        sleep 2
     else
         echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path."
         echo -e "     It is set to: $xcode_path${NC}"
