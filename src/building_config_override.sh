@@ -1,3 +1,68 @@
+function check_config_override_existence_offer_to_configure() {
+    section_separator
+
+    # Automatic signing functionality:
+    # 1) Use existing Override file
+    # 2) Copy team from latest provisioning profile
+    # 3) Enter team manually with option to skip
+
+    if [[ $USE_OVERRIDE_IN_REPO -eq 1 ]]; then
+        OVERRIDE_FULLPATH="${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}"
+    else
+        OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
+    fi
+
+    if [ -f ${OVERRIDE_FULLPATH} ] && grep -q "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}; then
+        # how_to_find_your_id
+        report_persistent_config_override
+    else
+        PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+
+        if [ -d "${PROFILES_DIR}" ]; then
+            latest_file=$(find "${PROFILES_DIR}" -type f -name "*.mobileprovision" -print0 | xargs -0 ls -t | head -n1)
+            if [ -n "$latest_file" ]; then
+                # Decode the .mobileprovision file using the security command
+                decoded_xml=$(security cms -D -i "$latest_file")
+
+                # Extract the Team ID from the XML
+                DEVELOPMENT_TEAM=$(echo "$decoded_xml" | awk -F'[<>]' '/<key>TeamIdentifier<\/key>/ { getline; getline; print $3 }')
+            fi
+        fi
+
+        if [ -n "$DEVELOPMENT_TEAM" ]; then
+            echo -e "Using TeamIdentifier from the latest provisioning profile\n"
+            set_development_team "$DEVELOPMENT_TEAM"
+            report_persistent_config_override
+        else
+            echo -e "Choose 1 to Sign Automatically or "
+            echo -e "       2 to Sign Manually (later in Xcode)"
+            echo -e "\nIf you choose Sign Automatically, script guides you"
+            echo -e "  to create a permanent signing file"
+            echo -e "  containing your Apple Developer ID"
+            choose_or_cancel
+            options=("Sign Automatically" "Sign Manually" "Cancel")
+            select opt in "${options[@]}"
+            do
+                case $opt in
+                    "Sign Automatically")
+                        create_persistent_config_override
+                        break
+                        ;;
+                    "Sign Manually")
+                        break
+                        ;;
+                    "Cancel")
+                        cancel_entry
+                        ;;
+                    *) # Invalid option
+                        invalid_entry
+                        ;;
+                esac
+            done
+        fi
+    fi
+}
+
 function report_persistent_config_override() {
     echo -e "Your Apple Developer ID was found automatically:"
     grep "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}
@@ -66,66 +131,9 @@ function create_persistent_config_override() {
 
 set_development_team() {
     team_id="$1"
-    if [ -f ${OVERRIDE_FILE} ]; then
-        cp -p "${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
+    if [[ $USE_OVERRIDE_IN_REPO != "1" ]] && [[ -f "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" ]]; then
+        cp -p "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
     fi
     echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
 }
 
-function check_config_override_existence_offer_to_configure() {
-    section_separator
-
-    # Automatic signing functionality:
-    # 1) Use existing Override file
-    # 2) Copy team from latest provisioning profile
-    # 3) Enter team manually with option to skip
-    if [ -f ${OVERRIDE_FULLPATH} ] && grep -q "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}; then
-        # how_to_find_your_id
-        report_persistent_config_override
-    else
-        PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
-
-        if [ -d "${PROFILES_DIR}" ]; then
-            latest_file=$(find "${PROFILES_DIR}" -type f -name "*.mobileprovision" -print0 | xargs -0 ls -t | head -n1)
-            if [ -n "$latest_file" ]; then
-                # Decode the .mobileprovision file using the security command
-                decoded_xml=$(security cms -D -i "$latest_file")
-
-                # Extract the Team ID from the XML
-                DEVELOPMENT_TEAM=$(echo "$decoded_xml" | awk -F'[<>]' '/<key>TeamIdentifier<\/key>/ { getline; getline; print $3 }')
-            fi
-        fi
-
-        if [ -n "$DEVELOPMENT_TEAM" ]; then
-            echo -e "Using TeamIdentifier from the latest provisioning profile\n"
-            set_development_team "$DEVELOPMENT_TEAM"
-            report_persistent_config_override
-        else
-            echo -e "Choose 1 to Sign Automatically or "
-            echo -e "       2 to Sign Manually (later in Xcode)"
-            echo -e "\nIf you choose Sign Automatically, script guides you"
-            echo -e "  to create a permanent signing file"
-            echo -e "  containing your Apple Developer ID"
-            choose_or_cancel
-            options=("Sign Automatically" "Sign Manually" "Cancel")
-            select opt in "${options[@]}"
-            do
-                case $opt in
-                    "Sign Automatically")
-                        create_persistent_config_override
-                        break
-                        ;;
-                    "Sign Manually")
-                        break
-                        ;;
-                    "Cancel")
-                        cancel_entry
-                        ;;
-                    *) # Invalid option
-                        invalid_entry
-                        ;;
-                esac
-            done
-        fi
-    fi
-}

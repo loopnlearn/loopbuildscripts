@@ -36,7 +36,17 @@ DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
 # BUILD_DIR=~/Downloads/"BuildLoop"
 # OVERRIDE_FILE=LoopConfigOverride.xcconfig
-OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
+
+# Some projects does not use a override file in the BUILD_DIR, 
+# instead an override file is modified in the downloaded repo.
+# This beaviour is default set to off, set this to 1 before inlining buildfunction to enable.
+: ${USE_OVERRIDE_IN_REPO:="0"}
+
+# Some projext does not use sub modules, to avoid confusion CLONE_SUB_MODULES
+# can be set to 0, then --recurse-submodules will not be used.
+# Set this value before inlining buildfunction to enable.
+: ${CLONE_SUB_MODULES:="1"}
+
 
 ############################################################
 # Define the rest of the functions (usage defined above):
@@ -112,8 +122,13 @@ function clone_repo() {
         fi
         echo -e "      ${LOCAL_DIR}\n"
         echo -e "Issuing this command:"
-        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
-        git clone --branch=$BRANCH --recurse-submodules $REPO
+        if [[ $CLONE_SUB_MODULES == "1" ]]; then
+            echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
+            git clone --branch=$BRANCH --recurse-submodules $REPO
+        else
+            echo -e "    git clone --branch=${BRANCH} ${REPO}"
+            git clone --branch=$BRANCH $REPO
+        fi
         clone_exit_status=$?
     else
         clone_exit_status=${CLONE_STATUS}
