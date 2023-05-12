@@ -7,7 +7,8 @@ DEST_DIR="."
 # List of scripts to process
 SCRIPTS=("BuildLoop.sh" "Build_iAPS.sh" "BuildLoopCaregiver.sh" \
   "BuildLoopFollow.sh" "CustomizationSelect.sh" \
-  "BuildFreeAPS.sh" "BuildLoopFixedDev.sh")
+  "BuildFreeAPS.sh" "BuildLoopDev.sh" \
+  "CleanProfiles.sh" "CleanDerived.sh" "CleanCartDerived.sh" "XcodeClean.sh")
 
 generated_comment="# -----------------------------------------------------------------------------\n\
 # This file is GENERATED. DO NOT EDIT directly.\n\
@@ -20,6 +21,8 @@ inline_file() {
   local output_file=$2
   local depth=$3
   local max_depth=10
+
+  echo $input_file
 
   if [[ $depth -gt $max_depth ]]; then
     echo "Max inline depth reached. Skipping the line: $line"

@@ -1,4 +1,4 @@
-#!/bin/bash # script Build_iAPS.sh
+#!/bin/bash # script BuildLoopDev.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,13 +10,9 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/"Build_iAPS"
-# For iAPS, OVERRIDE_FILE is inside newly downloaded iAPS folder
-USE_OVERRIDE_IN_REPO="1"
-OVERRIDE_FILE="ConfigOverride.xcconfig"
-DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
-# iAPS is not using sub modules
-CLONE_SUB_MODULES="0"
+BUILD_DIR=~/Downloads/BuildLoop
+OVERRIDE_FILE=LoopConfigOverride.xcconfig
+DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 STARTING_DIR="${PWD}"
 
@@ -726,41 +722,67 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+# Stable Dev SHA
+FIXED_SHA=00f7b05
+FIXED_TESTED_DATE="2023 May 06"
+FLAG_USE_SHA=0
 
-function select_iaps_main() {
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git main
+function choose_dev_branch() {
+    branch_select https://github.com/LoopKit/LoopWorkspace.git dev Loop_dev
 }
 
-function select_iaps_dev() {
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git dev
+function choose_fixed_dev_branch() {
+    FLAG_USE_SHA=1
+    branch_select https://github.com/LoopKit/LoopWorkspace.git dev Loop_dev_${FIXED_SHA}
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script to build iAPS${NC}"
-    echo -e "Before you continue, please ensure"
-    echo -e "  you have Xcode and Xcode command line tools installed\n"
-    echo -e "Please select which branch of iAPS to download and build."
-    echo -e "Most people should choose main branch"
-    echo -e ""
-    echo -e "Documentation is found at:"
-    echo -e "  https://github.com/Artificial-Pancreas/iAPS#iaps"
-    echo -e "       and"
-    echo -e "  https://iaps.readthedocs.io/en/latest/"
-    echo -e ""
+    echo -e "\n ${RED}${BOLD}You are running the script for the development version for Loop${NC}"
+    echo -e "\n** Be aware that a development version may require frequent rebuilds **${NC}\n"
+    echo -e " If you have not read this section of LoopDocs - please review before continuing"
+    echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#whats-going-on-in-the-dev-branch"
+    echo -e "\n** You can choose the dev branch or a lightly tested earlier commit of dev **"
 
-    options=("iAPS main" "iAPS dev" "Cancel")
-    actions=("select_iaps_main" "select_iaps_dev" "cancel_entry")
+    options=("Choose dev" "Choose dev lightly tested" "Cancel")
+    actions=("choose_dev_branch" "choose_fixed_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git $CUSTOM_BRANCH
+    branch_select https://github.com/LoopKit/LoopWorkspace.git $CUSTOM_BRANCH
 fi
 
 ############################################################
 # Standard Build train
 ############################################################
 
-standard_build_train
+verify_xcode_path
+clone_repo
+automated_clone_download_error_check
+
+# special build train for lightly tested commit
+cd $REPO_NAME
+
+this_dir="$(pwd)"
+echo -e "In ${this_dir}"
+if [ ${FRESH_CLONE} == 0 ] && [ ${FLAG_USE_SHA} == 1 ]; then
+    echo -e "\nExtra steps to prepare downloaded code from older clone"
+    echo -e "Quit out of Xcode and stash any changes in LoopWorkspace"
+    echo -e ""
+    return_when_ready
+    echo -e "  Updating to latest commit"
+    git checkout dev
+    git pull
+fi
+if [ ${FLAG_USE_SHA} == 1 ]; then
+    echo -e "  Checking out commit ${FIXED_SHA}\n"
+    git checkout ${FIXED_SHA} --recurse-submodules --quiet
+    git --no-pager branch
+    echo -e "Continue if no errors reported"
+    return_when_ready
+fi
+
+check_config_override_existence_offer_to_configure
+ensure_a_year
 
 
 ############################################################
@@ -773,6 +795,5 @@ echo -e "* Xcode ready to prep your current download for build"
 before_final_return_message
 echo -e ""
 return_when_ready
-cd $REPO_NAME
 xed . 
 exit_message

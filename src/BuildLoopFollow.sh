@@ -8,6 +8,7 @@
 BUILD_DIR=~/Downloads/BuildLoopFollow
 OVERRIDE_FILE=LoopFollowConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LF_DEVELOPMENT_TEAM"
+CLONE_SUB_MODULES="0"
 
 #!inline build_functions.sh
 
@@ -54,11 +55,7 @@ fi
 # Standard Build train
 ############################################################
 
-verify_xcode_path
-clone_repo
-automated_clone_download_error_check
-check_config_override_existence_offer_to_configure
-ensure_a_year
+standard_build_train
 
 
 ############################################################

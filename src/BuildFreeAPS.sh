@@ -46,12 +46,7 @@ fi
 # Standard Build train
 ############################################################
 
-verify_xcode_path
-clone_repo
-automated_clone_download_error_check
-check_config_override_existence_offer_to_configure
-ensure_a_year
-
+standard_build_train
 
 ############################################################
 # Open Xcode

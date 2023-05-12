@@ -1,3 +1,33 @@
+#!inline common.sh
+
+############################################################
+# Common functions used by multiple build scripts
+#    - Explanation of variables, Default values
+############################################################
+
+# Variables set by BuildXXX script that calls this inline script
+#
+# Required: BUILD_DIR
+#    it is where the download folder will be created
+#    For example: BUILD_DIR=~/Downloads/BuildLoop
+#
+# Required: OVERRIDE_FILE
+#    name of the automatic signing file
+#    For example: OVERRIDE_FILE=LoopConfigOverride.xcconfig
+
+# Default: some projects create or use the override file in the BUILD_DIR
+# Some, like iAPS, use a file in the downloaded clone itself
+#    in that case, set USE_OVERRIDE_IN_REPO to 1 in the src/Build script
+: ${USE_OVERRIDE_IN_REPO:="0"}
+
+# Default: some projects use submodules (and need --recurse-submodule)
+# Some, like iAPS and LoopFollow, do not use submodules
+#    in that case, set CLONE_SUB_MODULES to 0 in the src/Build script
+: ${CLONE_SUB_MODULES:="1"}
+
+# Set default values only if they haven't been defined as environment variables
+: ${SCRIPT_BRANCH:="main"}
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
@@ -12,25 +42,10 @@ if [ ! -d "${SCRIPT_DIR}" ]; then
     mkdir "${SCRIPT_DIR}"
 fi
 
-STARTING_DIR="${PWD}"
-
-# Set default values only if they haven't been defined as environment variables
-: ${SCRIPT_BRANCH:="main"}
-
-############################################################
-# define some font styles and colors
-############################################################
-
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-PURPLE='\033[0;35m'
-BOLD='\033[1m'
-NC='\033[0m'
-
 ############################################################
 # set up nominal values
 #   these can be later overwritten by flags
-#   for convenience when testing (or for advanced usersS)
+#   for convenience when testing (or for advanced users)
 ############################################################
 
 # FRESH_CLONE
@@ -44,100 +59,27 @@ NC='\033[0m'
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
-# BUILD_DIR=~/Downloads/"BuildLoop"
-# OVERRIDE_FILE=LoopConfigOverride.xcconfig
-OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
+# This enables the selection of a custom branch via enviroment variable
+# It can also be passed in as argument $1
+#   If passed in, it overwrites the environment variable
+#   When CUSTOM_BRANCH is set, the menu which asks which branch is skipped
+CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 
 ############################################################
 # Define the rest of the functions (usage defined above):
 ############################################################
 
-function section_separator() {
-    clear
-    echo -e "--------------------------------\n"
-}
+#!inline building_delete_old_downloads.sh
+#!inline building_verify_version.sh
+#!inline building_config_override.sh
 
-function section_divider() {
-    echo -e "--------------------------------\n"
-}
-
-function initial_greeting() {
-    # Skip initial greeting if already displayed or opted out using env variable
-    if [ "${SKIP_INITIAL_GREETING}" = "1" ]; then return; fi
-    SKIP_INITIAL_GREETING=1
-
-    local documentation_link="${1:-}"
-
-    section_separator
-    echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
-    echo -e "${BOLD}This project is:${RED}${BOLD}"
-    echo -e "  Open Source software"
-    echo -e "  Not \"approved\" for therapy\n"
-
-    echo -e "  You take full responsibility for reading and"
-    if [ -n "${documentation_link}" ]; then
-        echo -e "  understanding the documentation found at"
-        echo -e "      ${documentation_link},"
-    else
-        echo -e "  understanding the documentation"
-    fi
-    echo -e "  before building or running this system, and"
-    echo -e "  you do so at your own risk.${NC}\n"
-    echo -e "To increase (decrease) font size"
-    echo -e "  Hold down the CMD key and hit + (-)"
-    echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
-    echo -e "\n--------------------------------\n${NC}"
-
-    options=("Agree" "Cancel")
-    select opt in "${options[@]}"
-    do
-        case $opt in
-            "Agree")
-                break
-                ;;
-            "Cancel")
-                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-                exit_message
-                ;;
-            *)
-                echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n";
-                exit_message
-                ;;
-        esac
-    done
-
-    echo -e "${NC}\n\n\n\n"
-}
-
-function choose_or_cancel() {
-    echo -e "\nType a number from the list below and return to proceed."
-    echo -e "${RED}${BOLD}  To cancel, any entry not in list also works${NC}"
-    echo -e "\n--------------------------------\n"
-}
-
-function cancel_entry() {
-    echo -e "\n${RED}${BOLD}User canceled${NC}\n"
-    exit_message
-}
-
-function invalid_entry() {
-    echo -e "\n${RED}${BOLD}User canceled by entering an invalid option${NC}\n"
-    exit_message
-}
-
-function exit_message() {
-    section_divider
-    echo -e "\nShell Script Completed\n"
-    echo -e " * You may close the terminal window now if you want"
-    echo -e "   or"
-    echo -e " * You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning.\n\n"
-    exit 0
-}
-
-function return_when_ready() {
-    echo -e "${RED}${BOLD}Return when ready to continue${NC}"
-    read -p "" dummy
+function standard_build_train() { 
+    verify_xcode_path
+    check_versions
+    clone_repo
+    automated_clone_download_error_check
+    check_config_override_existence_offer_to_configure
+    ensure_a_year
 }
 
 function ensure_a_year() {
@@ -196,8 +138,13 @@ function clone_repo() {
         fi
         echo -e "      ${LOCAL_DIR}\n"
         echo -e "Issuing this command:"
-        echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
-        git clone --branch=$BRANCH --recurse-submodules $REPO
+        if [[ $CLONE_SUB_MODULES == "1" ]]; then
+            echo -e "    git clone --branch=${BRANCH} --recurse-submodules ${REPO}"
+            git clone --branch=$BRANCH --recurse-submodules $REPO
+        else
+            echo -e "    git clone --branch=${BRANCH} ${REPO}"
+            git clone --branch=$BRANCH $REPO
+        fi
         clone_exit_status=$?
     else
         clone_exit_status=${CLONE_STATUS}
@@ -224,6 +171,8 @@ function before_final_return_message() {
     echo -e "               Watch paired to phone and unlocked (on your wrist)"
     echo -e "               Trust computer if asked"
     ios16_warning
+    echo -e ""
+    echo -e "* Xcode will open automatically, please wait"
 }
 
 function before_final_return_message_without_watch() {
@@ -231,9 +180,9 @@ function before_final_return_message_without_watch() {
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     ios16_warning
+    echo -e ""
+    echo -e "* Xcode will open automatically, please wait"
 }
-
-#!inline config_override.sh
 
 function verify_xcode_path() {
     section_separator
@@ -247,7 +196,6 @@ function verify_xcode_path() {
     if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
         echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
-        sleep 2
     else
         echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path."
         echo -e "     It is set to: $xcode_path${NC}"
@@ -286,32 +234,6 @@ function verify_xcode_path() {
     fi
 }
 
-function do_continue() {
-  :
-}
-
-function menu_select() {
-    choose_or_cancel
-
-    local options=("${@:1:$#/2}")
-    local actions=("${@:$(($#+1))/2+1}")
-
-    while true; do
-        select opt in "${options[@]}"; do
-            for i in $(seq 0 $((${#options[@]} - 1))); do
-                if [ "$opt" = "${options[$i]}" ]; then
-                    eval "${actions[$i]}"
-                    return
-                fi
-            done
-            invalid_entry
-            break
-        done
-    done
-}
-
-#!inline delete_old_downloads.sh
-
 function branch_select() {
     local url=$1
     local branch=$2
@@ -326,7 +248,6 @@ function branch_select() {
     SUPPRESS_BRANCH=$suppress_branch
 }
 
-#!inline verify_version.sh
 
 ############################################################
 # End of functions used by script

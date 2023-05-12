@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildLoopFixedDev.sh
+#!/bin/bash # script BuildLoopDev.sh
 
 ############################################################
 # Required parameters for any build script that uses
@@ -49,7 +49,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("choose_dev_branch" "choose_fixed_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/loopnlearn/LoopWorkspace.git $CUSTOM_BRANCH
+    branch_select https://github.com/LoopKit/LoopWorkspace.git $CUSTOM_BRANCH
 fi
 
 ############################################################

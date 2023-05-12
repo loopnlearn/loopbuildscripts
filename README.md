@@ -39,13 +39,13 @@ The other scripts can be run with the following commands
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopCaregiver.sh)"
 ```
 
-#### BuildFreeAPS.sh - this version is based on Loop 2.2.x and is not being updated
+#### BuildFreeAPS.sh - this fork of Loop is based on version 2.2.x. [FreeAPS](https://www.loopandlearn.org/freeapsdoc)] is not being updated, but the build script is provided
 ```
 /bin/bash -c "$(curl -fsSL 
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
 ```
 
-#### BuildLoopFixedDev.sh - not being updated frequently (see details below)
+#### BuildLoopDev.sh - not being updated frequently (see details below)
 ```
 /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopFixedDev.sh)"
@@ -89,3 +89,74 @@ For example, if you want to modify the BuildLoop.sh script, you would edit the s
 Note that the build system uses special comments to indicate which files should be inlined. Any line in a script that starts with #!inline will be replaced with the contents of the specified file. The build system will inline files up to a maximum depth of 10, to prevent infinite recursion.
 
 To learn more about the inlining process and how it works, please see the comments in the build.sh script.
+
+### New script commands
+
+The current branch `new_buildfunctions` provides updated and new scripts for test. The commands below use `export` to set environment variables used by the script.
+
+Once you use an export command, that environment variable stays set in that terminal and will be used by the script. 
+
+* You can use the unset command to stay in the same terminal
+* You can use CMD-N while in any terminal window to open a new terminal window, then switch to the new window
+
+```
+unset CUSTOM_BRANCH
+unset SCRIPT_BRANCH
+```
+
+#### Build Select
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh)"
+```
+
+* New option under Utility for deleting old code
+* The delete statements are commented out, for now, and the design is in development
+
+#### Loop dev
+
+You can choose dev or a lightly tested commit for dev.
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopDev.sh)"
+```
+
+Any branch of Loop, for example libre branch, use the CUSTOM_BRANCH keyword:
+
+```
+export CUSTOM_BRANCH="libre" && \
+export SCRIPT_BRANCH="new_buildfunctions" && \
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopDev.sh)"
+```
+
+
+#### Loop Follow
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh)"
+```
+
+#### Loop Caregiver
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopCaregiver.sh)"
+```
+
+#### iAPS
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/Build_iAPS.sh)"
+```
+
+#### FreeAPS
+
+```
+export SCRIPT_BRANCH="new_buildfunctions" && /bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildFreeAPS.sh)"
+```
