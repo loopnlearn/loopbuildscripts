@@ -69,8 +69,6 @@ standard_build_train
 ############################################################
 
 section_separator
-echo -e "The following item will open (when you are ready)"
-echo -e "* Xcode ready to prep your current download for build"
 before_final_return_message
 echo -e ""
 return_when_ready
