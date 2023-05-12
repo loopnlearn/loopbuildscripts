@@ -182,6 +182,34 @@ function menu_select() {
 
 ############################################################
 # Common functions used by multiple build scripts
+#    - Explanation of variables, Default values
+############################################################
+
+# Variables set by BuildXXX script that calls this inline script
+#
+# Required: BUILD_DIR
+#    it is where the download folder will be created
+#    For example: BUILD_DIR=~/Downloads/BuildLoop
+#
+# Required: OVERRIDE_FILE
+#    name of the automatic signing file
+#    For example: OVERRIDE_FILE=LoopConfigOverride.xcconfig
+
+# Default: some projects create or use the override file in the BUILD_DIR
+# Some, like iAPS, use a file in the downloaded clone itself
+#    in that case, set USE_OVERRIDE_IN_REPO to 1 in the src/Build script
+: ${USE_OVERRIDE_IN_REPO:="0"}
+
+# Default: some projects use submodules (and need --recurse-submodule)
+# Some, like iAPS and LoopFollow, do not use submodules
+#    in that case, set CLONE_SUB_MODULES to 0 in the src/Build script
+: ${CLONE_SUB_MODULES:="1"}
+
+# Set default values only if they haven't been defined as environment variables
+: ${SCRIPT_BRANCH:="main"}
+
+############################################################
+# Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
 ############################################################
 
@@ -194,13 +222,10 @@ if [ ! -d "${SCRIPT_DIR}" ]; then
     mkdir "${SCRIPT_DIR}"
 fi
 
-# Set default values only if they haven't been defined as environment variables
-: ${SCRIPT_BRANCH:="main"}
-
 ############################################################
 # set up nominal values
 #   these can be later overwritten by flags
-#   for convenience when testing (or for advanced usersS)
+#   for convenience when testing (or for advanced users)
 ############################################################
 
 # FRESH_CLONE
@@ -214,113 +239,16 @@ fi
 # Prepare date-time stamp for folder
 DOWNLOAD_DATE=$(date +'%y%m%d-%H%M')
 
-# BUILD_DIR=~/Downloads/"BuildLoop"
-# OVERRIDE_FILE=LoopConfigOverride.xcconfig
-
-# Some projects does not use a override file in the BUILD_DIR, 
-# instead an override file is modified in the downloaded repo.
-# This beaviour is default set to off, set this to 1 before inlining buildfunctions to enable.
-: ${USE_OVERRIDE_IN_REPO:="0"}
-
-# Some projects does not use sub modules, to avoid confusion CLONE_SUB_MODULES
-# can be set to 0, then --recurse-submodules will not be used.
-# Set this value before inlining buildfunctions to enable.
-: ${CLONE_SUB_MODULES:="1"}
-
-# If a branch name is provided as a command line argument to the script, 
-# it will be assigned to the variable CUSTOM_BRANCH.
-# If no argument is given, the value of the environment variable CUSTOM_BRANCH is used instead. 
-# If CUSTOM_BRANCH is not set as an environment variable and no argument is provided, 
-# CUSTOM_BRANCH will remain unset and the user can instead select a branch in the script
+# This enables the selection of a custom branch via enviroment variable
+# It can also be passed in as argument $1
+#   If passed in, it overwrites the environment variable
+#   When CUSTOM_BRANCH is set, the menu which asks which branch is skipped
 CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 
 ############################################################
 # Define the rest of the functions (usage defined above):
 ############################################################
 
-
-function delete_folders_except_latest() {
-    local pattern="$1"
-    local total_size=0
-    local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
-
-    if [ ${#folders[@]} -eq 0 ]; then
-        return
-    fi
-
-    section_divider
-
-    if [ ${#folders[@]} -le 1 ]; then
-        echo "No folders to delete for '$pattern'"
-        return
-    fi
-
-    echo "Folder to Keep:"
-    echo "  ${folders[0]/#$HOME/~}"
-    echo
-
-    echo "Folder(s) that can be deleted:"
-    for folder in "${folders[@]:1}"; do
-        echo "  ${folder/#$HOME/~}"
-        total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
-    done
-
-    scripts_folder="$(dirname "${folders[0]}")/Scripts"
-    if [ -d "$scripts_folder" ]; then
-        echo "  ${scripts_folder/#$HOME/~}"
-        total_size=$(($total_size + $(du -s "$scripts_folder" | awk '{print $1}')))
-    else
-        scripts_folder=""
-    fi
-
-    total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
-    echo "Total size to be deleted: $total_size_mb MB"
-
-    options=("Delete" "Cancel" "Quit")
-    actions=("delete_selected_folders \"$pattern\" \"$scripts_folder\"" "return" "cancel_entry")
-    menu_select "${options[@]}" "${actions[@]}"
-}
-
-function delete_selected_folders() {
-    local pattern="$1"
-    local scripts_folder="$2"
-    local folders=($(ls -dt ~/Downloads/$pattern))
-
-    for folder in "${folders[@]:1}"; do
-        # rm -rf "$folder"
-        echo "xxx $folder"
-    done
-
-    if [ -n "$scripts_folder" ]; then
-        # rm -rf "$scripts_folder"
-        echo "xxx $scripts_folder"
-    fi
-
-    echo "Folders deleted."
-}
-
-function delete_old_downloads() {
-    patterns=(
-        "BuildLoopFollow/LoopFollow-*"
-        "Build_iAPS/iAPS-*"
-        "NonExistingApp/Loop-*"
-        "BuildLoop/Loop-*"
-        "BuildLoop/LoopCaregiver-*"
-        "BuildLoop/Loop_lnl_patches-*"
-    )
-
-    section_separator
-    echo "We will now go through all build folders and for each, "
-    echo "show the latest folder while giving you the option to "
-    echo "remove older folders, including the temporary "Scripts" folder."
-    echo 
-
-    for pattern in "${patterns[@]}"; do
-        delete_folders_except_latest "$pattern"
-    done
-
-    exit_message
-}
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
 LATEST_IOS_VER="16.4"
@@ -630,6 +558,8 @@ function before_final_return_message() {
     echo -e "               Watch paired to phone and unlocked (on your wrist)"
     echo -e "               Trust computer if asked"
     ios16_warning
+    echo -e ""
+    echo -e "* Xcode will open automatically, please wait"
 }
 
 function before_final_return_message_without_watch() {
@@ -637,6 +567,8 @@ function before_final_return_message_without_watch() {
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     ios16_warning
+    echo -e ""
+    echo -e "* Xcode will open automatically, please wait"
 }
 
 function verify_xcode_path() {
@@ -651,7 +583,6 @@ function verify_xcode_path() {
     if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
         echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
-        sleep 2
     else
         echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path."
         echo -e "     It is set to: $xcode_path${NC}"
@@ -752,8 +683,6 @@ standard_build_train
 ############################################################
 
 section_separator
-echo -e "The following item will open (when you are ready)"
-echo -e "* Xcode ready to prep your current download for build"
 before_final_return_message
 echo -e ""
 return_when_ready
