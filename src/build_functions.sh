@@ -123,7 +123,7 @@ function ios16_warning() {
 }
 
 function clone_repo() {
-    section_separator
+    section_divider
     if [ "$SUPPRESS_BRANCH" == "true" ]; then
         LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
     else
@@ -190,7 +190,7 @@ function before_final_return_message_without_watch() {
 }
 
 function verify_xcode_path() {
-    section_separator
+    section_divider
 
     echo -e "Verifying xcode-select path...\n"
 

@@ -23,7 +23,7 @@ function compare_versions() {
 }
 
 function check_versions() {
-    section_separator
+    section_divider
     echo "Verifying Xcode and macOS versions..."
 
     if ! command -v xcodebuild >/dev/null; then

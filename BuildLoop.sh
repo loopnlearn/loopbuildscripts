@@ -195,6 +195,12 @@ function menu_select() {
 #    name of the automatic signing file
 #    For example: OVERRIDE_FILE=LoopConfigOverride.xcconfig
 
+# Required: DEV_TEAM_SETTING_NAME
+#    keyword used in the automatic signing file
+#    e.g., ${DEV_TEAM_SETTING_NAME} = Apple Developer TeamID
+#    Loop and Loop associated apps use: "LOOP_DEVELOPMENT_TEAM"
+#    iAPS uses: "DEVELOPER_TEAM"
+
 # Default: some projects create or use the override file in the BUILD_DIR
 # Some, like iAPS, use a file in the downloaded clone itself
 #    in that case, set USE_OVERRIDE_IN_REPO to 1 in the src/Build script
@@ -274,7 +280,7 @@ function compare_versions() {
 }
 
 function check_versions() {
-    section_separator
+    section_divider
     echo "Verifying Xcode and macOS versions..."
 
     if ! command -v xcodebuild >/dev/null; then
@@ -505,7 +511,7 @@ function ios16_warning() {
 }
 
 function clone_repo() {
-    section_separator
+    section_divider
     if [ "$SUPPRESS_BRANCH" == "true" ]; then
         LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
     else
@@ -572,7 +578,7 @@ function before_final_return_message_without_watch() {
 }
 
 function verify_xcode_path() {
-    section_separator
+    section_divider
 
     echo -e "Verifying xcode-select path...\n"
 
