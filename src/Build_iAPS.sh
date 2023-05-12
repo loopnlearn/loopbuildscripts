@@ -7,9 +7,11 @@
 
 BUILD_DIR=~/Downloads/"Build_iAPS"
 # For iAPS, OVERRIDE_FILE is inside newly downloaded iAPS folder
-# it will be generated with branch and date
-OVERRIDE_FILE=file-cannot-exist-so-build_functions-will-work.txt
+USE_OVERRIDE_IN_REPO="1"
+OVERRIDE_FILE="ConfigOverride.xcconfig"
 DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
+# iAPS is not using sub modules
+CLONE_SUB_MODULES="0"
 
 #!inline build_functions.sh
 
@@ -59,13 +61,7 @@ fi
 # Standard Build train
 ############################################################
 
-verify_xcode_path
-clone_repo
-automated_clone_download_error_check
-# special for iAPS:
-OVERRIDE_FULLPATH="${LOCAL_DIR}/iAPS/ConfigOverride.xcconfig"
-check_config_override_existence_offer_to_configure
-ensure_a_year
+standard_build_train
 
 
 ############################################################
@@ -73,8 +69,6 @@ ensure_a_year
 ############################################################
 
 section_separator
-echo -e "The following item will open (when you are ready)"
-echo -e "* Xcode ready to prep your current download for build"
 before_final_return_message
 echo -e ""
 return_when_ready

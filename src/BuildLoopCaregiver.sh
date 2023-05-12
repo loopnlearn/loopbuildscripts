@@ -47,11 +47,7 @@ fi
 # Standard Build train
 ############################################################
 
-verify_xcode_path
-clone_repo
-automated_clone_download_error_check
-check_config_override_existence_offer_to_configure
-ensure_a_year
+standard_build_train
 
 
 ############################################################
@@ -59,8 +55,6 @@ ensure_a_year
 ############################################################
 
 section_separator
-echo -e "The following item will open (when you are ready)"
-echo -e "* Xcode ready to prep your current download for build"
 before_final_return_message_without_watch
 echo -e ""
 return_when_ready

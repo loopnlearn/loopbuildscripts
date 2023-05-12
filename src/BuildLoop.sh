@@ -10,6 +10,7 @@ OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 #!inline build_functions.sh
+#!inline building_delete_old_downloads.sh
 
 
 ############################################################
@@ -37,7 +38,7 @@ actions=("WHICH=Loop" "WHICH=LoopFollow" "WHICH=UtilityScripts" "cancel_entry")
 menu_select "${options[@]}" "${actions[@]}"
 
 if [ "$WHICH" = "Loop" ]; then
-    if [ -z "$CUSTOM_URL" ] || [ -z "$CUSTOM_BRANCH" ]; then
+    if [ -z "$CUSTOM_BRANCH" ]; then
         function choose_loop() {
             branch_select https://github.com/LoopKit/LoopWorkspace.git main Loop
         }
@@ -61,27 +62,17 @@ if [ "$WHICH" = "Loop" ]; then
         actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
         menu_select "${options[@]}" "${actions[@]}"
     else
-        branch_select $CUSTOM_URL $CUSTOM_BRANCH
+        branch_select ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"} $CUSTOM_BRANCH
     fi
 
     ############################################################
     # Standard Build train
     ############################################################
 
-    verify_xcode_path
-    check_versions
-    clone_repo
-    automated_clone_download_error_check
-    check_config_override_existence_offer_to_configure
-    ensure_a_year
+    standard_build_train
 
     section_separator
-    echo -e "The following item will open (when you are ready)"
-    echo -e "* Xcode ready to prep your current download for build"
     before_final_return_message
-    echo -e "\n${RED}${BOLD}As of Loop 3.2${NC}, LoopWorkspace is already configured."
-    echo -e "LoopWorkspace shows up in 2 places at top of Xcode."
-    echo -e "LoopDocs graphics will be updated soon.\n"
     return_when_ready
     cd $REPO_NAME
     xed .
