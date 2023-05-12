@@ -60,10 +60,13 @@ function delete_selected_folders() {
 
 function delete_old_downloads() {
     patterns=(
-        "BuildLoopFollow/LoopFollow-*"
-        "Build_iAPS/iAPS-*"
+        "BuildLoopFollow/LoopFollow_Main-*"
+        "BuildLoopFollow/LoopFollow_dev-*"
+        "Build_iAPS/iAPS_main-*"
+        "Build_iAPS/iAPS_dev-*"
         "NonExistingApp/Loop-*"
         "BuildLoop/Loop-*"
+        "BuildLoop/FreeAPS-*"
         "BuildLoop/LoopCaregiver-*"
         "BuildLoop/Loop_lnl_patches-*"
     )
