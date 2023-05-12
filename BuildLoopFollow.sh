@@ -225,9 +225,6 @@ SCRIPT_DIR="${BUILD_DIR}/Scripts"
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
 fi
-if [ ! -d "${SCRIPT_DIR}" ]; then
-    mkdir "${SCRIPT_DIR}"
-fi
 
 ############################################################
 # set up nominal values
@@ -642,6 +639,25 @@ function branch_select() {
     SUPPRESS_BRANCH=$suppress_branch
 }
 
+# run_script Function:
+# This function accepts two parameters:
+# 1. script_name: The name of the script to be executed.
+# 2. extra_arg (optional): An additional argument to be passed to the script.
+# The function fetches the script from the repository and executes it using bash.
+# If the script fails to execute, the function prints an error message and
+# terminates the entire shell script with a non-zero status code.
+function run_script() {
+    local script_name=$1
+    local extra_arg=$2
+    echo -e "\n--------------------------------\n"
+    echo -e "Executing Script: $script_name"
+    echo -e "\n--------------------------------\n"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" - $extra_arg
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to execute $script_name"
+        exit 1
+    fi
+}
 
 ############################################################
 # End of functions used by script

@@ -224,9 +224,6 @@ SCRIPT_DIR="${BUILD_DIR}/Scripts"
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
 fi
-if [ ! -d "${SCRIPT_DIR}" ]; then
-    mkdir "${SCRIPT_DIR}"
-fi
 
 ############################################################
 # set up nominal values
@@ -641,6 +638,26 @@ function branch_select() {
     SUPPRESS_BRANCH=$suppress_branch
 }
 
+# run_script Function:
+# This function accepts two parameters:
+# 1. script_name: The name of the script to be executed.
+# 2. extra_arg (optional): An additional argument to be passed to the script.
+# The function fetches the script from the repository and executes it using bash.
+# If the script fails to execute, the function prints an error message and
+# terminates the entire shell script with a non-zero status code.
+function run_script() {
+    local script_name=$1
+    local extra_arg=$2
+    echo -e "\n--------------------------------\n"
+    echo -e "Executing Script: $script_name"
+    echo -e "\n--------------------------------\n"
+    exit 1
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" - $extra_arg
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to execute $script_name"
+        exit 1
+    fi
+}
 
 ############################################################
 # End of functions used by script
@@ -800,47 +817,8 @@ if [ "$WHICH" = "Loop" ]; then
 
 elif [ "$WHICH" = "LoopFollow" ]
 then
-    cd $SCRIPT_DIR
-    echo -e "\n\n--------------------------------\n\n"
-    echo -e "Downloading Loop Follow Script\n"
-    echo -e "\n--------------------------------\n\n"
-    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh
-    echo -e "\n\n\n\n"
-    source ./BuildLoopFollow.sh
+    run_script "BuildLoopFollow.sh" $CUSTOM_BRANCH
 else
-    function choose_clean_derived() {
-        echo -e "\n--------------------------------\n"
-        echo -e "Downloading Script: CleanDerived.sh"
-        echo -e "\n--------------------------------\n"
-        curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CleanDerived.sh
-        source ./CleanDerived.sh
-    }
-
-    function choose_xcode_cleanup() {
-        echo -e "\n--------------------------------\n"
-        echo -e "Downloading Script: XcodeClean.sh"
-        echo -e "\n--------------------------------\n"
-        curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/XcodeClean.sh
-        source ./XcodeClean.sh
-    }
-
-    function choose_clean_profiles() {
-        echo -e "\n--------------------------------\n"
-        echo -e "Downloading Script: CleanProfiles.sh"
-        echo -e "\n--------------------------------\n"
-        curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CleanProfiles.sh
-        source ./CleanProfiles.sh
-    }
-
-    function choose_customizations() {
-        echo -e "\n--------------------------------\n"
-        echo -e "Downloading Script: CustomizationSelect.sh"
-        echo -e "\n--------------------------------\n"
-        curl -fsSLOJ https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CustomizationSelect.sh
-        source ./CustomizationSelect.sh
-    }
-
-    cd $SCRIPT_DIR
     echo -e "\n\n\n\n"
     echo -e "\n--------------------------------\n"
     echo -e "${BOLD}These utility scripts automate several cleanup actions${NC}"
@@ -869,8 +847,22 @@ else
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
 
-    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Customizations to Loop" "Delete old downloads" "Cancel")
-    actions=("choose_clean_derived" "choose_xcode_cleanup" "choose_clean_profiles" "choose_customizations" "delete_old_downloads" "cancel_entry")
+    options=(
+        "Clean Derived Data"
+        "Xcode Cleanup (The Big One)"
+        "Clean Profiles"
+        "Apply Customizations to Loop"
+        "Delete old downloads"
+        "Cancel"
+    )
+    actions=(
+        "run_script 'CleanDerived.sh'"
+        "run_script 'XcodeClean.sh'"
+        "run_script 'CleanProfiles.sh'"
+        "run_script 'CustomizationSelect.sh'"
+        "delete_old_downloads"
+        "cancel_entry"
+    )
     menu_select "${options[@]}" "${actions[@]}"
 fi
 
