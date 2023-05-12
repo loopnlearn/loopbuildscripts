@@ -40,47 +40,46 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-# Inform the user about env variables set, but only once
-if [ -z ${any_variable_set+x} ]; then
-    # Variables definition
-    variables=(
-        "SCRIPT_BRANCH: The branch other scripts will be sourced from."
-        "FRESH_CLONE: Lets you use an existing clone (saves time)."
-        "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
-        "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
-        "CUSTOM_URL: Overrides the repo url."
-        "CUSTOM_BRANCH: Overrides the branch used for git clone."
-        "CUSTOM_MACOS_VER: Overrides the detected macOS version."
-        "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
-    )
+# Inform the user about env variables set
+# Variables definition
+variables=(
+    "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+    "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
+    "FRESH_CLONE: Lets you use an existing clone (saves time)."
+    "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
+    "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
+    "CUSTOM_URL: Overrides the repo url."
+    "CUSTOM_BRANCH: Overrides the branch used for git clone."
+    "CUSTOM_MACOS_VER: Overrides the detected macOS version."
+    "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
+)
 
-    # Flag to check if any variable is set
-    any_variable_set=false
+# Flag to check if any variable is set
+any_variable_set=false
 
-    # Iterate over each variable
-    for var in "${variables[@]}"; do
-        # Split the variable name and description
-        IFS=":" read -r name description <<<"$var"
+# Iterate over each variable
+for var in "${variables[@]}"; do
+    # Split the variable name and description
+    IFS=":" read -r name description <<<"$var"
 
-        # Check if the variable is set
-        if [ -n "${!name}" ]; then
-            # If this is the first variable set, print the initial message
-            if ! $any_variable_set; then
-                section_separator
-                echo -e "For your information, you are running this script in customized mode"
-                echo -e "with environment variables set:"
-                any_variable_set=true
-            fi
-
-            # Print the variable name, value, and description
-            echo "  - $name: ${!name}"
-            echo "    $description"
+    # Check if the variable is set
+    if [ -n "${!name}" ]; then
+        # If this is the first variable set, print the initial message
+        if ! $any_variable_set; then
+            section_separator
+            echo -e "For your information, you are running this script in customized mode"
+            echo -e "with environment variables set:"
+            any_variable_set=true
         fi
-    done
-    if $any_variable_set; then
-        echo -e "\nTo clear the values, close this terminal and start a new one."
-        return_when_ready
+
+        # Print the variable name, value, and description
+        echo "  - $name: ${!name}"
+        echo "    $description"
     fi
+done
+if $any_variable_set; then
+    echo -e "\nTo clear the values, close this terminal and start a new one."
+    return_when_ready
 fi
 
 function initial_greeting() {
@@ -642,17 +641,21 @@ function branch_select() {
 # This function accepts two parameters:
 # 1. script_name: The name of the script to be executed.
 # 2. extra_arg (optional): An additional argument to be passed to the script.
-# The function fetches the script from the repository and executes it using bash.
-# If the script fails to execute, the function prints an error message and
-# terminates the entire shell script with a non-zero status code.
-function run_script() {
+# The function fetches and executes the script either from a local directory (if LOCAL_SCRIPT is set to "1") or from a remote GitHub repository.
+# If the script fails to execute, the function prints an error message and terminates the entire shell script with a non-zero status code.
+run_script() {
     local script_name=$1
     local extra_arg=$2
     echo -e "\n--------------------------------\n"
     echo -e "Executing Script: $script_name"
     echo -e "\n--------------------------------\n"
-    exit 1
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" - $extra_arg
+
+    if [[ ${LOCAL_SCRIPT:-0} -eq 1 ]]; then
+        /bin/bash "./$script_name" "$extra_arg"
+    else
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" - "$extra_arg"
+    fi
+
     if [ $? -ne 0 ]; then
         echo "Error: Failed to execute $script_name"
         exit 1
