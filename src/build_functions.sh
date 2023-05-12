@@ -15,6 +15,12 @@
 #    name of the automatic signing file
 #    For example: OVERRIDE_FILE=LoopConfigOverride.xcconfig
 
+# Required: DEV_TEAM_SETTING_NAME
+#    keyword used in the automatic signing file
+#    e.g., ${DEV_TEAM_SETTING_NAME} = Apple Developer TeamID
+#    Loop and Loop associated apps use: "LOOP_DEVELOPMENT_TEAM"
+#    iAPS uses: "DEVELOPER_TEAM"
+
 # Default: some projects create or use the override file in the BUILD_DIR
 # Some, like iAPS, use a file in the downloaded clone itself
 #    in that case, set USE_OVERRIDE_IN_REPO to 1 in the src/Build script
