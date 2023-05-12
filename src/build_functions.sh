@@ -69,7 +69,6 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 # Define the rest of the functions (usage defined above):
 ############################################################
 
-#!inline building_delete_old_downloads.sh
 #!inline building_verify_version.sh
 #!inline building_config_override.sh
 
