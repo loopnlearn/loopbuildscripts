@@ -5,6 +5,8 @@
 # directory and then run the build script to regenerate this output file.
 # -----------------------------------------------------------------------------
 
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -169,6 +171,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 section_separator
 echo -e "\n\n🕒 Please be patient. On older computers and virtual machines, this may take 5-10 minutes or longer to run.\n"
@@ -178,3 +182,5 @@ echo -e "✅ Done Cleaning"
 echo -e "   If Xcode was open, you may see a 'Permission denied' statement."
 echo -e "   In that case, quit out of Xcode and run the script again\n"
 exit_message
+# *** End of inlined file: src/CleanDerived.sh ***
+

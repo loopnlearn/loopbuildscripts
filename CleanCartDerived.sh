@@ -5,6 +5,8 @@
 # directory and then run the build script to regenerate this output file.
 # -----------------------------------------------------------------------------
 
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -169,6 +171,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 section_separator
 echo -e "\n\n🕒 Please be patient. On older computers and virtual machines, this may take 5-10 minutes or longer to run.\n"
@@ -176,3 +180,5 @@ echo -e "✅ Cleaning Derived Data files.\n"
 rm -rf ~/Library/Developer/Xcode/DerivedData
 echo -e "✅ Done Cleaning.\n\n⚠️  If Xcode is open, Quit it and open it again.\n"
 exit_message
+# *** End of inlined file: src/CleanCartDerived.sh ***
+

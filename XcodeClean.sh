@@ -5,6 +5,8 @@
 # directory and then run the build script to regenerate this output file.
 # -----------------------------------------------------------------------------
 
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -169,6 +171,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 section_separator
 
@@ -185,3 +189,5 @@ rm -rf "$HOME/Library/Developer/Xcode/DerivedData"
 
 echo -e "🛑  Please Reboot Now\n\n";
 exit 0
+# *** End of inlined file: src/XcodeClean.sh ***
+

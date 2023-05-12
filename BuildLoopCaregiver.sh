@@ -14,6 +14,10 @@ BUILD_DIR=~/Downloads/"BuildLoop"
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
+
+# *** Start of inlined file: src/build_functions.sh ***
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -178,6 +182,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 ############################################################
 # Common functions used by multiple build scripts
@@ -251,6 +257,8 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 # Define the rest of the functions (usage defined above):
 ############################################################
 
+
+# *** Start of inlined file: src/building_verify_version.sh ***
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
 LATEST_IOS_VER="16.4"
@@ -322,6 +330,10 @@ function check_versions() {
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
     fi
 }
+# *** End of inlined file: src/building_verify_version.sh ***
+
+
+# *** Start of inlined file: src/building_config_override.sh ***
 function check_config_override_existence_offer_to_configure() {
     section_separator
 
@@ -460,6 +472,8 @@ set_development_team() {
     fi
     echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
 }
+
+# *** End of inlined file: src/building_config_override.sh ***
 
 
 function standard_build_train() { 
@@ -637,35 +651,12 @@ function branch_select() {
     SUPPRESS_BRANCH=$suppress_branch
 }
 
-# run_script Function:
-# This function accepts two parameters:
-# 1. script_name: The name of the script to be executed.
-# 2. extra_arg (optional): An additional argument to be passed to the script.
-# The function fetches and executes the script either from a local directory (if LOCAL_SCRIPT is set to "1") or from a remote GitHub repository.
-# If the script fails to execute, the function prints an error message and terminates the entire shell script with a non-zero status code.
-run_script() {
-    local script_name=$1
-    local extra_arg=$2
-    echo -e "\n--------------------------------\n"
-    echo -e "Executing Script: $script_name"
-    echo -e "\n--------------------------------\n"
-
-    if [[ ${LOCAL_SCRIPT:-0} -eq 1 ]]; then
-        /bin/bash "./$script_name" "$extra_arg"
-    else
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" - "$extra_arg"
-    fi
-
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to execute $script_name"
-        exit 1
-    fi
-}
-
 ############################################################
 # End of functions used by script
 #    - end of build_functions.sh common code
 ############################################################
+# *** End of inlined file: src/build_functions.sh ***
+
 
 
 ############################################################
@@ -717,3 +708,5 @@ return_when_ready
 cd $REPO_NAME
 xed . 
 exit_message
+# *** End of inlined file: src/BuildLoopCaregiver.sh ***
+

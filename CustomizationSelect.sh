@@ -7,6 +7,8 @@
 
 BUILD_DIR=~/Downloads/BuildLoop
 
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -171,6 +173,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 
 ############################################################
@@ -422,3 +426,5 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 else
     exit 1
 fi
+# *** End of inlined file: src/CustomizationSelect.sh ***
+

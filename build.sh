@@ -29,6 +29,9 @@ inline_file() {
     return
   fi
 
+  # Add a starting comment for the inlined file
+  echo -e "\n# *** Start of inlined file: $input_file ***" >> "$output_file"
+
   # Copy the shebang (first line) from the input file to the output file
   if [[ $depth -eq 1 ]]; then
     head -n 1 "$input_file" > "$output_file"
@@ -45,6 +48,9 @@ inline_file() {
       echo "$line" >> "$output_file"
     fi
   done < <(if [[ $depth -eq 1 ]]; then tail -n +2 "$input_file"; else cat "$input_file"; fi)
+
+  # Add an ending comment for the inlined file
+  echo -e "# *** End of inlined file: $input_file ***\n" >> "$output_file"
 }
 
 # Process each script

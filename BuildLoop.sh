@@ -14,6 +14,10 @@ BUILD_DIR=~/Downloads/BuildLoop
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
+
+# *** Start of inlined file: src/build_functions.sh ***
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -178,6 +182,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 ############################################################
 # Common functions used by multiple build scripts
@@ -251,6 +257,8 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 # Define the rest of the functions (usage defined above):
 ############################################################
 
+
+# *** Start of inlined file: src/building_verify_version.sh ***
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
 LATEST_IOS_VER="16.4"
@@ -322,6 +330,10 @@ function check_versions() {
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
     fi
 }
+# *** End of inlined file: src/building_verify_version.sh ***
+
+
+# *** Start of inlined file: src/building_config_override.sh ***
 function check_config_override_existence_offer_to_configure() {
     section_separator
 
@@ -460,6 +472,8 @@ set_development_team() {
     fi
     echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
 }
+
+# *** End of inlined file: src/building_config_override.sh ***
 
 
 function standard_build_train() { 
@@ -637,6 +651,110 @@ function branch_select() {
     SUPPRESS_BRANCH=$suppress_branch
 }
 
+############################################################
+# End of functions used by script
+#    - end of build_functions.sh common code
+############################################################
+# *** End of inlined file: src/build_functions.sh ***
+
+
+# *** Start of inlined file: src/building_delete_old_downloads.sh ***
+# Flag to skip all deletions
+SKIP_ALL=false
+
+function list_build_folders() {
+    echo "The script will look for old downloads in these locations:"
+    for pattern in "${patterns[@]}"; do
+        echo "$pattern"
+    done
+
+    options=("Continue" "Skip" "Exit script")
+    actions=("return" "skip_all" "cancel_entry")
+    menu_select "${options[@]}" "${actions[@]}"
+}
+
+function delete_folders_except_latest() {
+    local pattern="$1"
+    local total_size=0
+    local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
+
+    section_divider
+
+    if [ ${#folders[@]} -le 1 ]; then
+        echo "No folders to delete for '$pattern'"
+        return
+    fi
+
+    echo "Folder to Keep:"
+    echo "  ${folders[0]/#$HOME/~}"
+    echo
+
+    echo "Folder(s) that can be deleted:"
+    for folder in "${folders[@]:1}"; do
+        echo "  ${folder/#$HOME/~}"
+        total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
+    done
+
+    total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
+    echo "Total size to be deleted: $total_size_mb MB"
+
+    options=("Delete these Folders" "Skip delete at this location" "Skip delete at all locations" "Exit script")
+    actions=("delete_selected_folders \"$pattern\"" "return" "skip_all" "cancel_entry")
+    menu_select "${options[@]}" "${actions[@]}"
+}
+
+function delete_selected_folders() {
+    local pattern="$1"
+    local folders=($(ls -dt ~/Downloads/$pattern))
+
+    for folder in "${folders[@]:1}"; do
+        # rm -rf "$folder"
+        echo "xxx $folder"
+    done
+
+    echo "Folder(s) deleted."
+}
+
+function skip_all() {
+    SKIP_ALL=true
+}
+
+function delete_old_downloads() {
+    patterns=(
+        "BuildLoopFollow/LoopFollow_Main-*"
+        "BuildLoopFollow/LoopFollow_dev-*"
+        "Build_iAPS/iAPS_main-*"
+        "Build_iAPS/iAPS_dev-*"
+        "BuildLoop/Loop-*"
+        "BuildLoop/FreeAPS-*"
+        "BuildLoop/LoopCaregiver-*"
+        "BuildLoop/Loop_lnl_patches-*"
+    )
+
+    section_separator
+    list_build_folders
+
+    if [ "$SKIP_ALL" = false ] ; then
+        echo "We will now go through all build folders and for each, "
+        echo "show the latest folder while giving you the option to "
+        echo "remove older folders."
+        echo 
+
+        for pattern in "${patterns[@]}"; do
+            if [ "$SKIP_ALL" = false ] ; then
+                delete_folders_except_latest "$pattern"
+            else
+                break
+            fi
+        done
+    fi
+
+    exit_message
+}
+# *** End of inlined file: src/building_delete_old_downloads.sh ***
+
+
+# *** Start of inlined file: src/run_script.sh ***
 # run_script Function:
 # This function accepts two parameters:
 # 1. script_name: The name of the script to be executed.
@@ -661,96 +779,8 @@ run_script() {
         exit 1
     fi
 }
+# *** End of inlined file: src/run_script.sh ***
 
-############################################################
-# End of functions used by script
-#    - end of build_functions.sh common code
-############################################################
-function delete_folders_except_latest() {
-    local pattern="$1"
-    local total_size=0
-    local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
-
-    if [ ${#folders[@]} -eq 0 ]; then
-        return
-    fi
-
-    section_divider
-
-    if [ ${#folders[@]} -le 1 ]; then
-        echo "No folders to delete for '$pattern'"
-        return
-    fi
-
-    echo "Folder to Keep:"
-    echo "  ${folders[0]/#$HOME/~}"
-    echo
-
-    echo "Folder(s) that can be deleted:"
-    for folder in "${folders[@]:1}"; do
-        echo "  ${folder/#$HOME/~}"
-        total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
-    done
-
-    scripts_folder="$(dirname "${folders[0]}")/Scripts"
-    if [ -d "$scripts_folder" ]; then
-        echo "  ${scripts_folder/#$HOME/~}"
-        total_size=$(($total_size + $(du -s "$scripts_folder" | awk '{print $1}')))
-    else
-        scripts_folder=""
-    fi
-
-    total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
-    echo "Total size to be deleted: $total_size_mb MB"
-
-    options=("Delete" "Cancel" "Quit")
-    actions=("delete_selected_folders \"$pattern\" \"$scripts_folder\"" "return" "cancel_entry")
-    menu_select "${options[@]}" "${actions[@]}"
-}
-
-function delete_selected_folders() {
-    local pattern="$1"
-    local scripts_folder="$2"
-    local folders=($(ls -dt ~/Downloads/$pattern))
-
-    for folder in "${folders[@]:1}"; do
-        # rm -rf "$folder"
-        echo "xxx $folder"
-    done
-
-    if [ -n "$scripts_folder" ]; then
-        # rm -rf "$scripts_folder"
-        echo "xxx $scripts_folder"
-    fi
-
-    echo "Folders deleted."
-}
-
-function delete_old_downloads() {
-    patterns=(
-        "BuildLoopFollow/LoopFollow_Main-*"
-        "BuildLoopFollow/LoopFollow_dev-*"
-        "Build_iAPS/iAPS_main-*"
-        "Build_iAPS/iAPS_dev-*"
-        "NonExistingApp/Loop-*"
-        "BuildLoop/Loop-*"
-        "BuildLoop/FreeAPS-*"
-        "BuildLoop/LoopCaregiver-*"
-        "BuildLoop/Loop_lnl_patches-*"
-    )
-
-    section_separator
-    echo "We will now go through all build folders and for each, "
-    echo "show the latest folder while giving you the option to "
-    echo "remove older folders, including the temporary "Scripts" folder."
-    echo 
-
-    for pattern in "${patterns[@]}"; do
-        delete_folders_except_latest "$pattern"
-    done
-
-    exit_message
-}
 
 
 ############################################################
@@ -868,4 +898,6 @@ else
     )
     menu_select "${options[@]}" "${actions[@]}"
 fi
+
+# *** End of inlined file: src/BuildLoop.sh ***
 

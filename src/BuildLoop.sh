@@ -11,6 +11,7 @@ DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 #!inline build_functions.sh
 #!inline building_delete_old_downloads.sh
+#!inline run_script.sh
 
 
 ############################################################

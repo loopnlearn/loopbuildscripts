@@ -5,6 +5,8 @@
 # directory and then run the build script to regenerate this output file.
 # -----------------------------------------------------------------------------
 
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -169,6 +171,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 section_separator
 echo -e "\n✅ Cleaning Profiles"
@@ -176,3 +180,5 @@ echo -e " - this ensures the next app you build with Xcode will last a year.\n"
 rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
 echo -e "✅ Profiles are cleaned."
 exit_message
+# *** End of inlined file: src/CleanProfiles.sh ***
+
