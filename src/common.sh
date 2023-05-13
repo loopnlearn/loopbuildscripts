@@ -24,7 +24,7 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-# Skip if this script is called from BuildLoop, then this has already been displayed
+# Skip if this script is called from another script, then this has already been displayed
 if [ "$0" != "_" ]; then
     # Inform the user about env variables set
     # Variables definition
