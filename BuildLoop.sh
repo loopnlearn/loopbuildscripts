@@ -660,7 +660,7 @@ function branch_select() {
 # *** End of inlined file: src/build_functions.sh ***
 
 
-# *** Start of inlined file: src/building_delete_old_downloads.sh ***
+# *** Start of inlined file: src/delete_old_downloads.sh ***
 # Flag to skip all deletions
 SKIP_ALL=false
 
@@ -753,7 +753,7 @@ function delete_old_downloads() {
 
     exit_message
 }
-# *** End of inlined file: src/building_delete_old_downloads.sh ***
+# *** End of inlined file: src/delete_old_downloads.sh ***
 
 
 # *** Start of inlined file: src/run_script.sh ***
