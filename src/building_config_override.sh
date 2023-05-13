@@ -78,9 +78,13 @@ function report_persistent_config_override() {
                 echo -e "    Edit the automatic signing file before hitting return"
                 echo -e "     step 1: open finder, "
                 echo -e "     step 2: locate and double click on"
-                echo -e "  ${OVERRIDE_FULLPATH}"
+                echo -e "             ${OVERRIDE_FULLPATH/$HOME/~}"
                 echo -e "             to open that file in Xcode"
-                echo -e "     step 3: edit in Xcode and save file\n"
+                echo -e "     step 3: find the line that starts with "
+                echo -e "             ${DEV_TEAM_SETTING_NAME}="
+                echo -e "             and modify the value to be your "
+                echo -e "             Apple Developer ID"
+                echo -e "     step 4: save the file\n"
                 echo -e "  When ready to proceed, hit return"
                 return_when_ready
                 break

@@ -14,6 +14,10 @@ BUILD_DIR=~/Downloads/BuildLoop
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
+
+# *** Start of inlined file: src/build_functions.sh ***
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -40,11 +44,13 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-# Inform the user about env variables set, but only once
-if [ -z ${any_variable_set+x} ]; then
+# Skip if this script is called from another script, then this has already been displayed
+if [ "$0" != "_" ]; then
+    # Inform the user about env variables set
     # Variables definition
     variables=(
         "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+        "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
         "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
@@ -84,9 +90,8 @@ if [ -z ${any_variable_set+x} ]; then
 fi
 
 function initial_greeting() {
-    # Skip initial greeting if already displayed or opted out using env variable
-    if [ "${SKIP_INITIAL_GREETING}" = "1" ]; then return; fi
-    SKIP_INITIAL_GREETING=1
+    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
+    if [ "${SKIP_INITIAL_GREETING}" = "1" ] || [ "$0" = "_" ]; then return; fi
 
     local documentation_link="${1:-}"
 
@@ -179,6 +184,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 ############################################################
 # Common functions used by multiple build scripts
@@ -224,9 +231,6 @@ SCRIPT_DIR="${BUILD_DIR}/Scripts"
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
 fi
-if [ ! -d "${SCRIPT_DIR}" ]; then
-    mkdir "${SCRIPT_DIR}"
-fi
 
 ############################################################
 # set up nominal values
@@ -255,6 +259,8 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 # Define the rest of the functions (usage defined above):
 ############################################################
 
+
+# *** Start of inlined file: src/building_verify_version.sh ***
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
 LATEST_IOS_VER="16.4"
@@ -326,6 +332,10 @@ function check_versions() {
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
     fi
 }
+# *** End of inlined file: src/building_verify_version.sh ***
+
+
+# *** Start of inlined file: src/building_config_override.sh ***
 function check_config_override_existence_offer_to_configure() {
     section_separator
 
@@ -406,9 +416,13 @@ function report_persistent_config_override() {
                 echo -e "    Edit the automatic signing file before hitting return"
                 echo -e "     step 1: open finder, "
                 echo -e "     step 2: locate and double click on"
-                echo -e "  ${OVERRIDE_FULLPATH}"
+                echo -e "             ${OVERRIDE_FULLPATH/$HOME/~}"
                 echo -e "             to open that file in Xcode"
-                echo -e "     step 3: edit in Xcode and save file\n"
+                echo -e "     step 3: find the line that starts with "
+                echo -e "             ${DEV_TEAM_SETTING_NAME}="
+                echo -e "             and modify the value to be your "
+                echo -e "             Apple Developer ID"
+                echo -e "     step 4: save the file\n"
                 echo -e "  When ready to proceed, hit return"
                 return_when_ready
                 break
@@ -464,6 +478,8 @@ set_development_team() {
     fi
     echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
 }
+
+# *** End of inlined file: src/building_config_override.sh ***
 
 
 function standard_build_train() { 
@@ -565,7 +581,7 @@ function before_final_return_message() {
     echo -e "               Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e " *** Xcode will open automatically, please wait"
 }
 
 function before_final_return_message_without_watch() {
@@ -574,7 +590,7 @@ function before_final_return_message_without_watch() {
     echo -e "     Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e " *** Xcode will open automatically, please wait"
 }
 
 function verify_xcode_path() {
@@ -641,11 +657,12 @@ function branch_select() {
     SUPPRESS_BRANCH=$suppress_branch
 }
 
-
 ############################################################
 # End of functions used by script
 #    - end of build_functions.sh common code
 ############################################################
+# *** End of inlined file: src/build_functions.sh ***
+
 
 
 ############################################################
@@ -732,3 +749,5 @@ echo -e ""
 return_when_ready
 xed . 
 exit_message
+# *** End of inlined file: src/BuildLoopDev.sh ***
+

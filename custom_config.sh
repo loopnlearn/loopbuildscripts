@@ -6,10 +6,11 @@
 
 # Clear values before setting them below
 unset SCRIPT_BRANCH
+unset LOCAL_SCRIPT
 unset FRESH_CLONE
 unset CLONE_STATUS
 unset SKIP_INITIAL_GREETING
-unset CUSTOM URL
+unset CUSTOM_URL
 unset CUSTOM_BRANCH
 unset CUSTOM_MACOS_VER
 unset CUSTOM_XCODE_VER
@@ -18,6 +19,12 @@ unset CUSTOM_XCODE_VER
 # SCRIPT_BRANCH is the branch scripts will be sourced from
 #   Uncomment line and replace main with branch you are testing
 #export SCRIPT_BRANCH="main"
+
+# LOCAL_SCRIPT can be set to 1 to run scripts from the local directory
+#   If not set or set to 0, scripts will be sourced from GitHub
+#   Uncomment the line
+#   Set the value to 1 to run scripts locally
+#export LOCAL_SCRIPT="1"
 
 # FRESH_CLONE (of 0) lets you use an existing LoopWorkspace clone (saves time)
 #   Uncomment the line

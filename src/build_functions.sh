@@ -44,9 +44,6 @@ SCRIPT_DIR="${BUILD_DIR}/Scripts"
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
 fi
-if [ ! -d "${SCRIPT_DIR}" ]; then
-    mkdir "${SCRIPT_DIR}"
-fi
 
 ############################################################
 # set up nominal values
@@ -177,7 +174,7 @@ function before_final_return_message() {
     echo -e "               Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e " *** Xcode will open automatically, please wait"
 }
 
 function before_final_return_message_without_watch() {
@@ -186,7 +183,7 @@ function before_final_return_message_without_watch() {
     echo -e "     Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e " *** Xcode will open automatically, please wait"
 }
 
 function verify_xcode_path() {
@@ -252,7 +249,6 @@ function branch_select() {
     APP_NAME=$app_name
     SUPPRESS_BRANCH=$suppress_branch
 }
-
 
 ############################################################
 # End of functions used by script

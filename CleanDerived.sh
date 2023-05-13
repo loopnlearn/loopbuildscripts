@@ -5,6 +5,8 @@
 # directory and then run the build script to regenerate this output file.
 # -----------------------------------------------------------------------------
 
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -31,11 +33,13 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-# Inform the user about env variables set, but only once
-if [ -z ${any_variable_set+x} ]; then
+# Skip if this script is called from another script, then this has already been displayed
+if [ "$0" != "_" ]; then
+    # Inform the user about env variables set
     # Variables definition
     variables=(
         "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+        "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
         "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
@@ -75,9 +79,8 @@ if [ -z ${any_variable_set+x} ]; then
 fi
 
 function initial_greeting() {
-    # Skip initial greeting if already displayed or opted out using env variable
-    if [ "${SKIP_INITIAL_GREETING}" = "1" ]; then return; fi
-    SKIP_INITIAL_GREETING=1
+    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
+    if [ "${SKIP_INITIAL_GREETING}" = "1" ] || [ "$0" = "_" ]; then return; fi
 
     local documentation_link="${1:-}"
 
@@ -170,6 +173,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 section_separator
 echo -e "\n\n🕒 Please be patient. On older computers and virtual machines, this may take 5-10 minutes or longer to run.\n"
@@ -179,3 +184,5 @@ echo -e "✅ Done Cleaning"
 echo -e "   If Xcode was open, you may see a 'Permission denied' statement."
 echo -e "   In that case, quit out of Xcode and run the script again\n"
 exit_message
+# *** End of inlined file: src/CleanDerived.sh ***
+

@@ -14,6 +14,10 @@ BUILD_DIR=~/Downloads/BuildLoop
 OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
+
+# *** Start of inlined file: src/build_functions.sh ***
+
+# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -40,11 +44,13 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-# Inform the user about env variables set, but only once
-if [ -z ${any_variable_set+x} ]; then
+# Skip if this script is called from another script, then this has already been displayed
+if [ "$0" != "_" ]; then
+    # Inform the user about env variables set
     # Variables definition
     variables=(
         "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+        "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
         "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
@@ -84,9 +90,8 @@ if [ -z ${any_variable_set+x} ]; then
 fi
 
 function initial_greeting() {
-    # Skip initial greeting if already displayed or opted out using env variable
-    if [ "${SKIP_INITIAL_GREETING}" = "1" ]; then return; fi
-    SKIP_INITIAL_GREETING=1
+    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
+    if [ "${SKIP_INITIAL_GREETING}" = "1" ] || [ "$0" = "_" ]; then return; fi
 
     local documentation_link="${1:-}"
 
@@ -179,6 +184,8 @@ function menu_select() {
         done
     done
 }
+# *** End of inlined file: src/common.sh ***
+
 
 ############################################################
 # Common functions used by multiple build scripts
@@ -224,9 +231,6 @@ SCRIPT_DIR="${BUILD_DIR}/Scripts"
 if [ ! -d "${BUILD_DIR}" ]; then
     mkdir "${BUILD_DIR}"
 fi
-if [ ! -d "${SCRIPT_DIR}" ]; then
-    mkdir "${SCRIPT_DIR}"
-fi
 
 ############################################################
 # set up nominal values
@@ -255,6 +259,8 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 # Define the rest of the functions (usage defined above):
 ############################################################
 
+
+# *** Start of inlined file: src/building_verify_version.sh ***
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
 LATEST_IOS_VER="16.4"
@@ -326,6 +332,10 @@ function check_versions() {
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
     fi
 }
+# *** End of inlined file: src/building_verify_version.sh ***
+
+
+# *** Start of inlined file: src/building_config_override.sh ***
 function check_config_override_existence_offer_to_configure() {
     section_separator
 
@@ -406,9 +416,13 @@ function report_persistent_config_override() {
                 echo -e "    Edit the automatic signing file before hitting return"
                 echo -e "     step 1: open finder, "
                 echo -e "     step 2: locate and double click on"
-                echo -e "  ${OVERRIDE_FULLPATH}"
+                echo -e "             ${OVERRIDE_FULLPATH/$HOME/~}"
                 echo -e "             to open that file in Xcode"
-                echo -e "     step 3: edit in Xcode and save file\n"
+                echo -e "     step 3: find the line that starts with "
+                echo -e "             ${DEV_TEAM_SETTING_NAME}="
+                echo -e "             and modify the value to be your "
+                echo -e "             Apple Developer ID"
+                echo -e "     step 4: save the file\n"
                 echo -e "  When ready to proceed, hit return"
                 return_when_ready
                 break
@@ -464,6 +478,8 @@ set_development_team() {
     fi
     echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
 }
+
+# *** End of inlined file: src/building_config_override.sh ***
 
 
 function standard_build_train() { 
@@ -565,7 +581,7 @@ function before_final_return_message() {
     echo -e "               Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e " *** Xcode will open automatically, please wait"
 }
 
 function before_final_return_message_without_watch() {
@@ -574,7 +590,7 @@ function before_final_return_message_without_watch() {
     echo -e "     Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e " *** Xcode will open automatically, please wait"
 }
 
 function verify_xcode_path() {
@@ -641,19 +657,32 @@ function branch_select() {
     SUPPRESS_BRANCH=$suppress_branch
 }
 
-
 ############################################################
 # End of functions used by script
 #    - end of build_functions.sh common code
 ############################################################
+# *** End of inlined file: src/build_functions.sh ***
+
+
+# *** Start of inlined file: src/delete_old_downloads.sh ***
+# Flag to skip all deletions
+SKIP_ALL=false
+
+function list_build_folders() {
+    echo "The script will look for old downloads in these locations:"
+    for pattern in "${patterns[@]}"; do
+        echo "$pattern"
+    done
+
+    options=("Continue" "Skip" "Exit script")
+    actions=("return" "skip_all" "cancel_entry")
+    menu_select "${options[@]}" "${actions[@]}"
+}
+
 function delete_folders_except_latest() {
     local pattern="$1"
     local total_size=0
     local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
-
-    if [ ${#folders[@]} -eq 0 ]; then
-        return
-    fi
 
     section_divider
 
@@ -672,25 +701,16 @@ function delete_folders_except_latest() {
         total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
     done
 
-    scripts_folder="$(dirname "${folders[0]}")/Scripts"
-    if [ -d "$scripts_folder" ]; then
-        echo "  ${scripts_folder/#$HOME/~}"
-        total_size=$(($total_size + $(du -s "$scripts_folder" | awk '{print $1}')))
-    else
-        scripts_folder=""
-    fi
-
     total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
     echo "Total size to be deleted: $total_size_mb MB"
 
-    options=("Delete" "Cancel" "Quit")
-    actions=("delete_selected_folders \"$pattern\" \"$scripts_folder\"" "return" "cancel_entry")
+    options=("Delete these Folders" "Skip delete at this location" "Skip delete at all locations" "Exit script")
+    actions=("delete_selected_folders \"$pattern\"" "return" "skip_all" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 }
 
 function delete_selected_folders() {
     local pattern="$1"
-    local scripts_folder="$2"
     local folders=($(ls -dt ~/Downloads/$pattern))
 
     for folder in "${folders[@]:1}"; do
@@ -698,12 +718,11 @@ function delete_selected_folders() {
         echo "xxx $folder"
     done
 
-    if [ -n "$scripts_folder" ]; then
-        # rm -rf "$scripts_folder"
-        echo "xxx $scripts_folder"
-    fi
+    echo "Folder(s) deleted."
+}
 
-    echo "Folders deleted."
+function skip_all() {
+    SKIP_ALL=true
 }
 
 function delete_old_downloads() {
@@ -712,25 +731,66 @@ function delete_old_downloads() {
         "BuildLoopFollow/LoopFollow_dev-*"
         "Build_iAPS/iAPS_main-*"
         "Build_iAPS/iAPS_dev-*"
-        "NonExistingApp/Loop-*"
         "BuildLoop/Loop-*"
         "BuildLoop/FreeAPS-*"
         "BuildLoop/LoopCaregiver-*"
         "BuildLoop/Loop_lnl_patches-*"
+        "BuildLoop/LoopWorkspace_*"
     )
 
     section_separator
-    echo "We will now go through all build folders and for each, "
-    echo "show the latest folder while giving you the option to "
-    echo "remove older folders, including the temporary "Scripts" folder."
-    echo 
+    list_build_folders
 
-    for pattern in "${patterns[@]}"; do
-        delete_folders_except_latest "$pattern"
-    done
+    if [ "$SKIP_ALL" = false ] ; then
+        echo "We will now go through all build folders and for each, "
+        echo "show the latest folder while giving you the option to "
+        echo "remove older folders."
+        echo 
+
+        for pattern in "${patterns[@]}"; do
+            if [ "$SKIP_ALL" = false ] ; then
+                delete_folders_except_latest "$pattern"
+            else
+                break
+            fi
+        done
+    fi
 
     exit_message
 }
+# *** End of inlined file: src/delete_old_downloads.sh ***
+
+
+# *** Start of inlined file: src/run_script.sh ***
+# The function fetches and executes a script either from LnL GitHub repository
+# or from the current local directory (if LOCAL_SCRIPT is set to "1").
+# The script is executed with "_" as parameter $0, telling the script that it is
+# run from within the ecosystem of LnL.
+# run_script accepts two parameters:
+#   1. script_name: The name of the script to be executed.
+#   2. extra_arg (optional): An additional argument to be passed to the script.
+# If the script fails to execute, the function prints an error message and terminates
+# the entire shell script with a non-zero status code.
+run_script() {
+    local script_name=$1
+    local extra_arg=$2
+    echo -e "\n--------------------------------\n"
+    echo -e "Executing Script: $script_name"
+    echo -e "\n--------------------------------\n"
+
+    if [[ ${LOCAL_SCRIPT:-0} -eq 0 ]]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" _ "$extra_arg"
+    else
+        /bin/bash -c "$(cat $script_name)" _ "$extra_arg"
+    fi
+
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to execute $script_name"
+        exit 1
+    fi
+}
+# *** End of inlined file: src/run_script.sh ***
+
 
 
 ############################################################
@@ -782,6 +842,10 @@ if [ "$WHICH" = "Loop" ]; then
         actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
         menu_select "${options[@]}" "${actions[@]}"
     else
+        section_separator
+        echo -e "You are about to download $CUSTOM_BRANCH branch from"
+        echo -e "  ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"}\n"
+        return_when_ready
         branch_select ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"} $CUSTOM_BRANCH
     fi
 
@@ -800,47 +864,8 @@ if [ "$WHICH" = "Loop" ]; then
 
 elif [ "$WHICH" = "LoopFollow" ]
 then
-    cd $SCRIPT_DIR
-    echo -e "\n\n--------------------------------\n\n"
-    echo -e "Downloading Loop Follow Script\n"
-    echo -e "\n--------------------------------\n\n"
-    curl -fsSLo ./BuildLoopFollow.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh
-    echo -e "\n\n\n\n"
-    source ./BuildLoopFollow.sh
+    run_script "BuildLoopFollow.sh" $CUSTOM_BRANCH
 else
-    function choose_clean_derived() {
-        echo -e "\n--------------------------------\n"
-        echo -e "Downloading Script: CleanDerived.sh"
-        echo -e "\n--------------------------------\n"
-        curl -fsSLo ./CleanDerived.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CleanDerived.sh
-        source ./CleanDerived.sh
-    }
-
-    function choose_xcode_cleanup() {
-        echo -e "\n--------------------------------\n"
-        echo -e "Downloading Script: XcodeClean.sh"
-        echo -e "\n--------------------------------\n"
-        curl -fsSLo ./XcodeClean.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/XcodeClean.sh
-        source ./XcodeClean.sh
-    }
-
-    function choose_clean_profiles() {
-        echo -e "\n--------------------------------\n"
-        echo -e "Downloading Script: CleanProfiles.sh"
-        echo -e "\n--------------------------------\n"
-        curl -fsSLo ./CleanProfiles.sh https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CleanProfiles.sh
-        source ./CleanProfiles.sh
-    }
-
-    function choose_customizations() {
-        echo -e "\n--------------------------------\n"
-        echo -e "Downloading Script: CustomizationSelect.sh"
-        echo -e "\n--------------------------------\n"
-        curl -fsSLOJ https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CustomizationSelect.sh
-        source ./CustomizationSelect.sh
-    }
-
-    cd $SCRIPT_DIR
     echo -e "\n\n\n\n"
     echo -e "\n--------------------------------\n"
     echo -e "${BOLD}These utility scripts automate several cleanup actions${NC}"
@@ -869,8 +894,24 @@ else
     echo -e "\n--------------------------------\n"
     echo -e "${RED}${BOLD}You may need to scroll up in the terminal to see details about options${NC}"
 
-    options=("Clean Derived Data" "Xcode Cleanup (The Big One)" "Clean Profiles" "Apply Customizations to Loop" "Delete old downloads" "Cancel")
-    actions=("choose_clean_derived" "choose_xcode_cleanup" "choose_clean_profiles" "choose_customizations" "delete_old_downloads" "cancel_entry")
+    options=(
+        "Clean Derived Data"
+        "Xcode Cleanup (The Big One)"
+        "Clean Profiles"
+        "Apply Customizations to Loop"
+        "Delete old downloads"
+        "Cancel"
+    )
+    actions=(
+        "run_script 'CleanDerived.sh'"
+        "run_script 'XcodeClean.sh'"
+        "run_script 'CleanProfiles.sh'"
+        "run_script 'CustomizationSelect.sh'"
+        "delete_old_downloads"
+        "cancel_entry"
+    )
     menu_select "${options[@]}" "${actions[@]}"
 fi
+
+# *** End of inlined file: src/BuildLoop.sh ***
 
