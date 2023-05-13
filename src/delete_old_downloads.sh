@@ -68,6 +68,7 @@ function delete_old_downloads() {
         "BuildLoop/FreeAPS-*"
         "BuildLoop/LoopCaregiver-*"
         "BuildLoop/Loop_lnl_patches-*"
+        "BuildLoop/LoopWorkspace_*"
     )
 
     section_separator
