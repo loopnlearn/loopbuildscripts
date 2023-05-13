@@ -12,9 +12,9 @@ run_script() {
     echo -e "\n--------------------------------\n"
 
     if [[ ${LOCAL_SCRIPT:-0} -eq 1 ]]; then
-        /bin/bash "./$script_name" "$extra_arg"
+        /bin/bash -c "$(cat $script_name)" _ "$extra_arg"
     else
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" - "$extra_arg"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" _ "$extra_arg"
     fi
 
     if [ $? -ne 0 ]; then
