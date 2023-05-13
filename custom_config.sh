@@ -6,7 +6,7 @@
 
 # Clear values before setting them below
 unset SCRIPT_BRANCH
-unset SCRIPT_LOCAL
+unset LOCAL_SCRIPT
 unset FRESH_CLONE
 unset CLONE_STATUS
 unset SKIP_INITIAL_GREETING
