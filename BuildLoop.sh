@@ -44,7 +44,7 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-# Skip if this script is called from BuildLoop, then this has already been displayed
+# Skip if this script is called from another script, then this has already been displayed
 if [ "$0" != "_" ]; then
     # Inform the user about env variables set
     # Variables definition
@@ -418,7 +418,11 @@ function report_persistent_config_override() {
                 echo -e "     step 2: locate and double click on"
                 echo -e "  ${OVERRIDE_FULLPATH}"
                 echo -e "             to open that file in Xcode"
-                echo -e "     step 3: edit in Xcode and save file\n"
+                echo -e "     step 3: find the line that starts with "
+                echo -e "  ${DEV_TEAM_SETTING_NAME}="
+                echo -e "             and make modify the value to be your "
+                echo -e "             Apple Developer ID"
+                echo -e "     step 4: save the file\n"
                 echo -e "  When ready to proceed, hit return"
                 return_when_ready
                 break
@@ -577,7 +581,7 @@ function before_final_return_message() {
     echo -e "               Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e "*** Xcode will open automatically, please wait"
 }
 
 function before_final_return_message_without_watch() {
@@ -586,7 +590,7 @@ function before_final_return_message_without_watch() {
     echo -e "     Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e "*** Xcode will open automatically, please wait"
 }
 
 function verify_xcode_path() {
@@ -758,12 +762,15 @@ function delete_old_downloads() {
 
 
 # *** Start of inlined file: src/run_script.sh ***
-# run_script Function:
-# This function accepts two parameters:
-# 1. script_name: The name of the script to be executed.
-# 2. extra_arg (optional): An additional argument to be passed to the script.
-# The function fetches and executes the script either from a local directory (if LOCAL_SCRIPT is set to "1") or from a remote GitHub repository.
-# If the script fails to execute, the function prints an error message and terminates the entire shell script with a non-zero status code.
+# The function fetches and executes a script either from LnL GitHub repository
+# or from the current local directory (if LOCAL_SCRIPT is set to "1").
+# The script is executed with "_" as parameter $0, telling the script that it is
+# run from within the ecosystem of LnL.
+# run_script accepts two parameters:
+#   1. script_name: The name of the script to be executed.
+#   2. extra_arg (optional): An additional argument to be passed to the script.
+# If the script fails to execute, the function prints an error message and terminates
+# the entire shell script with a non-zero status code.
 run_script() {
     local script_name=$1
     local extra_arg=$2
@@ -771,10 +778,10 @@ run_script() {
     echo -e "Executing Script: $script_name"
     echo -e "\n--------------------------------\n"
 
-    if [[ ${LOCAL_SCRIPT:-0} -eq 1 ]]; then
-        /bin/bash -c "$(cat $script_name)" _ "$extra_arg"
-    else
+    if [[ ${LOCAL_SCRIPT:-0} -eq 0 ]]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" _ "$extra_arg"
+    else
+        /bin/bash -c "$(cat $script_name)" _ "$extra_arg"
     fi
 
     if [ $? -ne 0 ]; then

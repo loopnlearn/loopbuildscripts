@@ -48,7 +48,7 @@ function return_when_ready() {
     read -p "" dummy
 }
 
-# Skip if this script is called from BuildLoop, then this has already been displayed
+# Skip if this script is called from another script, then this has already been displayed
 if [ "$0" != "_" ]; then
     # Inform the user about env variables set
     # Variables definition
@@ -422,7 +422,11 @@ function report_persistent_config_override() {
                 echo -e "     step 2: locate and double click on"
                 echo -e "  ${OVERRIDE_FULLPATH}"
                 echo -e "             to open that file in Xcode"
-                echo -e "     step 3: edit in Xcode and save file\n"
+                echo -e "     step 3: find the line that starts with "
+                echo -e "  ${DEV_TEAM_SETTING_NAME}="
+                echo -e "             and make modify the value to be your "
+                echo -e "             Apple Developer ID"
+                echo -e "     step 4: save the file\n"
                 echo -e "  When ready to proceed, hit return"
                 return_when_ready
                 break
@@ -581,7 +585,7 @@ function before_final_return_message() {
     echo -e "               Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e "*** Xcode will open automatically, please wait"
 }
 
 function before_final_return_message_without_watch() {
@@ -590,7 +594,7 @@ function before_final_return_message_without_watch() {
     echo -e "     Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e "* Xcode will open automatically, please wait"
+    echo -e "*** Xcode will open automatically, please wait"
 }
 
 function verify_xcode_path() {
