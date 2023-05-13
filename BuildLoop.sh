@@ -835,6 +835,10 @@ if [ "$WHICH" = "Loop" ]; then
         actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
         menu_select "${options[@]}" "${actions[@]}"
     else
+        section_separator
+        echo -e "You are about to download $CUSTOM_BRANCH branch from"
+        echo -e "  ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"}\n"
+        return_when_ready
         branch_select ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"} $CUSTOM_BRANCH
     fi
 
