@@ -1,4 +1,4 @@
-#!/bin/bash # script Build_iAPS.sh
+#!/bin/bash # script BuildiAPS.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,12 +10,13 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/"Build_iAPS"
+BUILD_DIR=~/Downloads/"BuildiAPS"
 # For iAPS, OVERRIDE_FILE is inside newly downloaded iAPS folder
 USE_OVERRIDE_IN_REPO="1"
 OVERRIDE_FILE="ConfigOverride.xcconfig"
 DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
-# iAPS is not using sub modules
+
+# sub modules are not required
 CLONE_SUB_MODULES="0"
 
 
@@ -348,7 +349,12 @@ function check_config_override_existence_offer_to_configure() {
     # 2) Copy team from latest provisioning profile
     # 3) Enter team manually with option to skip
 
-    if [[ $USE_OVERRIDE_IN_REPO -eq 1 ]]; then
+    # Options for USE_OVERRIDE_IN_REPO
+    #  0 means copy file in repo up 2 levels and use that
+    #  1 create the file in the repo and add development team
+    #  2 create the file in the repo with extra line(s) and the team
+
+    if [[ $USE_OVERRIDE_IN_REPO -ge 1 ]]; then
         OVERRIDE_FULLPATH="${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}"
     else
         OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
@@ -477,8 +483,16 @@ function create_persistent_config_override() {
 
 set_development_team() {
     team_id="$1"
-    if [[ $USE_OVERRIDE_IN_REPO != "1" ]] && [[ -f "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" ]]; then
+    if [[ $USE_OVERRIDE_IN_REPO == "0" ]] && 
+       [[ -f "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" ]]; then
         cp -p "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
+    else
+        echo "// Automatic Signing File" > ${OVERRIDE_FULLPATH}
+    fi
+    if [[ $USE_OVERRIDE_IN_REPO == "2" ]]; then
+        for str in ${ADDED_LINE_FOR_OVERRIDE[@]}; do
+            echo "$str" >> ${OVERRIDE_FULLPATH}
+         done
     fi
     echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
 }
@@ -680,13 +694,15 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+URL_THIS_SCRIPT="https://github.com/Artificial-Pancreas/iAPS.git"
+
 
 function select_iaps_main() {
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git main
+    branch_select ${URL_THIS_SCRIPT} main
 }
 
 function select_iaps_dev() {
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git dev
+    branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
@@ -707,7 +723,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("select_iaps_main" "select_iaps_dev" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 ############################################################
@@ -728,5 +744,5 @@ return_when_ready
 cd $REPO_NAME
 xed . 
 exit_message
-# *** End of inlined file: src/Build_iAPS.sh ***
+# *** End of inlined file: src/BuildiAPS.sh ***
 

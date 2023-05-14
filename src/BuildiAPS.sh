@@ -1,16 +1,17 @@
-#!/bin/bash # script Build_iAPS.sh
+#!/bin/bash # script BuildiAPS.sh
 
 ############################################################
 # Required parameters for any build script that uses
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/"Build_iAPS"
+BUILD_DIR=~/Downloads/"BuildiAPS"
 # For iAPS, OVERRIDE_FILE is inside newly downloaded iAPS folder
 USE_OVERRIDE_IN_REPO="1"
 OVERRIDE_FILE="ConfigOverride.xcconfig"
 DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
-# iAPS is not using sub modules
+
+# sub modules are not required
 CLONE_SUB_MODULES="0"
 
 #!inline build_functions.sh
@@ -27,13 +28,15 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+URL_THIS_SCRIPT="https://github.com/Artificial-Pancreas/iAPS.git"
+
 
 function select_iaps_main() {
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git main
+    branch_select ${URL_THIS_SCRIPT} main
 }
 
 function select_iaps_dev() {
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git dev
+    branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
@@ -54,7 +57,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("select_iaps_main" "select_iaps_dev" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/Artificial-Pancreas/iAPS.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 ############################################################
