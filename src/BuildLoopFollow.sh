@@ -24,12 +24,14 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+URL_THIS_SCRIPT="https://github.com/jonfawcett/LoopFollow.git"
+
 function choose_main_branch() {
-    branch_select https://github.com/jonfawcett/LoopFollow.git Main
+    branch_select ${URL_THIS_SCRIPT} Main
 }
 
 function choose_dev_branch() {
-    branch_select https://github.com/jonfawcett/LoopFollow.git dev
+    branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
@@ -47,7 +49,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/jonfawcett/LoopFollow.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 

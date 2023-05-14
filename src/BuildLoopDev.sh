@@ -28,13 +28,15 @@ FIXED_SHA=00f7b05
 FIXED_TESTED_DATE="2023 May 06"
 FLAG_USE_SHA=0
 
+URL_THIS_SCRIPT="https://github.com/LoopKit/LoopWorkspace.git"
+
 function choose_dev_branch() {
-    branch_select https://github.com/LoopKit/LoopWorkspace.git dev Loop_dev
+    branch_select ${URL_THIS_SCRIPT} dev Loop_dev
 }
 
 function choose_fixed_dev_branch() {
     FLAG_USE_SHA=1
-    branch_select https://github.com/LoopKit/LoopWorkspace.git dev Loop_dev_${FIXED_SHA}
+    branch_select ${URL_THIS_SCRIPT} dev Loop_dev_${FIXED_SHA}
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
@@ -49,7 +51,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("choose_dev_branch" "choose_fixed_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/LoopKit/LoopWorkspace.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 ############################################################

@@ -23,8 +23,10 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+URL_THIS_SCRIPT="https://github.com/LoopKit/LoopCaregiver.git"
+
 function choose_dev_branch() {
-    branch_select https://github.com/LoopKit/LoopCaregiver.git dev
+    branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
@@ -40,7 +42,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("choose_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/LoopKit/LoopCaregiver.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 ############################################################
