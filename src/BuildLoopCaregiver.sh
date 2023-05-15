@@ -23,16 +23,20 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+URL_THIS_SCRIPT="https://github.com/LoopKit/LoopCaregiver.git"
+
 function choose_dev_branch() {
-    branch_select https://github.com/LoopKit/LoopCaregiver.git dev
+    branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "\n ${RED}${BOLD}You are running the script for LoopCaregiver (LCG)"
     echo -e " This app is under development and may require frequent builds${NC}"
+    echo -e ""
     echo -e " If you have not read this section of LoopDocs - please review before continuing"
     echo -e "    https://loopkit.github.io/loopdocs/nightscout/remote-overrides"
+    echo -e ""
     echo -e " If you have not joined zulipchat Loop Caregiver App stream - do so now"
     echo -e "    https://loop.zulipchat.com/#narrow/stream/358458-Loop-Caregiver-App"
 
@@ -40,7 +44,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("choose_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/LoopKit/LoopCaregiver.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 ############################################################

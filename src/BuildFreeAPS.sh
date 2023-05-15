@@ -23,8 +23,10 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+URL_THIS_SCRIPT="https://github.com/loopnlearn/LoopWorkspace.git"
+
 function choose_main_branch() {
-    branch_select https://github.com/loopnlearn/LoopWorkspace.git freeaps FreeAPS_main
+    branch_select ${URL_THIS_SCRIPT} freeaps FreeAPS_main
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
@@ -39,7 +41,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("choose_main_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/loopnlearn/LoopWorkspace.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 ############################################################

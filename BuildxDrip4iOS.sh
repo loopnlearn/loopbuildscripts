@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildLoopFollow.sh
+#!/bin/bash # script BuildxDrip4iOS.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,9 +10,16 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/BuildLoopFollow
-OVERRIDE_FILE=LoopFollowConfigOverride.xcconfig
-DEV_TEAM_SETTING_NAME="LF_DEVELOPMENT_TEAM"
+BUILD_DIR=~/Downloads/BuildxDrip4iOS
+OVERRIDE_FILE=xDripConfigOverride.xcconfig
+DEV_TEAM_SETTING_NAME="XDRIP_DEVELOPMENT_TEAM"
+
+# value of 2 adds additional line to Override file in repo
+USE_OVERRIDE_IN_REPO="2"
+ADDED_LINE_FOR_OVERRIDE=("MAIN_APP_DISPLAY_NAME=xDrip4iO5" \
+    "MAIN_APP_BUNDLE_IDENTIFIER=com.\$(DEVELOPMENT_TEAM).xdripswift")
+
+# sub modules are not required
 CLONE_SUB_MODULES="0"
 
 
@@ -687,42 +694,32 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
-URL_THIS_SCRIPT="https://github.com/jonfawcett/LoopFollow.git"
+URL_THIS_SCRIPT="https://github.com/JohanDegraeve/xdripswift.git"
 
 function choose_main_branch() {
-    branch_select ${URL_THIS_SCRIPT} Main
-}
-
-function choose_dev_branch() {
-    branch_select ${URL_THIS_SCRIPT} dev
+    branch_select ${URL_THIS_SCRIPT} master xDrip4iOS
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script to build Loop Follow${NC}"
-    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e "\n${RED}${BOLD}You are running the script to build xDrip4iOS${NC}"
     echo -e ""
-    echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "Most people should choose Main branch"
-    echo -e ""
-    echo -e "Documentation is found at:"
-    echo -e "  https://www.loopandlearn.org/loop-follow/"
+    echo -e " If you have not read the docs - please review before continuing"
+    echo -e "    https://xdrip4ios.readthedocs.io/en/latest/"
     section_divider
-    
-    options=("Main Branch" "Dev Branch" "Cancel")
-    actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
+
+    options=("Continue" "Cancel")
+    actions=("choose_main_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
-
 
 ############################################################
 # Standard Build train
 ############################################################
 
 standard_build_train
-
 
 ############################################################
 # Open Xcode
@@ -735,5 +732,5 @@ return_when_ready
 cd $REPO_NAME
 xed . 
 exit_message
-# *** End of inlined file: src/BuildLoopFollow.sh ***
+# *** End of inlined file: src/BuildxDrip4iOS.sh ***
 

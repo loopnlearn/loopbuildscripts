@@ -24,30 +24,33 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+URL_THIS_SCRIPT="https://github.com/jonfawcett/LoopFollow.git"
+
 function choose_main_branch() {
-    branch_select https://github.com/jonfawcett/LoopFollow.git Main
+    branch_select ${URL_THIS_SCRIPT} Main
 }
 
 function choose_dev_branch() {
-    branch_select https://github.com/jonfawcett/LoopFollow.git dev
+    branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "\n ${RED}${BOLD}You are running the script to build Loop Follow${NC}"
-    echo -e "Before you continue, please ensure"
-    echo -e "  you have Xcode and Xcode command line tools installed\n"
+    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e ""
     echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "Most people should choose main branch"
+    echo -e "Most people should choose Main branch"
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/loop-follow/"
+    section_divider
     
     options=("Main Branch" "Dev Branch" "Cancel")
     actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/jonfawcett/LoopFollow.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 
