@@ -101,14 +101,6 @@ export SCRIPT_BRANCH="dev" && \
 
 These scripts can only be run directly.
 
-#### BuildFreeAPS.sh
-
-```
-export SCRIPT_BRANCH="dev" && \
-/bin/bash -c "$(curl -fsSL 
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildFreeAPS.sh)"
-```
-
 #### BuildLoopDev.sh
 
 This script enables building the dev branch, a lightly tested version of the dev branch or you can add ` - branch_name` to the end of the command to download and build any desired branch of LoopKit/LoopWorkspace.
@@ -117,6 +109,22 @@ This script enables building the dev branch, a lightly tested version of the dev
 export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopFixedDev.sh)"
+```
+
+#### BuildFreeAPS.sh
+
+```
+export SCRIPT_BRANCH="dev" && \
+/bin/bash -c "$(curl -fsSL 
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildFreeAPS.sh)"
+```
+
+#### Build_iAPS.sh
+
+```
+export SCRIPT_BRANCH="dev" && \
+/bin/bash -c "$(curl -fsSL 
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/Build_iAPS.sh)"
 ```
 
 ## Developer Tips
