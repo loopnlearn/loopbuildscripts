@@ -1,11 +1,11 @@
-#!/bin/bash # script BuildiAPS.sh
+#!/bin/bash # script Build_iAPS.sh
 
 ############################################################
 # Required parameters for any build script that uses
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/"BuildiAPS"
+BUILD_DIR=~/Downloads/"Build_iAPS"
 # For iAPS, OVERRIDE_FILE is inside newly downloaded iAPS folder
 USE_OVERRIDE_IN_REPO="1"
 OVERRIDE_FILE="ConfigOverride.xcconfig"

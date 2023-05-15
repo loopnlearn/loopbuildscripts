@@ -13,7 +13,7 @@ SCRIPTS=(\
   "BuildFreeAPS.sh" \
   "BuildLoopDev.sh" \
   "BuildxDrip4iOS.sh" \
-  "BuildiAPS.sh" \
+  "Build_iAPS.sh" \
   "CleanProfiles.sh" \
   "CleanDerived.sh" \
   "CleanCartDerived.sh" 

@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildiAPS.sh
+#!/bin/bash # script Build_iAPS.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,7 +10,7 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/"BuildiAPS"
+BUILD_DIR=~/Downloads/"Build_iAPS"
 # For iAPS, OVERRIDE_FILE is inside newly downloaded iAPS folder
 USE_OVERRIDE_IN_REPO="1"
 OVERRIDE_FILE="ConfigOverride.xcconfig"
@@ -741,5 +741,5 @@ return_when_ready
 cd $REPO_NAME
 xed . 
 exit_message
-# *** End of inlined file: src/BuildiAPS.sh ***
+# *** End of inlined file: src/Build_iAPS.sh ***
 
