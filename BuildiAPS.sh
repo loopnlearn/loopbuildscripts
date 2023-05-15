@@ -36,7 +36,9 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 function section_divider() {
-    echo -e "--------------------------------\n"
+    echo -e ""
+    echo -e "--------------------------------"
+    echo -e ""
 }
 
 function section_separator() {
@@ -102,19 +104,14 @@ function initial_greeting() {
 
     section_separator
     echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
-    echo -e "${BOLD}This project is:${RED}${BOLD}"
-    echo -e "  Open Source software"
-    echo -e "  Not \"approved\" for therapy\n"
-
-    echo -e "  You take full responsibility for reading and"
-    if [ -n "${documentation_link}" ]; then
-        echo -e "  understanding the documentation found at"
-        echo -e "      ${documentation_link},"
-    else
-        echo -e "  understanding the documentation"
-    fi
-    echo -e "  before building or running this system, and"
-    echo -e "  you do so at your own risk.${NC}\n"
+    echo -e "This project is:"
+    echo -e "${RED}${BOLD}  Open Source software"
+    echo -e "  Not \"approved\" for therapy${NC}"
+    echo -e ""
+    echo -e "  You take full responsibility when you build"
+    echo -e "  or run an open source app, and"
+    echo -e "  ${RED}${BOLD}you do so at your own risk.${NC}"
+    echo -e ""
     echo -e "To increase (decrease) font size"
     echo -e "  Hold down the CMD key and hit + (-)"
     echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
@@ -141,9 +138,9 @@ function initial_greeting() {
 }
 
 function choose_or_cancel() {
-    echo -e "\nType a number from the list below and return to proceed."
+    echo -e "Type a number from the list below and return to proceed."
     echo -e "${RED}${BOLD}  To cancel, any entry not in list also works${NC}"
-    echo -e "\n--------------------------------\n"
+    section_divider
 }
 
 function cancel_entry() {

@@ -32,7 +32,9 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 function section_divider() {
-    echo -e "--------------------------------\n"
+    echo -e ""
+    echo -e "--------------------------------"
+    echo -e ""
 }
 
 function section_separator() {
@@ -98,19 +100,14 @@ function initial_greeting() {
 
     section_separator
     echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
-    echo -e "${BOLD}This project is:${RED}${BOLD}"
-    echo -e "  Open Source software"
-    echo -e "  Not \"approved\" for therapy\n"
-
-    echo -e "  You take full responsibility for reading and"
-    if [ -n "${documentation_link}" ]; then
-        echo -e "  understanding the documentation found at"
-        echo -e "      ${documentation_link},"
-    else
-        echo -e "  understanding the documentation"
-    fi
-    echo -e "  before building or running this system, and"
-    echo -e "  you do so at your own risk.${NC}\n"
+    echo -e "This project is:"
+    echo -e "${RED}${BOLD}  Open Source software"
+    echo -e "  Not \"approved\" for therapy${NC}"
+    echo -e ""
+    echo -e "  You take full responsibility when you build"
+    echo -e "  or run an open source app, and"
+    echo -e "  ${RED}${BOLD}you do so at your own risk.${NC}"
+    echo -e ""
     echo -e "To increase (decrease) font size"
     echo -e "  Hold down the CMD key and hit + (-)"
     echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
@@ -137,9 +134,9 @@ function initial_greeting() {
 }
 
 function choose_or_cancel() {
-    echo -e "\nType a number from the list below and return to proceed."
+    echo -e "Type a number from the list below and return to proceed."
     echo -e "${RED}${BOLD}  To cancel, any entry not in list also works${NC}"
-    echo -e "\n--------------------------------\n"
+    section_divider
 }
 
 function cancel_entry() {
@@ -345,7 +342,12 @@ function check_config_override_existence_offer_to_configure() {
     # 2) Copy team from latest provisioning profile
     # 3) Enter team manually with option to skip
 
-    if [[ $USE_OVERRIDE_IN_REPO -eq 1 ]]; then
+    # Options for USE_OVERRIDE_IN_REPO
+    #  0 means copy file in repo up 2 levels and use that
+    #  1 create the file in the repo and add development team
+    #  2 create the file in the repo with extra line(s) and the team
+
+    if [[ $USE_OVERRIDE_IN_REPO -ge 1 ]]; then
         OVERRIDE_FULLPATH="${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}"
     else
         OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
@@ -474,8 +476,16 @@ function create_persistent_config_override() {
 
 set_development_team() {
     team_id="$1"
-    if [[ $USE_OVERRIDE_IN_REPO != "1" ]] && [[ -f "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" ]]; then
+    if [[ $USE_OVERRIDE_IN_REPO == "0" ]] && 
+       [[ -f "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" ]]; then
         cp -p "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
+    else
+        echo "// Automatic Signing File" > ${OVERRIDE_FULLPATH}
+    fi
+    if [[ $USE_OVERRIDE_IN_REPO == "2" ]]; then
+        for str in ${ADDED_LINE_FOR_OVERRIDE[@]}; do
+            echo "$str" >> ${OVERRIDE_FULLPATH}
+         done
     fi
     echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
 }
@@ -677,21 +687,23 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
+URL_THIS_SCRIPT="https://github.com/jonfawcett/LoopFollow.git"
+
 function choose_main_branch() {
-    branch_select https://github.com/jonfawcett/LoopFollow.git Main
+    branch_select ${URL_THIS_SCRIPT} Main
 }
 
 function choose_dev_branch() {
-    branch_select https://github.com/jonfawcett/LoopFollow.git dev
+    branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "\n ${RED}${BOLD}You are running the script to build Loop Follow${NC}"
-    echo -e "Before you continue, please ensure"
-    echo -e "  you have Xcode and Xcode command line tools installed\n"
+    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e ""
     echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "Most people should choose main branch"
+    echo -e "Most people should choose Main branch"
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/loop-follow/"
@@ -700,7 +712,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select https://github.com/jonfawcett/LoopFollow.git $CUSTOM_BRANCH
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
 
 
