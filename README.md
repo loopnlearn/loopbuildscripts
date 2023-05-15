@@ -108,7 +108,7 @@ This script enables building the dev branch, a lightly tested version of the dev
 ```
 export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopFixedDev.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopDev.sh)"
 ```
 
 #### BuildFreeAPS
