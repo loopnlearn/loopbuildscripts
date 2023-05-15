@@ -25,9 +25,9 @@ In addition to selecting options with the **Build-Select-Script** (BuildLoop.sh)
 
 There are several build scripts for specific code not included in **Build-Select-Script**. These are:
 
-* BuildLoopDev.sh
-* BuildFreeAPS.sh
-* Build_iAPS.sh
+* [BuildLoopDev.sh](#buildloopdev)
+* [BuildFreeAPS.sh](#buildfreeaps)
+* [Build_iAPS.sh](#build_iaps)
 
 
 ### Build-Select-Script
@@ -65,7 +65,7 @@ Each command below has an export command to select the correct branch from loopb
 
 Use these commands to run a script directly instead of using the **Build-Select-Script** menu.
 
-#### BuildLoopFollow.sh
+#### BuildLoopFollow
 
 ```
 export SCRIPT_BRANCH=dev && \
@@ -73,7 +73,7 @@ export SCRIPT_BRANCH=dev && \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopFollow.sh)"
 ```
 
-#### BuildLoopCaregiver.sh
+#### BuildLoopCaregiver
 
 ```
 export SCRIPT_BRANCH="dev" && \
@@ -81,7 +81,7 @@ export SCRIPT_BRANCH="dev" && \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopCaregiver.sh)"
 ```
 
-#### BuildxDrip4iOS.sh
+#### BuildxDrip4iOS
 
 ```
 export SCRIPT_BRANCH="dev" && \
@@ -89,7 +89,7 @@ export SCRIPT_BRANCH="dev" && \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildxDrip4iOS.sh)"
 ```
 
-#### CustomizationSelect.sh
+#### CustomizationSelect
 
 ```
 export SCRIPT_BRANCH="dev" && \
@@ -101,7 +101,7 @@ export SCRIPT_BRANCH="dev" && \
 
 These scripts can only be run directly.
 
-#### BuildLoopDev.sh
+#### BuildLoopDev
 
 This script enables building the dev branch, a lightly tested version of the dev branch or you can add ` - branch_name` to the end of the command to download and build any desired branch of LoopKit/LoopWorkspace.
 
@@ -111,7 +111,7 @@ export SCRIPT_BRANCH="dev" && \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopFixedDev.sh)"
 ```
 
-#### BuildFreeAPS.sh
+#### BuildFreeAPS
 
 ```
 export SCRIPT_BRANCH="dev" && \
@@ -119,7 +119,7 @@ export SCRIPT_BRANCH="dev" && \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildFreeAPS.sh)"
 ```
 
-#### Build_iAPS.sh
+#### Build_iAPS
 
 ```
 export SCRIPT_BRANCH="dev" && \
