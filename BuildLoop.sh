@@ -965,7 +965,7 @@ else
 
     options=(
         "Loop Customizations"
-        "Placeholder"
+        "CustomTypeOne Customizations"
         "Cancel"
     )
     actions=(
