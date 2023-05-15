@@ -703,8 +703,10 @@ function choose_main_branch() {
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "\n${RED}${BOLD}You are running the script to build xDrip4iOS${NC}"
+    echo -e ""
     echo -e " If you have not read the docs - please review before continuing"
     echo -e "    https://xdrip4ios.readthedocs.io/en/latest/"
+    section_divider
 
     options=("Continue" "Cancel")
     actions=("choose_main_branch" "cancel_entry")
