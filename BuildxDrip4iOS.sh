@@ -427,9 +427,10 @@ function report_persistent_config_override() {
                 break
                 ;;
             "Editing Instructions")
+                section_divider
                 echo -e " Part 1: How to find your Apple Developer ID"
                 how_to_find_your_id
-                return_when_ready
+                echo -e ""
                 echo -e " Part 2: Edit the automatic signing file before hitting return"
                 echo -e "     step 1: open finder, "
                 echo -e "     step 2: locate and double click on"
@@ -628,7 +629,7 @@ function verify_xcode_path() {
 
     # Check if the path contains "Xcode.app"
     if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
-        echo -e "$✅ ${SUCCESS_FONT}xcode-select path is correctly set: $xcode_path${NC}"
+        echo -e "✅ ${SUCCESS_FONT}xcode-select path is correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
     else
         echo -e "❌ ${ERROR_FONT}xcode-select is not pointing to the correct Xcode path."
