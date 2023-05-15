@@ -2,24 +2,24 @@
 
 These scripts simplify some tasks for building Loop and other DIY code from the GitHub repositories.
 
-The script that most user should use is the BuildLoop.sh script, otherwise known as the **Build-Select-Script**. This script has a menu for users to choose the option they want.
+Most users should use the BuildLoop.sh script, otherwise known as the **Build-Select-Script**. This script has a menu for users to choose the option they want.
 
-As of 15-May-2023, dev branch, the **Build-Select-Script** options (in BuildLoop.sh) were updated and expanded. The scripts are now significantly easier to create and maintain. All Build scripts include automatic signing.
+As of 15-May-2023 for the dev branch, the **Build-Select-Script** options were updated and expanded. The scripts are now significantly easier to create and maintain. All Build scripts include automatic signing.
 
-This script will help you to:
+The **Build-Select-Script** will help you to:
 
 1. Download and Build Loop
 2. Download and Build Related Apps
 3. Run Maintenance Utilities
 4. Run Customization Utilities
 
-The Build Loop option is similar to the previous version.
+The Build Loop option offers the released version of Loop and a released version with some commonly requested patches added (Loop with Patches).
 
 The Build Related Apps option includes Loop Follow, LoopCaregiver and xDrip4iOS. (Yes, GlucoseDirect is planned).
 
 The Maintenance Utilities option will soon include the Delete Old Downloads as well as other Xcode clean-up options.
 
-The Run Customization Utilities leads to the Customization Select script and has a placeholder for other customization scripts that are planned, but not yet ready.
+The Run Customization Utilities option leads to the Customization Select script and has a placeholder for other customization scripts that are planned, but not yet ready.
 
 In addition to selecting options with the **Build-Select-Script** (BuildLoop.sh), each of the scripts can be run directly.
 
@@ -115,7 +115,7 @@ export SCRIPT_BRANCH="dev" && \
 
 ```
 export SCRIPT_BRANCH="dev" && \
-/bin/bash -c "$(curl -fsSL 
+/bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildFreeAPS.sh)"
 ```
 
@@ -123,7 +123,7 @@ export SCRIPT_BRANCH="dev" && \
 
 ```
 export SCRIPT_BRANCH="dev" && \
-/bin/bash -c "$(curl -fsSL 
+/bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/Build_iAPS.sh)"
 ```
 
