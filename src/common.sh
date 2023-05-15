@@ -1,12 +1,3 @@
-#!/bin/bash
-# -----------------------------------------------------------------------------
-# This file is GENERATED. DO NOT EDIT directly.
-# If you want to modify this file, edit the corresponding file in the src/
-# directory and then run the build script to regenerate this output file.
-# -----------------------------------------------------------------------------
-
-
-# *** Start of inlined file: src/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -170,23 +161,3 @@ function menu_select() {
         done
     done
 }
-# *** End of inlined file: src/common.sh ***
-
-
-section_separator
-
-echo -e "\n\n🕒 Please be patient. On older computers and virtual machines, this may take 5-10 minutes or longer to run.\n"
-
-echo -e "\n\n✅ Removing Developer iOS DeviceSupport Library\n"
-rm -rf "$HOME/Library/Developer/Xcode/iOS\ DeviceSupport"
-
-echo -e "✅ Removing Developer watchOS DeviceSupport Library\n"
-rm -rf "$HOME/Library/Developer/Xcode/watchOS\ DeviceSupport"
-
-echo -e "✅ Removing Developer DerivedData\n"
-rm -rf "$HOME/Library/Developer/Xcode/DerivedData"
-
-echo -e "🛑  Please Reboot Now\n\n";
-exit 0
-# *** End of inlined file: src/XcodeClean.sh ***
-

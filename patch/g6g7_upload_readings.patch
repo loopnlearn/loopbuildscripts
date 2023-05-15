@@ -1,0 +1,50 @@
+Submodule CGMBLEKit contains modified content
+diff --git a/CGMBLEKit/CGMBLEKit/TransmitterManager.swift b/CGMBLEKit/CGMBLEKit/TransmitterManager.swift
+index 4942087..371b7bd 100644
+--- a/CGMBLEKit/CGMBLEKit/TransmitterManager.swift
++++ b/CGMBLEKit/CGMBLEKit/TransmitterManager.swift
+@@ -22,7 +22,7 @@ public struct TransmitterManagerState: RawRepresentable, Equatable {
+     
+     public var shouldSyncToRemoteService: Bool
+ 
+-    public init(transmitterID: String, shouldSyncToRemoteService: Bool = false) {
++    public init(transmitterID: String, shouldSyncToRemoteService: Bool = true) {
+         self.transmitterID = transmitterID
+         self.shouldSyncToRemoteService = shouldSyncToRemoteService
+     }
+Submodule G7SensorKit contains modified content
+diff --git a/G7SensorKit/G7SensorKit/G7CGMManager/G7CGMManagerState.swift b/G7SensorKit/G7SensorKit/G7CGMManager/G7CGMManagerState.swift
+index 948b02f..95538dd 100644
+--- a/G7SensorKit/G7SensorKit/G7CGMManager/G7CGMManagerState.swift
++++ b/G7SensorKit/G7SensorKit/G7CGMManager/G7CGMManagerState.swift
+@@ -18,7 +18,7 @@ public struct G7CGMManagerState: RawRepresentable, Equatable {
+     public var latestReading: G7GlucoseMessage?
+     public var latestReadingTimestamp: Date?
+     public var latestConnect: Date?
+-    public var uploadReadings: Bool = false
++    public var uploadReadings: Bool = true
+ 
+     init() {
+     }
+@@ -31,7 +31,7 @@ public struct G7CGMManagerState: RawRepresentable, Equatable {
+         }
+         self.latestReadingTimestamp = rawValue["latestReadingTimestamp"] as? Date
+         self.latestConnect = rawValue["latestConnect"] as? Date
+-        self.uploadReadings = rawValue["uploadReadings"] as? Bool ?? false
++        self.uploadReadings = rawValue["uploadReadings"] as? Bool ?? true
+     }
+ 
+     public var rawValue: RawValue {
+diff --git a/G7SensorKit/G7SensorKitUI/Views/G7SettingsViewModel.swift b/G7SensorKit/G7SensorKitUI/Views/G7SettingsViewModel.swift
+index 8513d2b..e2e275c 100644
+--- a/G7SensorKit/G7SensorKitUI/Views/G7SettingsViewModel.swift
++++ b/G7SensorKit/G7SensorKitUI/Views/G7SettingsViewModel.swift
+@@ -23,7 +23,7 @@ class G7SettingsViewModel: ObservableObject {
+     @Published private(set) var activatedAt: Date?
+     @Published private(set) var lastConnect: Date?
+     @Published private(set) var latestReadingTimestamp: Date?
+-    @Published var uploadReadings: Bool = false {
++    @Published var uploadReadings: Bool = true {
+         didSet {
+             cgmManager.uploadReadings = uploadReadings
+         }

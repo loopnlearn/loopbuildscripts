@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildLoopCaregiver.sh
+#!/bin/bash # script Build_iAPS.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,9 +10,14 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/"BuildLoop"
-OVERRIDE_FILE=LoopConfigOverride.xcconfig
-DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
+BUILD_DIR=~/Downloads/"Build_iAPS"
+# For iAPS, OVERRIDE_FILE is inside newly downloaded iAPS folder
+USE_OVERRIDE_IN_REPO="1"
+OVERRIDE_FILE="ConfigOverride.xcconfig"
+DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
+
+# sub modules are not required
+CLONE_SUB_MODULES="0"
 
 
 # *** Start of inlined file: src/build_functions.sh ***
@@ -686,25 +691,33 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
-URL_THIS_SCRIPT="https://github.com/LoopKit/LoopCaregiver.git"
+URL_THIS_SCRIPT="https://github.com/Artificial-Pancreas/iAPS.git"
 
-function choose_dev_branch() {
+
+function select_iaps_main() {
+    branch_select ${URL_THIS_SCRIPT} main
+}
+
+function select_iaps_dev() {
     branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script for LoopCaregiver (LCG)"
-    echo -e " This app is under development and may require frequent builds${NC}"
+    echo -e "\n ${RED}${BOLD}You are running the script to build iAPS${NC}"
+    echo -e "Before you continue, please ensure"
+    echo -e "  you have Xcode and Xcode command line tools installed\n"
+    echo -e "Please select which branch of iAPS to download and build."
+    echo -e "Most people should choose main branch"
     echo -e ""
-    echo -e " If you have not read this section of LoopDocs - please review before continuing"
-    echo -e "    https://loopkit.github.io/loopdocs/nightscout/remote-overrides"
+    echo -e "Documentation is found at:"
+    echo -e "  https://github.com/Artificial-Pancreas/iAPS#iaps"
+    echo -e "       and"
+    echo -e "  https://iaps.readthedocs.io/en/latest/"
     echo -e ""
-    echo -e " If you have not joined zulipchat Loop Caregiver App stream - do so now"
-    echo -e "    https://loop.zulipchat.com/#narrow/stream/358458-Loop-Caregiver-App"
 
-    options=("Continue" "Cancel")
-    actions=("choose_dev_branch" "cancel_entry")
+    options=("iAPS main" "iAPS dev" "Cancel")
+    actions=("select_iaps_main" "select_iaps_dev" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
@@ -722,11 +735,11 @@ standard_build_train
 ############################################################
 
 section_separator
-before_final_return_message_without_watch
+before_final_return_message
 echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
 exit_message
-# *** End of inlined file: src/BuildLoopCaregiver.sh ***
+# *** End of inlined file: src/Build_iAPS.sh ***
 

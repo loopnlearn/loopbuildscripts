@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildLoopCaregiver.sh
+#!/bin/bash # script BuildxDrip4iOS.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,9 +10,17 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/"BuildLoop"
-OVERRIDE_FILE=LoopConfigOverride.xcconfig
-DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
+BUILD_DIR=~/Downloads/BuildxDrip4iOS
+OVERRIDE_FILE=xDripConfigOverride.xcconfig
+DEV_TEAM_SETTING_NAME="XDRIP_DEVELOPMENT_TEAM"
+
+# value of 2 adds additional line to Override file in repo
+USE_OVERRIDE_IN_REPO="2"
+ADDED_LINE_FOR_OVERRIDE=("MAIN_APP_DISPLAY_NAME=xDrip4iO5" \
+    "MAIN_APP_BUNDLE_IDENTIFIER=com.\$(DEVELOPMENT_TEAM).xdripswift")
+
+# sub modules are not required
+CLONE_SUB_MODULES="0"
 
 
 # *** Start of inlined file: src/build_functions.sh ***
@@ -686,25 +694,22 @@ initial_greeting
 # Welcome & Branch Selection
 ############################################################
 
-URL_THIS_SCRIPT="https://github.com/LoopKit/LoopCaregiver.git"
+URL_THIS_SCRIPT="https://github.com/JohanDegraeve/xdripswift.git"
 
-function choose_dev_branch() {
-    branch_select ${URL_THIS_SCRIPT} dev
+function choose_main_branch() {
+    branch_select ${URL_THIS_SCRIPT} master xDrip4iOS
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script for LoopCaregiver (LCG)"
-    echo -e " This app is under development and may require frequent builds${NC}"
+    echo -e "\n${RED}${BOLD}You are running the script to build xDrip4iOS${NC}"
     echo -e ""
-    echo -e " If you have not read this section of LoopDocs - please review before continuing"
-    echo -e "    https://loopkit.github.io/loopdocs/nightscout/remote-overrides"
-    echo -e ""
-    echo -e " If you have not joined zulipchat Loop Caregiver App stream - do so now"
-    echo -e "    https://loop.zulipchat.com/#narrow/stream/358458-Loop-Caregiver-App"
+    echo -e " If you have not read the docs - please review before continuing"
+    echo -e "    https://xdrip4ios.readthedocs.io/en/latest/"
+    section_divider
 
     options=("Continue" "Cancel")
-    actions=("choose_dev_branch" "cancel_entry")
+    actions=("choose_main_branch" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
@@ -715,7 +720,6 @@ fi
 ############################################################
 
 standard_build_train
-
 
 ############################################################
 # Open Xcode
@@ -728,5 +732,5 @@ return_when_ready
 cd $REPO_NAME
 xed . 
 exit_message
-# *** End of inlined file: src/BuildLoopCaregiver.sh ***
+# *** End of inlined file: src/BuildxDrip4iOS.sh ***
 
