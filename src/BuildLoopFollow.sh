@@ -37,10 +37,10 @@ function choose_dev_branch() {
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "\n ${RED}${BOLD}You are running the script to build Loop Follow${NC}"
-    echo -e "Before you continue, please ensure"
-    echo -e "  you have Xcode and Xcode command line tools installed\n"
+    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e ""
     echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "Most people should choose main branch"
+    echo -e "Most people should choose Main branch"
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/loop-follow/"
