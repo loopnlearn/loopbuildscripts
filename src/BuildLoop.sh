@@ -56,6 +56,9 @@ actions=(\
 menu_select "${options[@]}" "${actions[@]}"
 
 if [ "$WHICH" = "Loop" ]; then
+
+    URL_THIS_SCRIPT="https://github.com/jonfawcett/LoopFollow.git"
+
     if [ -z "$CUSTOM_BRANCH" ]; then
         function choose_loop() {
             branch_select https://github.com/LoopKit/LoopWorkspace.git main Loop
@@ -133,27 +136,27 @@ elif [ "$WHICH" = "UtilityScripts" ]; then
     section_separator
     echo -e "${RED}${BOLD}These utility scripts automate several cleanup actions${NC}"
     echo -e ""
-    echo -e " 1. Clean Derived Data:"
+    echo -e " 1. Delete Old Downloads:"
+    echo -e "     Not ready for release - placeholder..."
+    echo -e " 2. Clean Derived Data:"
     echo -e "     Free space on your disk from old Xcode builds."
     echo -e "     You should quit Xcode before running this script."
-    echo -e " 2. Xcode Cleanup (The Big One):"
+    echo -e " 3. Xcode Cleanup (The Big One):"
     echo -e "     Clears more disk space filled up by using Xcode."
     echo -e "     * Use after uninstalling Xcode prior to new installation"
     echo -e "     * It can free up a substantial amount of disk space"
-    echo -e " 3. Delete Old Downloads:"
-    echo -e "     Not ready for release - placeholder..."
     section_divider
 
     options=(
+        "Delete Old Downloads"
         "Clean Derived Data"
         "Xcode Cleanup"
-        "Delete Old Downloads"
         "Cancel"
     )
     actions=(
+        "placeholder"
         "run_script 'CleanDerived.sh'"
         "run_script 'XcodeClean.sh'"
-        "placeholder"
         "cancel_entry"
     )
     menu_select "${options[@]}" "${actions[@]}"
