@@ -103,12 +103,6 @@ function initial_greeting() {
 
     section_separator
 
-    echo -e "Color Test:"
-    echo -e "  ${INFO_FONT}INFO_FONT${NC}"
-    echo -e "  ${SUCCESS_FONT}SUCCESS_FONT${NC}"
-    echo -e "  ${ERROR_FONT}ERROR_FONT${NC}"
-    section_divider
-
     echo -e "${INFO_FONT}*** IMPORTANT ***${NC}\n"
     echo -e "This project is:"
     echo -e "${INFO_FONT}  Open Source software"
