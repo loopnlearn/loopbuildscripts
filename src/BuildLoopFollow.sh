@@ -44,6 +44,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/loop-follow/"
+    section_divider
     
     options=("Main Branch" "Dev Branch" "Cancel")
     actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
