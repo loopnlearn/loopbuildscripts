@@ -41,7 +41,7 @@ function select_iaps_dev() {
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script to build iAPS${NC}"
+    echo -e "\n ${INFO_FONT}You are running the script to build iAPS${NC}"
     echo -e "Before you continue, please ensure"
     echo -e "  you have Xcode and Xcode command line tools installed\n"
     echo -e "Please select which branch of iAPS to download and build."

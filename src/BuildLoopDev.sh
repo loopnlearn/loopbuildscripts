@@ -41,8 +41,10 @@ function choose_fixed_dev_branch() {
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script for the development version for Loop${NC}"
+    echo -e "\n ${INFO_FONT}You are running the script for the development version for Loop${NC}"
     echo -e "\n** Be aware that a development version may require frequent rebuilds **${NC}\n"
+    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e ""
     echo -e " If you have not read this section of LoopDocs - please review before continuing"
     echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#whats-going-on-in-the-dev-branch"
     echo -e "\n** You can choose the dev branch or a lightly tested earlier commit of dev **"

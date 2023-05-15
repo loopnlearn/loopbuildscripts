@@ -87,7 +87,7 @@ function standard_build_train() {
 function ensure_a_year() {
     section_separator
 
-    echo -e "${RED}${BOLD}Ensure a year by deleting old provisioning profiles${NC}"
+    echo -e "${INFO_FONT}Ensure a year by deleting old provisioning profiles${NC}"
     echo -e "  Unless you have a specific reason, choose option 1\n"
     options=("Ensure a Year" "Skip" "Quit Scipt")
     select opt in "${options[@]}"
@@ -95,7 +95,7 @@ function ensure_a_year() {
         case $opt in
             "Ensure a Year")
                 rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
-                echo -e "✅ Profiles were cleaned"
+                echo -e "✅ ${SUCCESS_FONT}Profiles were cleaned${NC}"
                 echo -e "   Next app you build with Xcode will last a year"
                 return_when_ready
                 break
@@ -114,8 +114,8 @@ function ensure_a_year() {
 }
 
 function ios16_warning() {
-    echo -e "\n${RED}${BOLD}If you have iOS 16, you must enable Developer Mode${NC}"
-    echo -e "${RED}${BOLD}  Phone Settings->Privacy & Security${NC}"
+    echo -e "\n${INFO_FONT}If you have iOS 16, you must enable Developer Mode${NC}"
+    echo -e "${INFO_FONT}  Phone Settings->Privacy & Security${NC}"
     echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
@@ -157,16 +157,16 @@ function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
         # Use this flag to modify exit_message
-        echo -e "✅ Successful Download. Proceed to the next step..."
+        echo -e "✅ ${SUCCESS_FONT}Successful Download. Proceed to the next step...${NC}"
         return_when_ready
     else
-        echo -e "${RED}❌ An error occurred during download. Please investigate the issue.${NC}"
+        echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
         exit_message
     fi
 }
 
 function before_final_return_message() {
-    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e "\n${INFO_FONT}BEFORE you hit return:${NC}"
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     echo -e " *** Optional: For Apple Watch - if you never built app on it"
@@ -178,7 +178,7 @@ function before_final_return_message() {
 }
 
 function before_final_return_message_without_watch() {
-    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e "\n${INFO_FONT}BEFORE you hit return:${NC}"
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     ios16_warning
@@ -196,10 +196,10 @@ function verify_xcode_path() {
 
     # Check if the path contains "Xcode.app"
     if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
-        echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
+        echo -e "$✅ ${SUCCESS_FONT}xcode-select path is correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
     else
-        echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path."
+        echo -e "❌ ${ERROR_FONT}xcode-select is not pointing to the correct Xcode path."
         echo -e "     It is set to: $xcode_path${NC}"
         echo -e "Please choose an option below to proceed:\n"
         options=("Correct xcode-select path" "Skip" "Quit Script")
@@ -214,11 +214,11 @@ function verify_xcode_path() {
                     # Check if the path was corrected successfully
                     xcode_path=$(xcode-select -p)
                     if [[ "$xcode_path" == *Xcode.app* ]]; then
-                        echo -e "✅ xcode-select path has been corrected."
+                        echo -e "✅ ${SUCCESS_FONT}xcode-select path has been corrected.${NC}"
                         return_when_ready
                         break
                     else
-                        echo -e "${RED}❌ Failed to set xcode-select path correctly.${NC}"
+                        echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
                         exit_message
                     fi
                     ;;

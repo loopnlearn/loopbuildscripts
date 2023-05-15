@@ -31,8 +31,9 @@ function choose_dev_branch() {
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script for LoopCaregiver (LCG)"
+    echo -e "\n ${INFO_FONT}You are running the script for LoopCaregiver (LCG)"
     echo -e " This app is under development and may require frequent builds${NC}"
+    echo -e " You need Xcode and Xcode command line tools installed"
     echo -e ""
     echo -e " If you have not read this section of LoopDocs - please review before continuing"
     echo -e "    https://loopkit.github.io/loopdocs/nightscout/remote-overrides"

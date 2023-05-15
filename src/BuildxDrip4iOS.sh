@@ -39,7 +39,8 @@ function choose_main_branch() {
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n${RED}${BOLD}You are running the script to build xDrip4iOS${NC}"
+    echo -e "\n${INFO_FONT}You are running the script to build xDrip4iOS${NC}"
+    echo -e " You need Xcode and Xcode command line tools installed"
     echo -e ""
     echo -e " If you have not read the docs - please review before continuing"
     echo -e "    https://xdrip4ios.readthedocs.io/en/latest/"

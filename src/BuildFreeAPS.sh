@@ -31,11 +31,14 @@ function choose_main_branch() {
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script to build FreeAPS"
+    echo -e "\n ${INFO_FONT}You are running the script to build FreeAPS"
     echo -e " This app is a fork based off of Loop 2.2.x."
     echo -e " Please consider Loop 3 instead.${NC}"
+    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e ""
     echo -e " If you have not read this page - please review before continuing"
     echo -e "    https://www.loopandlearn.org/freeapsdoc"
+    section_divider
 
     options=("Continue" "Cancel")
     actions=("choose_main_branch" "cancel_entry")

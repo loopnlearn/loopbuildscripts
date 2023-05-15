@@ -24,11 +24,13 @@ STARTING_DIR="${PWD}"
 # define some font styles and colors
 ############################################################
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-PURPLE='\033[0;35m'
-BOLD='\033[1m'
+# remove special font
 NC='\033[0m'
+# add special font
+#INFO_FONT='\033[1;36m'
+INFO_FONT='\033[1m'
+SUCCESS_FONT='\033[1;32m'
+ERROR_FONT='\033[1;31m'
 
 function section_divider() {
     echo -e ""
@@ -42,7 +44,7 @@ function section_separator() {
 }
 
 function return_when_ready() {
-    echo -e "${RED}${BOLD}Return when ready to continue${NC}"
+    echo -e "${INFO_FONT}Return when ready to continue${NC}"
     read -p "" dummy
 }
 
@@ -51,7 +53,7 @@ if [ "$0" != "_" ]; then
     # Inform the user about env variables set
     # Variables definition
     variables=(
-        "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+        "SCRIPT_BRANCH: Indicates the loopbuildscripts branch in use."
         "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
@@ -76,7 +78,8 @@ if [ "$0" != "_" ]; then
             if ! $any_variable_set; then
                 section_separator
                 echo -e "For your information, you are running this script in customized mode"
-                echo -e "with environment variables set:"
+                echo -e "You might be using a branch other than main, and using SCRIPT_BRANCH"
+                echo -e "Developers might have additional environment variables set:"
                 any_variable_set=true
             fi
 
@@ -98,18 +101,25 @@ function initial_greeting() {
     local documentation_link="${1:-}"
 
     section_separator
-    echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
+
+    echo -e "Color Test:"
+    echo -e "  ${INFO_FONT}INFO_FONT${NC}"
+    echo -e "  ${SUCCESS_FONT}SUCCESS_FONT${NC}"
+    echo -e "  ${ERROR_FONT}ERROR_FONT${NC}"
+    section_divider
+
+    echo -e "${INFO_FONT}*** IMPORTANT ***${NC}\n"
     echo -e "This project is:"
-    echo -e "${RED}${BOLD}  Open Source software"
+    echo -e "${INFO_FONT}  Open Source software"
     echo -e "  Not \"approved\" for therapy${NC}"
     echo -e ""
     echo -e "  You take full responsibility when you build"
     echo -e "  or run an open source app, and"
-    echo -e "  ${RED}${BOLD}you do so at your own risk.${NC}"
+    echo -e "  ${INFO_FONT}you do so at your own risk.${NC}"
     echo -e ""
     echo -e "To increase (decrease) font size"
     echo -e "  Hold down the CMD key and hit + (-)"
-    echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
+    echo -e "\n${INFO_FONT}By typing 1 and ENTER, you indicate you understand"
     echo -e "\n--------------------------------\n${NC}"
 
     options=("Agree" "Cancel")
@@ -119,11 +129,11 @@ function initial_greeting() {
             break
             ;;
         "Cancel")
-            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n"
+            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
             exit_message
             ;;
         *)
-            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n"
+            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
             exit_message
             ;;
         esac
@@ -134,25 +144,25 @@ function initial_greeting() {
 
 function choose_or_cancel() {
     echo -e "Type a number from the list below and return to proceed."
-    echo -e "${RED}${BOLD}  To cancel, any entry not in list also works${NC}"
+    echo -e "${INFO_FONT}  To cancel, any entry not in list also works${NC}"
     section_divider
 }
 
 function cancel_entry() {
-    echo -e "\n${RED}${BOLD}User canceled${NC}\n"
+    echo -e "\n${INFO_FONT}User canceled${NC}\n"
     exit_message
 }
 
 function invalid_entry() {
-    echo -e "\n${RED}${BOLD}User canceled by entering an invalid option${NC}\n"
+    echo -e "\n${ERROR_FONT}User canceled by entering an invalid option${NC}\n"
     exit_message
 }
 
 function exit_message() {
     section_divider
-    echo -e "\nShell Script Completed\n"
+    echo -e "${SUCCESS_FONT}Shell Script Completed${NC}"
     echo -e " * You may close the terminal window now if you want"
-    echo -e "   or"
+    echo -e " or"
     echo -e " * You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n"
     exit 0
@@ -415,7 +425,10 @@ function report_persistent_config_override() {
                 break
                 ;;
             "Editing Instructions")
-                echo -e "    Edit the automatic signing file before hitting return"
+                echo -e " Part 1: How to find your Apple Developer ID"
+                how_to_find_your_id
+                return_when_ready
+                echo -e " Part 2: Edit the automatic signing file before hitting return"
                 echo -e "     step 1: open finder, "
                 echo -e "     step 2: locate and double click on"
                 echo -e "             ${OVERRIDE_FULLPATH/$HOME/~}"
@@ -504,7 +517,7 @@ function standard_build_train() {
 function ensure_a_year() {
     section_separator
 
-    echo -e "${RED}${BOLD}Ensure a year by deleting old provisioning profiles${NC}"
+    echo -e "${INFO_FONT}Ensure a year by deleting old provisioning profiles${NC}"
     echo -e "  Unless you have a specific reason, choose option 1\n"
     options=("Ensure a Year" "Skip" "Quit Scipt")
     select opt in "${options[@]}"
@@ -512,7 +525,7 @@ function ensure_a_year() {
         case $opt in
             "Ensure a Year")
                 rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
-                echo -e "✅ Profiles were cleaned"
+                echo -e "✅ ${SUCCESS_FONT}Profiles were cleaned${NC}"
                 echo -e "   Next app you build with Xcode will last a year"
                 return_when_ready
                 break
@@ -531,8 +544,8 @@ function ensure_a_year() {
 }
 
 function ios16_warning() {
-    echo -e "\n${RED}${BOLD}If you have iOS 16, you must enable Developer Mode${NC}"
-    echo -e "${RED}${BOLD}  Phone Settings->Privacy & Security${NC}"
+    echo -e "\n${INFO_FONT}If you have iOS 16, you must enable Developer Mode${NC}"
+    echo -e "${INFO_FONT}  Phone Settings->Privacy & Security${NC}"
     echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
@@ -574,16 +587,16 @@ function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
         # Use this flag to modify exit_message
-        echo -e "✅ Successful Download. Proceed to the next step..."
+        echo -e "✅ ${SUCCESS_FONT}Successful Download. Proceed to the next step...${NC}"
         return_when_ready
     else
-        echo -e "${RED}❌ An error occurred during download. Please investigate the issue.${NC}"
+        echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
         exit_message
     fi
 }
 
 function before_final_return_message() {
-    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e "\n${INFO_FONT}BEFORE you hit return:${NC}"
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     echo -e " *** Optional: For Apple Watch - if you never built app on it"
@@ -595,7 +608,7 @@ function before_final_return_message() {
 }
 
 function before_final_return_message_without_watch() {
-    echo -e "\n${RED}${BOLD}BEFORE you hit return:${NC}"
+    echo -e "\n${INFO_FONT}BEFORE you hit return:${NC}"
     echo -e " *** Unlock your phone and plug it into your computer"
     echo -e "     Trust computer if asked"
     ios16_warning
@@ -613,10 +626,10 @@ function verify_xcode_path() {
 
     # Check if the path contains "Xcode.app"
     if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
-        echo -e "${GREEN}xcode-select path is correctly set: $xcode_path${NC}"
+        echo -e "$✅ ${SUCCESS_FONT}xcode-select path is correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
     else
-        echo -e "${RED}${BOLD}xcode-select is not pointing to the correct Xcode path."
+        echo -e "❌ ${ERROR_FONT}xcode-select is not pointing to the correct Xcode path."
         echo -e "     It is set to: $xcode_path${NC}"
         echo -e "Please choose an option below to proceed:\n"
         options=("Correct xcode-select path" "Skip" "Quit Script")
@@ -631,11 +644,11 @@ function verify_xcode_path() {
                     # Check if the path was corrected successfully
                     xcode_path=$(xcode-select -p)
                     if [[ "$xcode_path" == *Xcode.app* ]]; then
-                        echo -e "✅ xcode-select path has been corrected."
+                        echo -e "✅ ${SUCCESS_FONT}xcode-select path has been corrected.${NC}"
                         return_when_ready
                         break
                     else
-                        echo -e "${RED}❌ Failed to set xcode-select path correctly.${NC}"
+                        echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
                         exit_message
                     fi
                     ;;
@@ -694,11 +707,14 @@ function choose_main_branch() {
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${RED}${BOLD}You are running the script to build FreeAPS"
+    echo -e "\n ${INFO_FONT}You are running the script to build FreeAPS"
     echo -e " This app is a fork based off of Loop 2.2.x."
     echo -e " Please consider Loop 3 instead.${NC}"
+    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e ""
     echo -e " If you have not read this page - please review before continuing"
     echo -e "    https://www.loopandlearn.org/freeapsdoc"
+    section_divider
 
     options=("Continue" "Cancel")
     actions=("choose_main_branch" "cancel_entry")

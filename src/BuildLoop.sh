@@ -14,8 +14,10 @@ DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 #!inline run_script.sh
 
 function placeholder() {
-    echo -e "The feature is not ready"
-    echo -e "This is a placeholder"
+    section_divider
+    echo -e "  The feature is not available, coming soon"
+    echo -e "  This is a placeholder"
+    exit_message
 }
 
 ############################################################
@@ -30,7 +32,7 @@ initial_greeting
 ############################################################
 
 section_separator
-echo -e "${RED}${BOLD}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
+echo -e "${INFO_FONT}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
 echo -e "This script will help you to:"
 echo -e "  1 Download and Build Loop"
 echo -e "  2 Download and Build Related Apps"
@@ -69,7 +71,7 @@ if [ "$WHICH" = "Loop" ]; then
         }
         
         section_separator
-        echo -e "${RED}${BOLD}You should be familiar with the documenation found at:${NC}"
+        echo -e "${INFO_FONT}You should be familiar with the documenation found at:${NC}"
         echo -e "   https://loopdocs.org"
         echo -e ""
         echo -e "Select which version of Loop to download and build."
@@ -134,9 +136,10 @@ elif [ "$WHICH" = "OtherApps" ]; then
 elif [ "$WHICH" = "UtilityScripts" ]; then
 
     section_separator
-    echo -e "${RED}${BOLD}These utility scripts automate several cleanup actions${NC}"
+    echo -e "${INFO_FONT}These utility scripts automate several cleanup actions${NC}"
     echo -e ""
     echo -e " 1. Delete Old Downloads:"
+    echo -e "     Planned function will keep most recent download for each build type"
     echo -e "     Not ready for release - placeholder..."
     echo -e " 2. Clean Derived Data:"
     echo -e "     Free space on your disk from old Xcode builds."
@@ -163,7 +166,7 @@ elif [ "$WHICH" = "UtilityScripts" ]; then
 
 else
     section_separator
-    echo -e "${RED}${BOLD}Selectable Customizations for:${NC}"
+    echo -e "${INFO_FONT}Selectable Customizations for:${NC}"
     echo -e "    Released code: Loop or Loop with Patches"
     echo -e "    Might work for development branches of Loop"
     echo -e ""

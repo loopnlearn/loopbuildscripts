@@ -13,11 +13,13 @@ STARTING_DIR="${PWD}"
 # define some font styles and colors
 ############################################################
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-PURPLE='\033[0;35m'
-BOLD='\033[1m'
+# remove special font
 NC='\033[0m'
+# add special font
+#INFO_FONT='\033[1;36m'
+INFO_FONT='\033[1m'
+SUCCESS_FONT='\033[1;32m'
+ERROR_FONT='\033[1;31m'
 
 function section_divider() {
     echo -e ""
@@ -31,7 +33,7 @@ function section_separator() {
 }
 
 function return_when_ready() {
-    echo -e "${RED}${BOLD}Return when ready to continue${NC}"
+    echo -e "${INFO_FONT}Return when ready to continue${NC}"
     read -p "" dummy
 }
 
@@ -40,7 +42,7 @@ if [ "$0" != "_" ]; then
     # Inform the user about env variables set
     # Variables definition
     variables=(
-        "SCRIPT_BRANCH: The branch other scripts will be sourced from."
+        "SCRIPT_BRANCH: Indicates the loopbuildscripts branch in use."
         "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
@@ -65,7 +67,8 @@ if [ "$0" != "_" ]; then
             if ! $any_variable_set; then
                 section_separator
                 echo -e "For your information, you are running this script in customized mode"
-                echo -e "with environment variables set:"
+                echo -e "You might be using a branch other than main, and using SCRIPT_BRANCH"
+                echo -e "Developers might have additional environment variables set:"
                 any_variable_set=true
             fi
 
@@ -87,18 +90,25 @@ function initial_greeting() {
     local documentation_link="${1:-}"
 
     section_separator
-    echo -e "${RED}${BOLD}*** IMPORTANT ***${NC}\n"
+
+    echo -e "Color Test:"
+    echo -e "  ${INFO_FONT}INFO_FONT${NC}"
+    echo -e "  ${SUCCESS_FONT}SUCCESS_FONT${NC}"
+    echo -e "  ${ERROR_FONT}ERROR_FONT${NC}"
+    section_divider
+
+    echo -e "${INFO_FONT}*** IMPORTANT ***${NC}\n"
     echo -e "This project is:"
-    echo -e "${RED}${BOLD}  Open Source software"
+    echo -e "${INFO_FONT}  Open Source software"
     echo -e "  Not \"approved\" for therapy${NC}"
     echo -e ""
     echo -e "  You take full responsibility when you build"
     echo -e "  or run an open source app, and"
-    echo -e "  ${RED}${BOLD}you do so at your own risk.${NC}"
+    echo -e "  ${INFO_FONT}you do so at your own risk.${NC}"
     echo -e ""
     echo -e "To increase (decrease) font size"
     echo -e "  Hold down the CMD key and hit + (-)"
-    echo -e "\n${RED}${BOLD}By typing 1 and ENTER, you indicate you understand"
+    echo -e "\n${INFO_FONT}By typing 1 and ENTER, you indicate you understand"
     echo -e "\n--------------------------------\n${NC}"
 
     options=("Agree" "Cancel")
@@ -108,11 +118,11 @@ function initial_greeting() {
             break
             ;;
         "Cancel")
-            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n"
+            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
             exit_message
             ;;
         *)
-            echo -e "\n${RED}${BOLD}User did not agree to terms of use.${NC}\n\n"
+            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
             exit_message
             ;;
         esac
@@ -123,25 +133,25 @@ function initial_greeting() {
 
 function choose_or_cancel() {
     echo -e "Type a number from the list below and return to proceed."
-    echo -e "${RED}${BOLD}  To cancel, any entry not in list also works${NC}"
+    echo -e "${INFO_FONT}  To cancel, any entry not in list also works${NC}"
     section_divider
 }
 
 function cancel_entry() {
-    echo -e "\n${RED}${BOLD}User canceled${NC}\n"
+    echo -e "\n${INFO_FONT}User canceled${NC}\n"
     exit_message
 }
 
 function invalid_entry() {
-    echo -e "\n${RED}${BOLD}User canceled by entering an invalid option${NC}\n"
+    echo -e "\n${ERROR_FONT}User canceled by entering an invalid option${NC}\n"
     exit_message
 }
 
 function exit_message() {
     section_divider
-    echo -e "\nShell Script Completed\n"
+    echo -e "${SUCCESS_FONT}Shell Script Completed${NC}"
     echo -e " * You may close the terminal window now if you want"
-    echo -e "   or"
+    echo -e " or"
     echo -e " * You can press the up arrow ⬆️  on the keyboard"
     echo -e "    and return to repeat script from beginning.\n\n"
     exit 0
