@@ -4,7 +4,7 @@ These scripts simplify some tasks for building Loop and other DIY code from the 
 
 The script that most user should use is the BuildLoop.sh script, otherwise known as the **Build-Select-Script**. This script has a menu for users to choose the option they want.
 
-As of 15-May-2023, dev branch, the Build-Select options (in BuildLoop.sh) was updated and expanded.
+As of 15-May-2023, dev branch, the **Build-Select-Script** options (in BuildLoop.sh) was updated and expanded. The scripts are now significantly easier to create and maintain.
 
 This script will help you to:
 
@@ -21,24 +21,13 @@ The Maintenance Utilities option will soon include the Delete Old Downloads as w
 
 The Run Customization Utilities leads to the Customization Select script and has a placeholder for other customization scripts that are planned, but not yet ready.
 
-In addition to running scripts through the Build-Select-Script (BuildLoop.sh), each of the scripts can be run directly.
+In addition to running scripts through the **Build-Select-Script** (BuildLoop.sh), each of the scripts can be run directly.
 
-There are several build scripts for specific code that is not included in Build-Select-Script. These are:
+There are several build scripts for specific code that is not included in **Build-Select-Script**. These are:
 
 * BuildFreeAPS.sh
 * Build_iAPS.sh
 
-### When running these scripts in any branch other than main
-
-The scripts have been redesigned to be significantly easier to create and maintain.
-
-If you are running a script from any branch other than main, you will need to copy and paste this command into your terminal one time to set the SCRIPT_BRANCH environment variable. To clear this variable, the easiest approach is to open a new terminal window.
-
-```
-export SCRIPT_BRANCH="dev"
-```
-
-All the copy paste command below use $SCRIPT_BRANCH. That will be replaced with main prior to merge with dev.
 
 ### Build-Select-Script
 
@@ -51,6 +40,7 @@ This is documented (note - for main only, not for dev) in
 2. Copy/Paste this code into terminal (use copy icon, bottom right): 
 
 ```
+export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoop.sh)"
 ```
@@ -68,38 +58,42 @@ The other scripts can be run with the following commands
 
 #### branches other than main
 
-Instead of main, the scripts below use $SCRIPT_BRANCH. Be sure you followed the directions at this link: [When running these scripts in any branch other than main](#version-for-any-branch-other-than-main).
+Each command below has an export command to select the correct branch. This will be cleaned up prior to merge to main. Not that the export sets an enviroment variable that remains set (and used) until it it cleared.
 
 #### Scripts included in Build-Select-Script
 
-Use these commands to run a script directly instead of using the Build-Select-Script menu.
+Use these commands to run a script directly instead of using the **Build-Select-Script** menu.
 
 #### BuildLoopFollow.sh
 
 ```
+export SCRIPT_BRANCH=dev && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/main/BuildLoopFollow.sh)"
+  https://raw.githubusercontent.com/jonfawcett/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFollow.sh)"
 ```
 
 #### BuildLoopCaregiver.sh
 
 ```
+export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildLoopCaregiver.sh)"
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopCaregiver.sh)"
 ```
 
 #### BuildxDrip4iOS.sh
 
 ```
+export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildxDrip4iOS.sh)"
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildxDrip4iOS.sh)"
 ```
 
 #### CustomizationSelect.sh
 
 ```
+export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/CustomizationSelect.sh)"
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/CustomizationSelect.sh)"
 ```
 
 #### Scripts not included in Build-Select-Script
@@ -109,8 +103,9 @@ These scripts can only be run directly.
 #### BuildFreeAPS.sh
 
 ```
+export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL 
-  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/main/BuildFreeAPS.sh)"
+  https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildFreeAPS.sh)"
 ```
 
 #### BuildLoopDev.sh
@@ -118,6 +113,7 @@ These scripts can only be run directly.
 This script enables building the dev branch, a lightly tested version of the dev branch or you can add ` - branch_name` to the end of the command to download and build any desired branch of LoopKit/LoopWorkspace.
 
 ```
+export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/BuildLoopFixedDev.sh)"
 ```
