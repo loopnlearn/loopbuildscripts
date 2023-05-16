@@ -118,11 +118,13 @@ elif [ "$WHICH" = "OtherApps" ]; then
         "Build Loop Follow" \
         "Build LoopCaregiver" \
         "Build xDrip4iOS" \
+        "Build Glucose Direct" \
         "Cancel")
     actions=(\
         "WHICH=LoopFollow" \
         "WHICH=LoopCaregiver" \
         "WHICH=xDrip4iOS" \
+        "WHICH=GlucoseDirect" \
         "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
     if [ "$WHICH" = "LoopFollow" ]; then
@@ -131,6 +133,8 @@ elif [ "$WHICH" = "OtherApps" ]; then
         run_script "BuildLoopCaregiver.sh" $CUSTOM_BRANCH
     elif [ "$WHICH" = "xDrip4iOS" ]; then
         run_script "BuildxDrip4iOS.sh" $CUSTOM_BRANCH
+    elif [ "$WHICH" = "GlucoseDirect" ]; then
+        run_script "BuildGlucoseDirect.sh" $CUSTOM_BRANCH
     fi
 
 elif [ "$WHICH" = "UtilityScripts" ]; then

@@ -364,7 +364,9 @@ function check_config_override_existence_offer_to_configure() {
         OVERRIDE_FULLPATH="${BUILD_DIR}/${OVERRIDE_FILE}"
     fi
 
-    if [ -f ${OVERRIDE_FULLPATH} ] && grep -q "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}; then
+    if [ -f ${OVERRIDE_FULLPATH} ] && \
+        [[ $USE_OVERRIDE_IN_REPO -ne "3" ]] && \
+        grep -q "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}; then
         # how_to_find_your_id
         report_persistent_config_override
     else
@@ -429,19 +431,21 @@ function report_persistent_config_override() {
             "Editing Instructions")
                 section_divider
                 echo -e " Part 1: How to find your Apple Developer ID"
+                echo -e ""
                 how_to_find_your_id
                 echo -e ""
                 echo -e " Part 2: Edit the automatic signing file before hitting return"
-                echo -e "     step 1: open finder, "
-                echo -e "     step 2: locate and double click on"
-                echo -e "             ${OVERRIDE_FULLPATH/$HOME/~}"
-                echo -e "             to open that file in Xcode"
-                echo -e "     step 3: find the line that starts with "
-                echo -e "             ${DEV_TEAM_SETTING_NAME}="
-                echo -e "             and modify the value to be your "
-                echo -e "             Apple Developer ID"
-                echo -e "     step 4: save the file\n"
-                echo -e "  When ready to proceed, hit return"
+                echo -e "   step 1: open finder, "
+                echo -e "   step 2: locate and double click on"
+                echo -e "           ${OVERRIDE_FULLPATH/$HOME/~}"
+                echo -e "           to open that file in Xcode"
+                echo -e "   step 3: find the line that starts with "
+                echo -e "           ${DEV_TEAM_SETTING_NAME}="
+                echo -e "           and modify the value to be your "
+                echo -e "           Apple Developer ID"
+                echo -e "   step 4: save the file"
+                echo -e ""
+                echo -e " When ready to proceed, hit return"
                 return_when_ready
                 break
                 ;;
@@ -494,7 +498,8 @@ set_development_team() {
     if [[ $USE_OVERRIDE_IN_REPO == "0" ]] && 
        [[ -f "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" ]]; then
         cp -p "${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}" "${OVERRIDE_FULLPATH}"
-    else
+    elif [[ $USE_OVERRIDE_IN_REPO == "1" ]] || \
+         [[ $USE_OVERRIDE_IN_REPO == "2" ]]; then
         echo "// Automatic Signing File" > ${OVERRIDE_FULLPATH}
     fi
     if [[ $USE_OVERRIDE_IN_REPO == "2" ]]; then
@@ -629,7 +634,7 @@ function verify_xcode_path() {
 
     # Check if the path contains "Xcode.app"
     if [[ -x "$xcode_path/usr/bin/xcodebuild" ]]; then
-        echo -e "✅ ${SUCCESS_FONT}xcode-select path is correctly set: $xcode_path${NC}"
+        echo -e "✅ ${SUCCESS_FONT}xcode-select path correctly set: $xcode_path${NC}"
         echo -e "Continuing the script..."
     else
         echo -e "❌ ${ERROR_FONT}xcode-select is not pointing to the correct Xcode path."

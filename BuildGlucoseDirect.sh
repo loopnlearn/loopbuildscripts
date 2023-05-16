@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildLoop.sh
+#!/bin/bash # script BuildGlucoseDirect.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,9 +10,15 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/BuildLoop
-OVERRIDE_FILE=LoopConfigOverride.xcconfig
-DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
+BUILD_DIR=~/Downloads/"BuildGlucoseDirect"
+OVERRIDE_FILE=GlucoseDirect.xcconfig
+DEV_TEAM_SETTING_NAME="DEVELOPMENT_TEAM"
+
+# value of 3 means add to an existing file in the repo
+USE_OVERRIDE_IN_REPO="3"
+
+# sub modules are not required
+CLONE_SUB_MODULES="0"
 
 
 # *** Start of inlined file: src/build_functions.sh ***
@@ -687,140 +693,6 @@ function branch_select() {
 # *** End of inlined file: src/build_functions.sh ***
 
 
-# *** Start of inlined file: src/delete_old_downloads.sh ***
-# Flag to skip all deletions
-SKIP_ALL=false
-
-function list_build_folders() {
-    echo "The script will look for old downloads in these locations:"
-    for pattern in "${patterns[@]}"; do
-        echo "$pattern"
-    done
-
-    options=("Continue" "Skip" "Exit script")
-    actions=("return" "skip_all" "cancel_entry")
-    menu_select "${options[@]}" "${actions[@]}"
-}
-
-function delete_folders_except_latest() {
-    local pattern="$1"
-    local total_size=0
-    local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
-
-    section_divider
-
-    if [ ${#folders[@]} -le 1 ]; then
-        echo "No folders to delete for '$pattern'"
-        return
-    fi
-
-    echo "Folder to Keep:"
-    echo "  ${folders[0]/#$HOME/~}"
-    echo
-
-    echo "Folder(s) that can be deleted:"
-    for folder in "${folders[@]:1}"; do
-        echo "  ${folder/#$HOME/~}"
-        total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
-    done
-
-    total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
-    echo "Total size to be deleted: $total_size_mb MB"
-
-    options=("Delete these Folders" "Skip delete at this location" "Skip delete at all locations" "Exit script")
-    actions=("delete_selected_folders \"$pattern\"" "return" "skip_all" "cancel_entry")
-    menu_select "${options[@]}" "${actions[@]}"
-}
-
-function delete_selected_folders() {
-    local pattern="$1"
-    local folders=($(ls -dt ~/Downloads/$pattern))
-
-    for folder in "${folders[@]:1}"; do
-        # rm -rf "$folder"
-        echo "xxx $folder"
-    done
-
-    echo "Folder(s) deleted."
-}
-
-function skip_all() {
-    SKIP_ALL=true
-}
-
-function delete_old_downloads() {
-    patterns=(
-        "BuildLoopFollow/LoopFollow_Main-*"
-        "BuildLoopFollow/LoopFollow_dev-*"
-        "Build_iAPS/iAPS_main-*"
-        "Build_iAPS/iAPS_dev-*"
-        "BuildLoop/Loop-*"
-        "BuildLoop/FreeAPS-*"
-        "BuildLoop/LoopCaregiver-*"
-        "BuildLoop/Loop_lnl_patches-*"
-        "BuildLoop/LoopWorkspace_*"
-    )
-
-    section_separator
-    list_build_folders
-
-    if [ "$SKIP_ALL" = false ] ; then
-        echo "We will now go through all build folders and for each, "
-        echo "show the latest folder while giving you the option to "
-        echo "remove older folders."
-        echo 
-
-        for pattern in "${patterns[@]}"; do
-            if [ "$SKIP_ALL" = false ] ; then
-                delete_folders_except_latest "$pattern"
-            else
-                break
-            fi
-        done
-    fi
-
-    exit_message
-}
-# *** End of inlined file: src/delete_old_downloads.sh ***
-
-
-# *** Start of inlined file: src/run_script.sh ***
-# The function fetches and executes a script either from LnL GitHub repository
-# or from the current local directory (if LOCAL_SCRIPT is set to "1").
-# The script is executed with "_" as parameter $0, telling the script that it is
-# run from within the ecosystem of LnL.
-# run_script accepts two parameters:
-#   1. script_name: The name of the script to be executed.
-#   2. extra_arg (optional): An additional argument to be passed to the script.
-# If the script fails to execute, the function prints an error message and terminates
-# the entire shell script with a non-zero status code.
-run_script() {
-    local script_name=$1
-    local extra_arg=$2
-    echo -e "\n--------------------------------\n"
-    echo -e "Executing Script: $script_name"
-    echo -e "\n--------------------------------\n"
-
-    if [[ ${LOCAL_SCRIPT:-0} -eq 0 ]]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" _ "$extra_arg"
-    else
-        /bin/bash -c "$(cat $script_name)" _ "$extra_arg"
-    fi
-
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to execute $script_name"
-        exit 1
-    fi
-}
-# *** End of inlined file: src/run_script.sh ***
-
-
-function placeholder() {
-    section_divider
-    echo -e "  The feature is not available, coming soon"
-    echo -e "  This is a placeholder"
-    exit_message
-}
 
 ############################################################
 # The rest of this is specific to the particular script
@@ -830,171 +702,48 @@ initial_greeting
 
 
 ############################################################
-# Welcome & What to do selection
+# Welcome & Branch Selection
+############################################################
+
+URL_THIS_SCRIPT="https://github.com/creepymonster/GlucoseDirect.git"
+
+function choose_main_branch() {
+    branch_select ${URL_THIS_SCRIPT} main
+}
+
+if [ -z "$CUSTOM_BRANCH" ]; then
+    section_separator
+    echo -e "\n${INFO_FONT}You are running the script to build GlucoseDirect${NC}"
+    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e ""
+    echo -e " If you have not read the docs - please review before continuing"
+    echo -e "    https://github.com/creepymonster/GlucoseDirect#readme"
+    section_divider
+
+    options=("Continue" "Cancel")
+    actions=("choose_main_branch" "cancel_entry")
+    menu_select "${options[@]}" "${actions[@]}"
+else
+    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
+fi
+
+############################################################
+# Standard Build train
+############################################################
+
+standard_build_train
+
+############################################################
+# Open Xcode
 ############################################################
 
 section_separator
-echo -e "${INFO_FONT}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
-echo -e "This script will help you to:"
-echo -e "  1 Download and Build Loop"
-echo -e "  2 Download and Build Related Apps"
-echo -e "  3 Run Maintenance Utilities"
-echo -e "  4 Run Customization Utilities"
+before_final_return_message_without_watch
+echo -e " *** Be patient while packages are downloaded"
 echo -e ""
-echo -e "Run the script again to choose a different option"
-echo -e "You need Xcode and Xcode command line tools installed"
-section_divider
-
-options=(\
-    "Build Loop" \
-    "Build Related Apps" \
-    "Maintenance Utilities" \
-    "Customization Utilities" \
-    "Cancel")
-actions=(\
-    "WHICH=Loop" \
-    "WHICH=OtherApps" \
-    "WHICH=UtilityScripts" \
-    "WHICH=CustomizationScripts" \
-    "cancel_entry")
-menu_select "${options[@]}" "${actions[@]}"
-
-if [ "$WHICH" = "Loop" ]; then
-
-    URL_THIS_SCRIPT="https://github.com/jonfawcett/LoopFollow.git"
-
-    if [ -z "$CUSTOM_BRANCH" ]; then
-        function choose_loop() {
-            branch_select https://github.com/LoopKit/LoopWorkspace.git main Loop
-        }
-
-        function choose_loop_with_patches() {
-            branch_select https://github.com/loopnlearn/LoopWorkspace.git main_lnl_patches Loop_lnl_patches
-        }
-        
-        section_separator
-        echo -e "${INFO_FONT}You should be familiar with the documenation found at:${NC}"
-        echo -e "   https://loopdocs.org"
-        echo -e ""
-        echo -e "Select which version of Loop to download and build."
-        echo -e "   Loop:"
-        echo -e "      This is always the current released version"
-        echo -e "      More info at https://github.com/LoopKit/Loop/releases"
-        echo -e "   Loop with Patches:"
-        echo -e "      Adds 2 CGM options, CustomTypeOne LoopPatches, new Logo"
-        echo -e "      More info at https://www.loopandlearn.org/main-lnl-patches"
-        section_divider
-
-        options=("Loop" "Loop with Patches" "Cancel")
-        actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
-        menu_select "${options[@]}" "${actions[@]}"
-    else
-        section_separator
-        echo -e "You are about to download $CUSTOM_BRANCH branch from"
-        echo -e "  ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"}\n"
-        return_when_ready
-        branch_select ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"} $CUSTOM_BRANCH
-    fi
-
-    ############################################################
-    # Standard Build train
-    ############################################################
-
-    standard_build_train
-
-    section_separator
-    before_final_return_message
-    return_when_ready
-    cd $REPO_NAME
-    xed .
-    exit_message
-
-elif [ "$WHICH" = "OtherApps" ]; then
-
-    section_separator
-    echo -e "Select the app you want to build"
-    echo -e "  Each selection will indicate documentation links"
-    echo -e "  Please read the documentation before using the app"
-    echo -e ""
-    options=(\
-        "Build Loop Follow" \
-        "Build LoopCaregiver" \
-        "Build xDrip4iOS" \
-        "Build Glucose Direct" \
-        "Cancel")
-    actions=(\
-        "WHICH=LoopFollow" \
-        "WHICH=LoopCaregiver" \
-        "WHICH=xDrip4iOS" \
-        "WHICH=GlucoseDirect" \
-        "cancel_entry")
-    menu_select "${options[@]}" "${actions[@]}"
-    if [ "$WHICH" = "LoopFollow" ]; then
-        run_script "BuildLoopFollow.sh" $CUSTOM_BRANCH
-    elif [ "$WHICH" = "LoopCaregiver" ]; then
-        run_script "BuildLoopCaregiver.sh" $CUSTOM_BRANCH
-    elif [ "$WHICH" = "xDrip4iOS" ]; then
-        run_script "BuildxDrip4iOS.sh" $CUSTOM_BRANCH
-    elif [ "$WHICH" = "GlucoseDirect" ]; then
-        run_script "BuildGlucoseDirect.sh" $CUSTOM_BRANCH
-    fi
-
-elif [ "$WHICH" = "UtilityScripts" ]; then
-
-    section_separator
-    echo -e "${INFO_FONT}These utility scripts automate several cleanup actions${NC}"
-    echo -e ""
-    echo -e " 1. Delete Old Downloads:"
-    echo -e "     Planned function will keep most recent download for each build type"
-    echo -e "     Not ready for release - placeholder..."
-    echo -e " 2. Clean Derived Data:"
-    echo -e "     Free space on your disk from old Xcode builds."
-    echo -e "     You should quit Xcode before running this script."
-    echo -e " 3. Xcode Cleanup (The Big One):"
-    echo -e "     Clears more disk space filled up by using Xcode."
-    echo -e "     * Use after uninstalling Xcode prior to new installation"
-    echo -e "     * It can free up a substantial amount of disk space"
-    section_divider
-
-    options=(
-        "Delete Old Downloads"
-        "Clean Derived Data"
-        "Xcode Cleanup"
-        "Cancel"
-    )
-    actions=(
-        "placeholder"
-        "run_script 'CleanDerived.sh'"
-        "run_script 'XcodeClean.sh'"
-        "cancel_entry"
-    )
-    menu_select "${options[@]}" "${actions[@]}"
-
-else
-    section_separator
-    echo -e "${INFO_FONT}Selectable Customizations for:${NC}"
-    echo -e "    Released code: Loop or Loop with Patches"
-    echo -e "    Might work for development branches of Loop"
-    echo -e ""
-    echo -e "Reports status for each customization:"
-    echo -e "    can be or has been applied or is not applicable"
-    echo -e ""
-    echo -e "Automatically finds most recent Loop download unless"
-    echo -e "    terminal is already at the LoopWorkspace folder level"
-    section_divider
-
-    options=(
-        "Loop Customizations"
-        "CustomTypeOne Customizations"
-        "Cancel"
-    )
-    actions=(
-        "run_script 'CustomizationSelect.sh'"
-        "placeholder"
-        "cancel_entry"
-    )
-    menu_select "${options[@]}" "${actions[@]}"
-fi
-
-# *** End of inlined file: src/BuildLoop.sh ***
+return_when_ready
+cd $REPO_NAME
+xed . 
+exit_message
+# *** End of inlined file: src/BuildGlucoseDirect.sh ***
 
