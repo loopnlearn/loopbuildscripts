@@ -27,17 +27,22 @@ function list_build_folders() {
 function delete_folders_except_latest() {
     local pattern="$1"
     local total_size=0
-    local folders=($(ls -dt ~/Downloads/$pattern 2>/dev/null))
+    local folders=($(ls -dt ~/Downloads/$pattern/ 2>/dev/null))
 
-    if [ ${#folders[@]} -le 1 ]; then
-        if [ ${#folders[@]} -eq 1 ]; then
-            ((app_pattern_count=app_pattern_count+1))
-            echo "Only one download for app pattern: '$pattern'"
-        fi
+    if [ ${#folders[@]} -eq 0 ]; then
+        return
+    fi
+
+    # increment because folders were found
+    ((app_pattern_count=app_pattern_count+1))
+
+    if [ ${#folders[@]} -eq 1 ]; then
+        echo "Only one download for app pattern: '$pattern'"
         return
     fi
 
     section_divider
+
     echo "Pattern for this app: '$pattern':"
     echo
     echo "Download Folder to Keep:"
@@ -118,9 +123,13 @@ function delete_old_downloads() {
     fi
 
     echo
-    echo "Download folders have been examined for all apps."
-    echo "  There were ${app_pattern_count} app patterns that have downloads"
-    echo "  There were ${folder_count} old download folders deleted"
+    echo -e "✅ ${SUCCESS_FONT}Download folders have been examined for all app patterns.${NC}"
+    echo -e "   Found folders containing downloads for ${app_pattern_count} app patterns"
+    if [ ${folder_count} -eq 0 ]; then
+        echo -e "   No Download folders deleted"
+    else
+        echo -e "   Deleted a total of ${folder_count} older download folders"
+    fi
 
     exit_message
 }
