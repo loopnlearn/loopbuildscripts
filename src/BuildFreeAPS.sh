@@ -26,7 +26,7 @@ initial_greeting
 URL_THIS_SCRIPT="https://github.com/loopnlearn/LoopWorkspace.git"
 
 function choose_main_branch() {
-    branch_select ${URL_THIS_SCRIPT} freeaps FreeAPS_main
+    branch_select ${URL_THIS_SCRIPT} freeaps FreeAPS
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then

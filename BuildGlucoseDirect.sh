@@ -707,7 +707,7 @@ initial_greeting
 URL_THIS_SCRIPT="https://github.com/creepymonster/GlucoseDirect.git"
 
 function choose_main_branch() {
-    branch_select ${URL_THIS_SCRIPT} main
+    branch_select ${URL_THIS_SCRIPT} main GlucoseDirect
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
