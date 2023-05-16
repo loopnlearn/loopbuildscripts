@@ -61,3 +61,7 @@ unset CUSTOM_XCODE_VER
 #   Set the version to be simulated
 #export CUSTOM_MACOS_VER=12.9
 
+# DELETE_SELECTED_FOLDERS override to just report what folders would be deleted
+#   Uncomment the line
+#   Default is 1 (really delete)
+#export DELETE_SELECTED_FOLDERS=0
