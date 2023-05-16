@@ -10,7 +10,6 @@ function check_config_override_existence_offer_to_configure() {
     #  0 means copy file in repo up 2 levels and use that
     #  1 create the file in the repo and add development team
     #  2 create the file in the repo with extra line(s) and the team
-
     if [[ $USE_OVERRIDE_IN_REPO -ge 1 ]]; then
         OVERRIDE_FULLPATH="${LOCAL_DIR}/$REPO_NAME/${OVERRIDE_FILE}"
     else
@@ -18,7 +17,6 @@ function check_config_override_existence_offer_to_configure() {
     fi
 
     if [ -f ${OVERRIDE_FULLPATH} ] && \
-        [[ $USE_OVERRIDE_IN_REPO -ne "3" ]] && \
         grep -q "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}; then
         # how_to_find_your_id
         report_persistent_config_override
