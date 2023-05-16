@@ -764,7 +764,8 @@ function delete_selected_folders() {
         ((this_pattern_count=this_pattern_count+1))
     done
 
-    echo "Deleted ${this_pattern_count} download folders"
+    echo -e "✅ {SUCCESS_FONT}Deleted ${this_pattern_count} download folders for this app pattern${NC}"
+    return_when_ready
 }
 
 function skip_all() {
