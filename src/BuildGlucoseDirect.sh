@@ -6,11 +6,11 @@
 ############################################################
 
 BUILD_DIR=~/Downloads/"BuildGlucoseDirect"
-OVERRIDE_FILE=GlucoseDirect.xcconfig
+OVERRIDE_FILE=GlucoseDirectOverride.xcconfig
 DEV_TEAM_SETTING_NAME="DEVELOPMENT_TEAM"
 
-# value of 3 means add to an existing file in the repo
-USE_OVERRIDE_IN_REPO="3"
+#  1 create the file in the repo and add development team
+USE_OVERRIDE_IN_REPO="1"
 
 # sub modules are not required
 CLONE_SUB_MODULES="0"
