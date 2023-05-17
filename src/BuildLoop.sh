@@ -10,7 +10,7 @@ OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 #!inline build_functions.sh
-#!inline delete_old_downloads.sh
+
 #!inline run_script.sh
 
 function placeholder() {
@@ -143,8 +143,8 @@ elif [ "$WHICH" = "UtilityScripts" ]; then
     echo -e "${INFO_FONT}These utility scripts automate several cleanup actions${NC}"
     echo -e ""
     echo -e " 1. Delete Old Downloads:"
-    echo -e "     Planned function will keep most recent download for each build type"
-    echo -e "     Not ready for release - placeholder..."
+    echo -e "     This will keep the most recent download for each build type"
+    echo -e "     It asks before deleting any folders"
     echo -e " 2. Clean Derived Data:"
     echo -e "     Free space on your disk from old Xcode builds."
     echo -e "     You should quit Xcode before running this script."
@@ -161,7 +161,7 @@ elif [ "$WHICH" = "UtilityScripts" ]; then
         "Cancel"
     )
     actions=(
-        "placeholder"
+        "run_script 'DeleteOldDownloads.sh'"
         "run_script 'CleanDerived.sh'"
         "run_script 'XcodeClean.sh'"
         "cancel_entry"

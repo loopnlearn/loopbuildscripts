@@ -63,6 +63,7 @@ if [ "$0" != "_" ]; then
         "CUSTOM_BRANCH: Overrides the branch used for git clone."
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."
         "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
+        "DELETE_SELECTED_FOLDERS: Echoes folder names but does not delete them"
     )
 
     # Flag to check if any variable is set
