@@ -89,6 +89,14 @@ export SCRIPT_BRANCH="dev" && \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildxDrip4iOS.sh)"
 ```
 
+#### DeleteOldDownloads
+
+```
+export SCRIPT_BRANCH="dev" && \
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/DeleteOldDownloads.sh)"
+```
+
 #### CustomizationSelect
 
 ```
