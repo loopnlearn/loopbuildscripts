@@ -17,7 +17,8 @@ SCRIPTS=(\
   "Build_iAPS.sh" \
   "CleanProfiles.sh" \
   "CleanDerived.sh" \
-  "CleanCartDerived.sh" 
+  "CleanCartDerived.sh" \
+  "DeleteOldDownloads.sh" 
   "XcodeClean.sh")
 
 generated_comment="# -----------------------------------------------------------------------------\n\

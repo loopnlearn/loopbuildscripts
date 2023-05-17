@@ -13,6 +13,9 @@ function list_build_folders() {
     # only echo pattern when testing
     if [ ${DELETE_SELECTED_FOLDERS} == 0 ]; then
         echo
+        echo -e "  ${INFO_FONT}Environment variable DELETE_SELECTED_FOLDERS is set to 0"
+        echo -e "  This is the list of all patterns that will be searched${NC}"
+        echo
         for pattern in "${patterns[@]}"; do
             echo "    $pattern"
         done
@@ -43,13 +46,14 @@ function delete_folders_except_latest() {
     ((app_pattern_count=app_pattern_count+1))
 
     if [ ${#folders[@]} -eq 1 ]; then
-        echo "Only one download for app pattern: '$pattern'"
+        echo "Only one download found for app pattern: '$pattern'"
         return
     fi
 
     section_divider
 
-    echo "Pattern for this app: '$pattern':"
+    echo "More than one download found for app pattern:"
+    echo "  '$pattern':"
     echo
     echo "Download Folder to Keep:"
     echo "  ${folders[0]/#$HOME/~}"
@@ -62,6 +66,7 @@ function delete_folders_except_latest() {
     done
 
     total_size_mb=$(echo "scale=2; $total_size / 1024" | bc)
+    echo
     echo "Total size to be deleted: $total_size_mb MB"
     section_divider
 
@@ -92,7 +97,13 @@ function delete_selected_folders() {
         ((this_pattern_count=this_pattern_count+1))
     done
 
-    echo -e "✅ {SUCCESS_FONT}Deleted ${this_pattern_count} download folders for this app pattern${NC}"
+    echo -e "✅ ${SUCCESS_FONT}Deleted ${this_pattern_count} download folders for this app pattern${NC}"
+    if [ ${DELETE_SELECTED_FOLDERS} == 0 ]; then
+        echo
+        echo -e "  ${INFO_FONT}Environment variable DELETE_SELECTED_FOLDERS is set to 0"
+        echo -e "  So folders marked successfully deleted are still there${NC}"
+    fi
+    echo
     return_when_ready
 }
 
@@ -136,11 +147,16 @@ function delete_old_downloads() {
 
     echo
     echo -e "✅ ${SUCCESS_FONT}Download folders have been examined for all app patterns.${NC}"
-    echo -e "   Found folders containing downloads for ${app_pattern_count} app patterns"
+    echo -e "   There were ${app_pattern_count} app patterns that contain one or more download"
     if [ ${folder_count} -eq 0 ]; then
         echo -e "   No Download folders deleted"
     else
         echo -e "   Deleted a total of ${folder_count} older download folders"
+    fi
+    if [ ${DELETE_SELECTED_FOLDERS} == 0 ]; then
+        echo
+        echo -e "  ${INFO_FONT}Environment variable DELETE_SELECTED_FOLDERS is set to 0"
+        echo -e "  So folders marked successfully deleted are still there${NC}"
     fi
 
     exit_message

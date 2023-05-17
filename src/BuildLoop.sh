@@ -10,7 +10,7 @@ OVERRIDE_FILE=LoopConfigOverride.xcconfig
 DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 
 #!inline build_functions.sh
-#!inline delete_old_downloads.sh
+
 #!inline run_script.sh
 
 function placeholder() {
@@ -161,7 +161,7 @@ elif [ "$WHICH" = "UtilityScripts" ]; then
         "Cancel"
     )
     actions=(
-        "delete_old_downloads"
+        "run_script 'DeleteOldDownloads.sh'"
         "run_script 'CleanDerived.sh'"
         "run_script 'XcodeClean.sh'"
         "cancel_entry"
