@@ -4,7 +4,7 @@ folder_count=0
 app_pattern_count=0
 
 # Default if environment variable is not set
-${DELETE_SELECTED_FOLDERS:="1"}
+: ${DELETE_SELECTED_FOLDERS:="1"}
 
 function list_build_folders() {
     echo -e "The script will look for downloads of a particular app"
