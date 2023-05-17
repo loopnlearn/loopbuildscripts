@@ -716,7 +716,13 @@ function list_build_folders() {
 function delete_folders_except_latest() {
     local pattern="$1"
     local total_size=0
-    local folders=($(ls -dt ~/Downloads/$pattern/ 2>/dev/null))
+    local unsorted_folders=()
+    for entry in ~/Downloads/$pattern; do
+        [ -d "$entry" ] && unsorted_folders+=("$entry")
+    done
+    # Sort the folders array by date (newest first)
+    IFS=$'\n' folders=($(sort -r <<<"${unsorted_folders[*]}"))
+    IFS=$' \t\n' # Reset IFS to default value.
 
     if [ ${#folders[@]} -eq 0 ]; then
         return
@@ -755,7 +761,13 @@ function delete_folders_except_latest() {
 
 function delete_selected_folders() {
     local pattern="$1"
-    local folders=($(ls -dt ~/Downloads/$pattern))
+    local unsorted_folders=()
+    for entry in ~/Downloads/$pattern; do
+        [ -d "$entry" ] && unsorted_folders+=("$entry")
+    done
+    # Sort the folders array by date (newest first)
+    IFS=$'\n' folders=($(sort -r <<<"${unsorted_folders[*]}"))
+    IFS=$' \t\n' # Reset IFS to default value.
     echo
 
     this_pattern_count=0
