@@ -169,7 +169,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     add_patch "Disable Authentication Requirement" "no_auth" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/77ee44534dd16154d910cfb11dea240cf8a23262.patch"
     add_patch "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/f35654104f70b7dc70f750d129fbb338b9a4cee0.patch"
     add_patch "CAGE: Upload Pod Start to Nightscout" "cage" "" ""
-    add_patch "SAGE: Upload G6 Sensor Start to Nightscout" "sage" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/777c7e36de64bdc060973a6628a02add0917520e.patch"
+    add_patch "SAGE: Upload Dexcom Start to Nightscout" "g6g7_sage.patch" "" ""
     add_patch "Change Default to Upload Dexcom Readings" "g6g7_upload_readings" "" ""
 
     echo "Downloading customizations, please wait..."
