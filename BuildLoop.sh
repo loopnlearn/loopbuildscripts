@@ -888,7 +888,7 @@ else
 
     options=(
         "Loop Customizations"
-        "CustomTypeOne Customizations"
+        "Placeholder"
         "Cancel"
     )
     actions=(
