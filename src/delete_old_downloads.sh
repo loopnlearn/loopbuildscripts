@@ -114,9 +114,10 @@ function skip_all() {
 function delete_old_downloads() {
     patterns=(
         "BuildLoop/Loop-*"
-        "BuildLoop/LoopCaregiver-*"
         "BuildLoop/Loop_lnl_patches-*"
+        "BuildLoop/LoopCaregiver_dev-*"
         "BuildLoop/LoopWorkspace_*"
+        "BuildLoop/Loop_dev-*"
         "BuildLoop/FreeAPS*"
         "BuildLoopFollow/LoopFollow_Main*"
         "BuildLoopFollow/LoopFollow_dev*"
