@@ -9,7 +9,7 @@ unset SCRIPT_BRANCH
 unset LOCAL_SCRIPT
 unset FRESH_CLONE
 unset CLONE_STATUS
-unset SKIP_INITIAL_GREETING
+unset SKIP_OPEN_SOURCE_WARNING
 unset CUSTOM_URL
 unset CUSTOM_BRANCH
 unset CUSTOM_MACOS_VER
@@ -36,10 +36,10 @@ unset CUSTOM_XCODE_VER
 #   Pair this with FRESH_CLONE="0"
 #export CLONE_STATUS="1"
 
-# SKIP_INITIAL_GREETING can be set to 1 to skip the initial greeting
+# SKIP_OPEN_SOURCE_WARNING can be set to 1 to skip the initial greeting
 #   Uncomment the line
 #   Set the value to 1 to skip the initial greeting dialog
-#export SKIP_INITIAL_GREETING="1"
+#export SKIP_OPEN_SOURCE_WARNING="1"
 
 # CUSTOM_BRANCH overrides the branch used for git clone
 #   Uncomment the line

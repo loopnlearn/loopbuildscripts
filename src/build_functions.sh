@@ -1,5 +1,7 @@
 #!inline common.sh
 
+#!inline build_warning.sh
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Explanation of variables, Default values

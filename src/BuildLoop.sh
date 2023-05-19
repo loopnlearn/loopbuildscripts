@@ -1,16 +1,6 @@
 #!/bin/bash # script BuildLoop.sh
 
-############################################################
-# Required parameters for any build script that uses
-#   inline build_functions
-############################################################
-
-BUILD_DIR=~/Downloads/BuildLoop
-OVERRIDE_FILE=LoopConfigOverride.xcconfig
-DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
-
-#!inline build_functions.sh
-
+#!inline common.sh
 #!inline run_script.sh
 
 function placeholder() {
@@ -23,8 +13,6 @@ function placeholder() {
 ############################################################
 # The rest of this is specific to the particular script
 ############################################################
-
-initial_greeting
 
 
 ############################################################
@@ -40,7 +28,6 @@ echo -e "  3 Run Maintenance Utilities"
 echo -e "  4 Run Customization Utilities"
 echo -e ""
 echo -e "Run the script again to choose a different option"
-echo -e "You need Xcode and Xcode command line tools installed"
 section_divider
 
 options=(\
@@ -59,53 +46,7 @@ menu_select "${options[@]}" "${actions[@]}"
 
 if [ "$WHICH" = "Loop" ]; then
 
-    URL_THIS_SCRIPT="https://github.com/jonfawcett/LoopFollow.git"
-
-    if [ -z "$CUSTOM_BRANCH" ]; then
-        function choose_loop() {
-            branch_select https://github.com/LoopKit/LoopWorkspace.git main Loop
-        }
-
-        function choose_loop_with_patches() {
-            branch_select https://github.com/loopnlearn/LoopWorkspace.git main_lnl_patches Loop_lnl_patches
-        }
-        
-        section_separator
-        echo -e "${INFO_FONT}You should be familiar with the documenation found at:${NC}"
-        echo -e "   https://loopdocs.org"
-        echo -e ""
-        echo -e "Select which version of Loop to download and build."
-        echo -e "   Loop:"
-        echo -e "      This is always the current released version"
-        echo -e "      More info at https://github.com/LoopKit/Loop/releases"
-        echo -e "   Loop with Patches:"
-        echo -e "      Adds 2 CGM options, CustomTypeOne LoopPatches, new Logo"
-        echo -e "      More info at https://www.loopandlearn.org/main-lnl-patches"
-        section_divider
-
-        options=("Loop" "Loop with Patches" "Cancel")
-        actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
-        menu_select "${options[@]}" "${actions[@]}"
-    else
-        section_separator
-        echo -e "You are about to download $CUSTOM_BRANCH branch from"
-        echo -e "  ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"}\n"
-        return_when_ready
-        branch_select ${CUSTOM_URL:-"https://github.com/LoopKit/LoopWorkspace.git"} $CUSTOM_BRANCH
-    fi
-
-    ############################################################
-    # Standard Build train
-    ############################################################
-
-    standard_build_train
-
-    section_separator
-    before_final_return_message
-    return_when_ready
-    cd $REPO_NAME
-    xed .
-    exit_message
+    run_script "BuildLoopReleased.sh" $CUSTOM_BRANCH
 
 elif [ "$WHICH" = "OtherApps" ]; then
 

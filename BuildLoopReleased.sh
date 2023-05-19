@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildLoopDev.sh
+#!/bin/bash # script BuildLoopReleased.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -880,84 +880,56 @@ function branch_select() {
 # *** End of inlined file: src/build_functions.sh ***
 
 
-
 ############################################################
 # The rest of this is specific to the particular script
 ############################################################
 
+echo "about to call open_source_warning"
 open_source_warning
 
 
-############################################################
-# Welcome & Branch Selection
-############################################################
-
-# Stable Dev SHA
-FIXED_SHA=00f7b05
-FIXED_TESTED_DATE="2023 May 06"
-FLAG_USE_SHA=0
-
 URL_THIS_SCRIPT="https://github.com/LoopKit/LoopWorkspace.git"
-
-function choose_dev_branch() {
-    branch_select ${URL_THIS_SCRIPT} dev Loop_dev
-}
-
-function choose_fixed_dev_branch() {
-    FLAG_USE_SHA=1
-    branch_select ${URL_THIS_SCRIPT} dev Loop_dev_${FIXED_SHA}
-}
+URL_FOR_LNL="https://github.com/loopnlearn/LoopWorkspace.git"
 
 if [ -z "$CUSTOM_BRANCH" ]; then
-    section_separator
-    echo -e "\n ${INFO_FONT}You are running the script for the development version for Loop${NC}"
-    echo -e "\n** Be aware that a development version may require frequent rebuilds **${NC}\n"
-    echo -e " You need Xcode and Xcode command line tools installed"
-    echo -e ""
-    echo -e " If you have not read this section of LoopDocs - please review before continuing"
-    echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#whats-going-on-in-the-dev-branch"
-    echo -e "\n** You can choose the dev branch or a lightly tested earlier commit of dev **"
+    function choose_loop() {
+        branch_select ${URL_THIS_SCRIPT} main Loop
+    }
 
-    options=("Choose dev" "Choose dev lightly tested" "Cancel")
-    actions=("choose_dev_branch" "choose_fixed_dev_branch" "cancel_entry")
+    function choose_loop_with_patches() {
+        branch_select ${URL_FOR_LNL} main_lnl_patches Loop_lnl_patches
+    }
+    
+    section_separator
+    echo -e "${INFO_FONT}You should be familiar with the documenation found at:${NC}"
+    echo -e "   https://loopdocs.org"
+    echo -e ""
+    echo -e "Select which version of Loop to download and build."
+    echo -e "   Loop:"
+    echo -e "      This is always the current released version"
+    echo -e "      More info at https://github.com/LoopKit/Loop/releases"
+    echo -e "   Loop with Patches:"
+    echo -e "      Adds 2 CGM options, CustomTypeOne LoopPatches, new Logo"
+    echo -e "      More info at https://www.loopandlearn.org/main-lnl-patches"
+    echo -e "You need Xcode and Xcode command line tools installed"
+    section_divider
+
+    options=("Loop" "Loop with Patches" "Cancel")
+    actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
     menu_select "${options[@]}" "${actions[@]}"
 else
-    branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
+    section_separator
+    echo -e "You are about to download $CUSTOM_BRANCH branch from"
+    echo -e "  ${CUSTOM_URL:-${URL_THIS_SCRIPT}}\n"
+    return_when_ready
+    branch_select ${CUSTOM_URL:-${URL_THIS_SCRIPT}} $CUSTOM_BRANCH
 fi
 
 ############################################################
 # Standard Build train
 ############################################################
 
-verify_xcode_path
-clone_repo
-automated_clone_download_error_check
-
-# special build train for lightly tested commit
-cd $REPO_NAME
-
-this_dir="$(pwd)"
-echo -e "In ${this_dir}"
-if [ ${FRESH_CLONE} == 0 ] && [ ${FLAG_USE_SHA} == 1 ]; then
-    echo -e "\nExtra steps to prepare downloaded code from older clone"
-    echo -e "Quit out of Xcode and stash any changes in LoopWorkspace"
-    echo -e ""
-    return_when_ready
-    echo -e "  Updating to latest commit"
-    git checkout dev
-    git pull
-fi
-if [ ${FLAG_USE_SHA} == 1 ]; then
-    echo -e "  Checking out commit ${FIXED_SHA}\n"
-    git checkout ${FIXED_SHA} --recurse-submodules --quiet
-    git --no-pager branch
-    echo -e "Continue if no errors reported"
-    return_when_ready
-fi
-
-check_config_override_existence_offer_to_configure
-ensure_a_year
-
+standard_build_train
 
 ############################################################
 # Open Xcode
@@ -967,7 +939,9 @@ section_separator
 before_final_return_message
 echo -e ""
 return_when_ready
+cd $REPO_NAME
 xed . 
 exit_message
-# *** End of inlined file: src/BuildLoopDev.sh ***
+
+# *** End of inlined file: src/BuildLoopReleased.sh ***
 

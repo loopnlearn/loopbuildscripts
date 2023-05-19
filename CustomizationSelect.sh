@@ -48,7 +48,7 @@ if [ "$0" != "_" ]; then
         "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
-        "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
+        "SKIP_OPEN_SOURCE_WARNING: If set, skips the initial greeting when running the script."
         "CUSTOM_URL: Overrides the repo url."
         "CUSTOM_BRANCH: Overrides the branch used for git clone."
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."
@@ -85,48 +85,6 @@ if [ "$0" != "_" ]; then
         return_when_ready
     fi
 fi
-
-function initial_greeting() {
-    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
-    if [ "${SKIP_INITIAL_GREETING}" = "1" ] || [ "$0" = "_" ]; then return; fi
-
-    local documentation_link="${1:-}"
-
-    section_separator
-
-    echo -e "${INFO_FONT}*** IMPORTANT ***${NC}\n"
-    echo -e "This project is:"
-    echo -e "${INFO_FONT}  Open Source software"
-    echo -e "  Not \"approved\" for therapy${NC}"
-    echo -e ""
-    echo -e "  You take full responsibility when you build"
-    echo -e "  or run an open source app, and"
-    echo -e "  ${INFO_FONT}you do so at your own risk.${NC}"
-    echo -e ""
-    echo -e "To increase (decrease) font size"
-    echo -e "  Hold down the CMD key and hit + (-)"
-    echo -e "\n${INFO_FONT}By typing 1 and ENTER, you indicate you understand"
-    echo -e "\n--------------------------------\n${NC}"
-
-    options=("Agree" "Cancel")
-    select opt in "${options[@]}"; do
-        case $opt in
-        "Agree")
-            break
-            ;;
-        "Cancel")
-            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
-            ;;
-        *)
-            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
-            ;;
-        esac
-    done
-
-    echo -e "${NC}\n\n\n\n"
-}
 
 function choose_or_cancel() {
     echo -e "Type a number from the list below and return to proceed."
@@ -185,7 +143,7 @@ function menu_select() {
 # The rest of this is specific to the particular script
 ############################################################
 
-initial_greeting
+open_source_warning
 
 function display_applied_patches() {
     has_applied_patches=false

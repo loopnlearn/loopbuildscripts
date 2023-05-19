@@ -16,7 +16,7 @@ DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 # The rest of this is specific to the particular script
 ############################################################
 
-initial_greeting
+open_source_warning
 
 
 ############################################################

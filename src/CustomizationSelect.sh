@@ -9,7 +9,7 @@ BUILD_DIR=~/Downloads/BuildLoop
 # The rest of this is specific to the particular script
 ############################################################
 
-initial_greeting
+open_source_warning
 
 function display_applied_patches() {
     has_applied_patches=false

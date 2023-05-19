@@ -21,7 +21,7 @@ CLONE_SUB_MODULES="0"
 # The rest of this is specific to the particular script
 ############################################################
 
-initial_greeting
+open_source_warning
 
 
 ############################################################
