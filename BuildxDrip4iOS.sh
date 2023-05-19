@@ -338,56 +338,6 @@ function open_source_warning() {
 
     echo -e "${NC}\n\n\n\n"
 }
-
-function choose_or_cancel() {
-    echo -e "Type a number from the list below and return to proceed."
-    echo -e "${INFO_FONT}  To cancel, any entry not in list also works${NC}"
-    section_divider
-}
-
-function cancel_entry() {
-    echo -e "\n${INFO_FONT}User canceled${NC}\n"
-    exit_message
-}
-
-function invalid_entry() {
-    echo -e "\n${ERROR_FONT}User canceled by entering an invalid option${NC}\n"
-    exit_message
-}
-
-function exit_message() {
-    section_divider
-    echo -e "${SUCCESS_FONT}Shell Script Completed${NC}"
-    echo -e " * You may close the terminal window now if you want"
-    echo -e " or"
-    echo -e " * You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning.\n\n"
-    exit 0
-}
-
-function do_continue() {
-    :
-}
-
-function menu_select() {
-    choose_or_cancel
-
-    local options=("${@:1:$#/2}")
-    local actions=("${@:$(($# + 1))/2+1}")
-
-    while true; do
-        select opt in "${options[@]}"; do
-            for i in $(seq 0 $((${#options[@]} - 1))); do
-                if [ "$opt" = "${options[$i]}" ]; then
-                    eval "${actions[$i]}"
-                    return
-                fi
-            done
-            invalid_entry
-            break
-        done
-    done
-}
 # *** End of inlined file: src/build_warning.sh ***
 
 
