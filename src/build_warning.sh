@@ -32,11 +32,12 @@ function open_source_warning() {
             ;;
         "Cancel")
             echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
+            exit_script
             ;;
         *)
             echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
+            invalid_entry
+            exit_script
             ;;
         esac
     done

@@ -6,4 +6,3 @@
 
 delete_old_downloads
 
-exit_message

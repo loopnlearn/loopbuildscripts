@@ -8,7 +8,7 @@ function placeholder() {
     section_divider
     echo -e "  The feature is not available, coming soon"
     echo -e "  This is a placeholder"
-    exit_message
+    exit_or_return_menu
 }
 
 ############################################################
@@ -33,13 +33,6 @@ function first_time_menu() {
     FIRST_TIME="0"
 }
 
-function repeat_menu() {
-    section_divider
-    echo -e "Option completed"
-    echo -e "You may choose another or exit the script"
-    section_divider
-}
-
 ############################################################
 # Welcome & What to do selection
 ############################################################
@@ -47,8 +40,6 @@ function repeat_menu() {
 while true; do
     if [ "${FIRST_TIME}" = "1" ]; then
         first_time_menu
-    else
-        repeat_menu
     fi
 
     options=(\

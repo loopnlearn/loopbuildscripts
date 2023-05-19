@@ -90,25 +90,18 @@ function choose_option() {
 }
 
 function exit_script() {
-    echo -e "\n${INFO_FONT}Exit Script selected${NC}\n"
-    exit_message
+    section_divider
+    echo -e "${INFO_FONT}Exit from Build Select Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
 }
 
 function invalid_entry() {
     echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
-}
-
-function exit_message() {
-    section_divider
-    echo -e "${SUCCESS_FONT}Selection Completed${NC}"
-    exit 0
-}
-
-function quit_message() {
-    section_divider
-    echo -e "${INFO_FONT}Exiting Script${NC}"
-    echo "  You may close the terminal"
-    exit 1
 }
 
 function do_continue() {
@@ -150,6 +143,6 @@ echo -e "\n✅ Cleaning Profiles"
 echo -e " - this ensures the next app you build with Xcode will last a year.\n"
 rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
 echo -e "✅ Profiles are cleaned."
-exit_message
+exit_or_return_menu
 # *** End of inlined file: src/CleanProfiles.sh ***
 

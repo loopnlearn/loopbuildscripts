@@ -106,25 +106,18 @@ function choose_option() {
 }
 
 function exit_script() {
-    echo -e "\n${INFO_FONT}Exit Script selected${NC}\n"
-    exit_message
+    section_divider
+    echo -e "${INFO_FONT}Exit from Build Select Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
 }
 
 function invalid_entry() {
     echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
-}
-
-function exit_message() {
-    section_divider
-    echo -e "${SUCCESS_FONT}Selection Completed${NC}"
-    exit 0
-}
-
-function quit_message() {
-    section_divider
-    echo -e "${INFO_FONT}Exiting Script${NC}"
-    echo "  You may close the terminal"
-    exit 1
 }
 
 function do_continue() {
@@ -232,11 +225,12 @@ function open_source_warning() {
             ;;
         "Cancel")
             echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
+            exit_script
             ;;
         *)
             echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
+            invalid_entry
+            exit_script
             ;;
         esac
     done
@@ -319,7 +313,7 @@ function check_versions() {
 
     if ! command -v xcodebuild >/dev/null; then
         echo "Xcode not found. Please install Xcode and try again."
-        exit_message
+        exit_or_return_menu
     fi
 
     if [ -n "$CUSTOM_XCODE_VER" ]; then
@@ -342,7 +336,7 @@ function check_versions() {
         echo "Please verify your versions using https://www.loopandlearn.org/version-updates/ and https://developer.apple.com/support/xcode/"
 
         options=("Continue" "Exit")
-        actions=("return" "exit_message")
+        actions=("return" "exit_or_return_menu")
         menu_select "${options[@]}" "${actions[@]}"
     # Check if Xcode version is less than the lowest required version
     elif [ "$(compare_versions "$XCODE_VER" "$LOWEST_XCODE_VER")" = "$XCODE_VER" ] && [ "$XCODE_VER" != "$LOWEST_XCODE_VER" ]; then
@@ -354,7 +348,7 @@ function check_versions() {
         echo "You need to upgrade Xcode to version $LOWEST_XCODE_VER or later to build for iOS $LATEST_IOS_VER."
 
         options=("Continue with lower iOS version" "Exit")
-        actions=("return" "exit_message")
+        actions=("return" "exit_or_return_menu")
         menu_select "${options[@]}" "${actions[@]}"
     else 
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
@@ -611,12 +605,12 @@ function clone_repo() {
 function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
-        # Use this flag to modify exit_message
+        # Use this flag to modify exit_or_return_menu
         echo -e "✅ ${SUCCESS_FONT}Successful Download. Proceed to the next step...${NC}"
         return_when_ready
     else
         echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
-        exit_message
+        exit_or_return_menu
     fi
 }
 
@@ -674,7 +668,7 @@ function verify_xcode_path() {
                         break
                     else
                         echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
-                        exit_message
+                        exit_or_return_menu
                     fi
                     ;;
                 "Skip")
@@ -773,6 +767,6 @@ echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
-exit_message
+exit_or_return_menu
 # *** End of inlined file: src/Build_iAPS.sh ***
 

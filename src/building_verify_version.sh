@@ -28,7 +28,7 @@ function check_versions() {
 
     if ! command -v xcodebuild >/dev/null; then
         echo "Xcode not found. Please install Xcode and try again."
-        exit_message
+        exit_or_return_menu
     fi
 
     if [ -n "$CUSTOM_XCODE_VER" ]; then
@@ -51,7 +51,7 @@ function check_versions() {
         echo "Please verify your versions using https://www.loopandlearn.org/version-updates/ and https://developer.apple.com/support/xcode/"
 
         options=("Continue" "Exit")
-        actions=("return" "exit_message")
+        actions=("return" "exit_or_return_menu")
         menu_select "${options[@]}" "${actions[@]}"
     # Check if Xcode version is less than the lowest required version
     elif [ "$(compare_versions "$XCODE_VER" "$LOWEST_XCODE_VER")" = "$XCODE_VER" ] && [ "$XCODE_VER" != "$LOWEST_XCODE_VER" ]; then
@@ -63,7 +63,7 @@ function check_versions() {
         echo "You need to upgrade Xcode to version $LOWEST_XCODE_VER or later to build for iOS $LATEST_IOS_VER."
 
         options=("Continue with lower iOS version" "Exit")
-        actions=("return" "exit_message")
+        actions=("return" "exit_or_return_menu")
         menu_select "${options[@]}" "${actions[@]}"
     else 
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."

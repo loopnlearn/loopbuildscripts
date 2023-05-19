@@ -63,4 +63,4 @@ echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
-exit_message
+exit_or_return_menu

@@ -90,25 +90,18 @@ function choose_option() {
 }
 
 function exit_script() {
-    echo -e "\n${INFO_FONT}Exit Script selected${NC}\n"
-    exit_message
+    section_divider
+    echo -e "${INFO_FONT}Exit from Build Select Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
 }
 
 function invalid_entry() {
     echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
-}
-
-function exit_message() {
-    section_divider
-    echo -e "${SUCCESS_FONT}Selection Completed${NC}"
-    exit 0
-}
-
-function quit_message() {
-    section_divider
-    echo -e "${INFO_FONT}Exiting Script${NC}"
-    echo "  You may close the terminal"
-    exit 1
 }
 
 function do_continue() {
@@ -180,11 +173,12 @@ function open_source_warning() {
             ;;
         "Cancel")
             echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
+            exit_script
             ;;
         *)
             echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
+            invalid_entry
+            exit_script
             ;;
         esac
     done
@@ -232,7 +226,7 @@ function placeholder() {
     section_divider
     echo -e "  The feature is not available, coming soon"
     echo -e "  This is a placeholder"
-    exit_message
+    exit_or_return_menu
 }
 
 ############################################################
@@ -257,13 +251,6 @@ function first_time_menu() {
     FIRST_TIME="0"
 }
 
-function repeat_menu() {
-    section_divider
-    echo -e "Option completed"
-    echo -e "You may choose another or exit the script"
-    section_divider
-}
-
 ############################################################
 # Welcome & What to do selection
 ############################################################
@@ -271,8 +258,6 @@ function repeat_menu() {
 while true; do
     if [ "${FIRST_TIME}" = "1" ]; then
         first_time_menu
-    else
-        repeat_menu
     fi
 
     options=(\

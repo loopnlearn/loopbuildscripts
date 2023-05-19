@@ -159,12 +159,12 @@ function clone_repo() {
 function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
-        # Use this flag to modify exit_message
+        # Use this flag to modify exit_or_return_menu
         echo -e "✅ ${SUCCESS_FONT}Successful Download. Proceed to the next step...${NC}"
         return_when_ready
     else
         echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
-        exit_message
+        exit_or_return_menu
     fi
 }
 
@@ -222,7 +222,7 @@ function verify_xcode_path() {
                         break
                     else
                         echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
-                        exit_message
+                        exit_or_return_menu
                     fi
                     ;;
                 "Skip")

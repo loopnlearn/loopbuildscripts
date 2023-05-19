@@ -90,25 +90,18 @@ function choose_option() {
 }
 
 function exit_script() {
-    echo -e "\n${INFO_FONT}Exit Script selected${NC}\n"
-    exit_message
+    section_divider
+    echo -e "${INFO_FONT}Exit from Build Select Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
 }
 
 function invalid_entry() {
     echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
-}
-
-function exit_message() {
-    section_divider
-    echo -e "${SUCCESS_FONT}Selection Completed${NC}"
-    exit 0
-}
-
-function quit_message() {
-    section_divider
-    echo -e "${INFO_FONT}Exiting Script${NC}"
-    echo "  You may close the terminal"
-    exit 1
 }
 
 function do_continue() {
@@ -155,10 +148,7 @@ app_pattern_count=0
 # Default if environment variable is not set
 : ${DELETE_SELECTED_FOLDERS:="1"}
 
-function list_build_folders() {
-    echo -e "The script will look for downloads of a particular app"
-    echo -e "  and offer to remove all but the most recent download."
-    echo -e "It does this for each type of Build offered as a build script."
+function list_build_folders_when_testing() {
     # only echo pattern when testing
     if [ ${DELETE_SELECTED_FOLDERS} == 0 ]; then
         echo
@@ -168,12 +158,8 @@ function list_build_folders() {
         for pattern in "${patterns[@]}"; do
             echo "    $pattern"
         done
+        section_divider
     fi
-    section_divider
-
-    options=("Continue" "Skip" "Exit script")
-    actions=("return" "skip_all" "exit_script")
-    menu_select "${options[@]}" "${actions[@]}"
 }
 
 function delete_folders_except_latest() {
@@ -219,8 +205,14 @@ function delete_folders_except_latest() {
     echo "Total size to be deleted: $total_size_mb MB"
     section_divider
 
-    options=("Delete these Folders" "Skip delete at this location" "Skip delete at all locations" "Exit script")
-    actions=("delete_selected_folders \"$pattern\"" "return" "skip_all" "exit_script")
+    options=(
+        "Delete these Folders" 
+        "Skip delete at this location" 
+        "$(exit_or_return_menu)")
+    actions=(
+        "delete_selected_folders \"$pattern\"" 
+        "return" 
+        "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 }
 
@@ -276,15 +268,13 @@ function delete_old_downloads() {
         "Build_iAPS/iAPS_dev*"
     )
 
-    section_separator
-    list_build_folders
+    list_build_folders_when_testing
 
     if [ "$SKIP_ALL" = false ] ; then
         section_divider
         echo "For each type of Build provided as a build script, "
         echo "  you will be shown your most recent download"
         echo "  and given the option to remove older downloads."
-        echo 
 
         for pattern in "${patterns[@]}"; do
             if [ "$SKIP_ALL" = false ] ; then
@@ -308,14 +298,11 @@ function delete_old_downloads() {
         echo -e "  ${INFO_FONT}Environment variable DELETE_SELECTED_FOLDERS is set to 0"
         echo -e "  So folders marked successfully deleted are still there${NC}"
     fi
-
-    exit_message
 }
 # *** End of inlined file: src/delete_old_downloads.sh ***
 
 
 delete_old_downloads
 
-exit_message
 # *** End of inlined file: src/DeleteOldDownloads.sh ***
 
