@@ -1,6 +1,7 @@
 #!/bin/bash # script BuildLoop.sh
 
 #!inline common.sh
+#!inline build_warning.sh
 #!inline run_script.sh
 
 function placeholder() {
@@ -15,6 +16,7 @@ function placeholder() {
 ############################################################
 
 FIRST_TIME="1"
+SKIP_OPEN_SOURCE_WARNING="0"
 
 function first_time_menu() {
     section_separator
@@ -32,7 +34,7 @@ function first_time_menu() {
 }
 
 function repeat_menu() {
-    section_separator
+    section_divider
     echo -e "Option completed"
     echo -e "You may choose another or exit the script"
     section_divider
@@ -65,9 +67,16 @@ while true; do
 
     if [ "$WHICH" = "Loop" ]; then
 
+        # Issue Warning if not done previously
+        open_source_warning
+
         run_script "BuildLoopReleased.sh" $CUSTOM_BRANCH
 
+
     elif [ "$WHICH" = "OtherApps" ]; then
+
+        # Issue Warning if not done previously
+        open_source_warning
 
         section_separator
         echo -e "Select the app you want to build"

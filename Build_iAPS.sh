@@ -195,8 +195,8 @@ function menu_select() {
 ############################################################
 
 function open_source_warning() {
-    # Skip initial greeting if opted out using env variable or previously used
-    if [ "${SKIP_OPEN_SOURCE_WARNING}" = "1" ]; then return; fi
+    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
+    if [ "${SKIP_OPEN_SOURCE_WARNING}" = "1" ] || [ "$0" = "_" ]; then return; fi
 
     local documentation_link="${1:-}"
 

@@ -137,6 +137,58 @@ function menu_select() {
 # *** End of inlined file: src/common.sh ***
 
 
+# *** Start of inlined file: src/build_warning.sh ***
+############################################################
+# warning used by all scripts that build an app
+############################################################
+
+function open_source_warning() {
+    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
+    if [ "${SKIP_OPEN_SOURCE_WARNING}" = "1" ] || [ "$0" = "_" ]; then return; fi
+
+    local documentation_link="${1:-}"
+
+    section_separator
+
+    echo -e "${INFO_FONT}*** IMPORTANT ***${NC}\n"
+    echo -e "This project is:"
+    echo -e "${INFO_FONT}  Open Source software"
+    echo -e "  Not \"approved\" for therapy${NC}"
+    echo -e ""
+    echo -e "  You take full responsibility when you build"
+    echo -e "  or run an open source app, and"
+    echo -e "  ${INFO_FONT}you do so at your own risk.${NC}"
+    echo -e ""
+    echo -e "To increase (decrease) font size"
+    echo -e "  Hold down the CMD key and hit + (-)"
+    echo -e "\n${INFO_FONT}By typing 1 and ENTER, you indicate you understand"
+    echo -e "\n--------------------------------\n${NC}"
+
+    options=("Agree" "Cancel")
+    select opt in "${options[@]}"; do
+        case $opt in
+        "Agree")
+            break
+            ;;
+        "Cancel")
+            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
+            exit_message
+            ;;
+        *)
+            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
+            exit_message
+            ;;
+        esac
+    done
+
+    # Warning has been issued
+    SKIP_OPEN_SOURCE_WARNING=1
+
+    echo -e "${NC}\n\n\n\n"
+}
+# *** End of inlined file: src/build_warning.sh ***
+
+
 # *** Start of inlined file: src/run_script.sh ***
 # The function fetches and executes a script either from LnL GitHub repository
 # or from the current local directory (if LOCAL_SCRIPT is set to "1").
@@ -180,6 +232,7 @@ function placeholder() {
 ############################################################
 
 FIRST_TIME="1"
+SKIP_OPEN_SOURCE_WARNING="0"
 
 function first_time_menu() {
     section_separator
@@ -197,7 +250,7 @@ function first_time_menu() {
 }
 
 function repeat_menu() {
-    section_separator
+    section_divider
     echo -e "Option completed"
     echo -e "You may choose another or exit the script"
     section_divider
@@ -230,9 +283,16 @@ while true; do
 
     if [ "$WHICH" = "Loop" ]; then
 
+        # Issue Warning if not done previously
+        open_source_warning
+
         run_script "BuildLoopReleased.sh" $CUSTOM_BRANCH
 
+
     elif [ "$WHICH" = "OtherApps" ]; then
+
+        # Issue Warning if not done previously
+        open_source_warning
 
         section_separator
         echo -e "Select the app you want to build"
