@@ -298,8 +298,6 @@ function delete_old_downloads() {
         echo -e "  ${INFO_FONT}Environment variable DELETE_SELECTED_FOLDERS is set to 0"
         echo -e "  So folders marked successfully deleted are still there${NC}"
     fi
-
-    exit_script
 }
 # *** End of inlined file: src/delete_old_downloads.sh ***
 
