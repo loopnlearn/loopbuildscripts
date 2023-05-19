@@ -1,7 +1,5 @@
-#!inline common.sh
-
 ############################################################
-# used by all scripts that build an app
+# warning used by all scripts that build an app
 ############################################################
 
 function open_source_warning() {

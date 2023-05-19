@@ -1,7 +1,5 @@
 #!inline common.sh
 
-#!inline build_warning.sh
-
 ############################################################
 # Common functions used by multiple build scripts
 #    - Explanation of variables, Default values
@@ -35,6 +33,9 @@
 
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
+
+# Accept build_warning before creating folders
+#!inline build_warning.sh
 
 ############################################################
 # Common functions used by multiple build scripts
