@@ -143,8 +143,6 @@ function menu_select() {
 # The rest of this is specific to the particular script
 ############################################################
 
-open_source_warning
-
 function display_applied_patches() {
     has_applied_patches=false
     for i in ${!name[@]}; do
