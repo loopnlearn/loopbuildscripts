@@ -44,7 +44,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "You need Xcode and Xcode command line tools installed"
     section_divider
 
-    options=("Loop" "Loop with Patches" "Cancel")
+    options=("Loop" "Loop with Patches" "$(exit_or_return_menu)")
     actions=("choose_loop" "choose_loop_with_patches" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else

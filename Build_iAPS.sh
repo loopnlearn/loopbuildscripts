@@ -150,6 +150,14 @@ function menu_select() {
         done
     done
 }
+
+function exit_or_return_menu() {
+    if [ "$0" != "_" ]; then
+        echo "Exit Script"
+    else
+        echo "Return to Menu"
+    fi
+}
 # *** End of inlined file: src/common.sh ***
 
 
@@ -403,7 +411,7 @@ function check_config_override_existence_offer_to_configure() {
             echo -e "  to create a permanent signing file"
             echo -e "  containing your Apple Developer ID"
             choose_option
-            options=("Sign Automatically" "Sign Manually" "Cancel")
+            options=("Sign Automatically" "Sign Manually" "$(exit_or_return_menu)")
             select opt in "${options[@]}"
             do
                 case $opt in
@@ -414,7 +422,7 @@ function check_config_override_existence_offer_to_configure() {
                     "Sign Manually")
                         break
                         ;;
-                    "Cancel")
+                    "$(exit_or_return_menu)")
                         exit_script
                         ;;
                     *) # Invalid option
@@ -741,7 +749,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  https://iaps.readthedocs.io/en/latest/"
     echo -e ""
 
-    options=("iAPS main" "iAPS dev" "Cancel")
+    options=("iAPS main" "iAPS dev" "$(exit_or_return_menu)")
     actions=("select_iaps_main" "select_iaps_dev" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else

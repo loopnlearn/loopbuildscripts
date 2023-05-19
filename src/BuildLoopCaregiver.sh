@@ -41,7 +41,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e " If you have not joined zulipchat Loop Caregiver App stream - do so now"
     echo -e "    https://loop.zulipchat.com/#narrow/stream/358458-Loop-Caregiver-App"
 
-    options=("Continue" "Cancel")
+    options=("Continue" "$(exit_or_return_menu)")
     actions=("choose_dev_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else

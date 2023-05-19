@@ -53,7 +53,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  https://iaps.readthedocs.io/en/latest/"
     echo -e ""
 
-    options=("iAPS main" "iAPS dev" "Cancel")
+    options=("iAPS main" "iAPS dev" "$(exit_or_return_menu)")
     actions=("select_iaps_main" "select_iaps_dev" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else

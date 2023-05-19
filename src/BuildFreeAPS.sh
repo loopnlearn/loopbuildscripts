@@ -40,7 +40,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "    https://www.loopandlearn.org/freeapsdoc"
     section_divider
 
-    options=("Continue" "Cancel")
+    options=("Continue" "$(exit_or_return_menu)")
     actions=("choose_main_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else

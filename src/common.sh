@@ -125,3 +125,11 @@ function menu_select() {
         done
     done
 }
+
+function exit_or_return_menu() {
+    if [ "$0" != "_" ]; then
+        echo "Exit Script"
+    else
+        echo "Return to Menu"
+    fi
+}

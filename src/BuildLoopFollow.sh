@@ -46,7 +46,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  https://www.loopandlearn.org/loop-follow/"
     section_divider
     
-    options=("Main Branch" "Dev Branch" "Cancel")
+    options=("Main Branch" "Dev Branch" "$(exit_or_return_menu)")
     actions=("choose_main_branch" "choose_dev_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else

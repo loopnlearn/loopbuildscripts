@@ -136,6 +136,14 @@ function menu_select() {
         done
     done
 }
+
+function exit_or_return_menu() {
+    if [ "$0" != "_" ]; then
+        echo "Exit Script"
+    else
+        echo "Return to Menu"
+    fi
+}
 # *** End of inlined file: src/common.sh ***
 
 
@@ -340,8 +348,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         if [ "$has_applied_patches" = true ]; then
             echo "$((${#name[@]}+1))) Remove a customization"
         fi
-        echo "$((${#name[@]}+2))) Quit"
-        echo "$((${#name[@]}+3))) Quit and open Xcode"
+        echo "$((${#name[@]}+2))) $(exit_or_return_menu)"
+        echo "$((${#name[@]}+3))) $(exit_or_return_menu) and open Xcode"
 
         read -p "Enter your choice: " choice
         if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $((${#name[@]}+3)) ]]; then

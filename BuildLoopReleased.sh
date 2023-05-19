@@ -145,6 +145,14 @@ function menu_select() {
         done
     done
 }
+
+function exit_or_return_menu() {
+    if [ "$0" != "_" ]; then
+        echo "Exit Script"
+    else
+        echo "Return to Menu"
+    fi
+}
 # *** End of inlined file: src/common.sh ***
 
 
@@ -398,7 +406,7 @@ function check_config_override_existence_offer_to_configure() {
             echo -e "  to create a permanent signing file"
             echo -e "  containing your Apple Developer ID"
             choose_option
-            options=("Sign Automatically" "Sign Manually" "Cancel")
+            options=("Sign Automatically" "Sign Manually" "$(exit_or_return_menu)")
             select opt in "${options[@]}"
             do
                 case $opt in
@@ -409,7 +417,7 @@ function check_config_override_existence_offer_to_configure() {
                     "Sign Manually")
                         break
                         ;;
-                    "Cancel")
+                    "$(exit_or_return_menu)")
                         exit_script
                         ;;
                     *) # Invalid option
@@ -732,7 +740,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "You need Xcode and Xcode command line tools installed"
     section_divider
 
-    options=("Loop" "Loop with Patches" "Cancel")
+    options=("Loop" "Loop with Patches" "$(exit_or_return_menu)")
     actions=("choose_loop" "choose_loop_with_patches" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
