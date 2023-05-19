@@ -239,7 +239,7 @@ SKIP_OPEN_SOURCE_WARNING="0"
 function first_time_menu() {
     section_separator
     echo -e "${INFO_FONT}Welcome to the Loop and Learn\n  Build-Select Script\n${NC}"
-    echo "You will have the opportunity to choose from one of these options:"
+    echo "Choose from one of these options:"
     echo "  1 Download and Build Loop"
     echo "  2 Download and Build Related Apps"
     echo "  3 Run Maintenance Utilities"
