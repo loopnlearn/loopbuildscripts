@@ -84,30 +84,31 @@ if [ "$0" != "_" ]; then
     fi
 fi
 
-function choose_or_cancel() {
+function choose_option() {
     echo -e "Type a number from the list below and return to proceed."
-    echo -e "${INFO_FONT}  To cancel, any entry not in list also works${NC}"
     section_divider
 }
 
-function cancel_entry() {
-    echo -e "\n${INFO_FONT}User canceled${NC}\n"
+function exit_script() {
+    echo -e "\n${INFO_FONT}Exit Script selected${NC}\n"
     exit_message
 }
 
 function invalid_entry() {
-    echo -e "\n${ERROR_FONT}User canceled by entering an invalid option${NC}\n"
-    exit_message
+    echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
 }
 
 function exit_message() {
     section_divider
-    echo -e "${SUCCESS_FONT}Shell Script Completed${NC}"
-    echo -e " * You may close the terminal window now if you want"
-    echo -e " or"
-    echo -e " * You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning.\n\n"
+    echo -e "${SUCCESS_FONT}Selection Completed${NC}"
     exit 0
+}
+
+function quit_message() {
+    section_divider
+    echo -e "${INFO_FONT}Exiting Script${NC}"
+    echo "  You may close the terminal"
+    exit 1
 }
 
 function do_continue() {
@@ -115,7 +116,7 @@ function do_continue() {
 }
 
 function menu_select() {
-    choose_or_cancel
+    choose_option
 
     local options=("${@:1:$#/2}")
     local actions=("${@:$(($# + 1))/2+1}")
@@ -178,7 +179,7 @@ function placeholder() {
 # The rest of this is specific to the particular script
 ############################################################
 
-FIRST_TIME_SHOWN=0
+FIRST_TIME="1"
 
 function first_time_menu() {
     section_separator
@@ -192,7 +193,7 @@ function first_time_menu() {
     echo ""
     echo "After completing a given option, you can choose another or exit the script"
     section_divider
-    FIRST_TIME_SHOWN=1
+    FIRST_TIME="0"
 }
 
 function repeat_menu() {
@@ -207,7 +208,7 @@ function repeat_menu() {
 ############################################################
 
 while true; do
-    if [ FIRST_TIME_SHOWN -eq 0 ]; then
+    if [ "${FIRST_TIME}" = "1" ]; then
         first_time_menu
     else
         repeat_menu
@@ -224,7 +225,7 @@ while true; do
         "WHICH=OtherApps" \
         "WHICH=UtilityScripts" \
         "WHICH=CustomizationScripts" \
-        "cancel_entry")
+        "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 
     if [ "$WHICH" = "Loop" ]; then
@@ -243,13 +244,13 @@ while true; do
             "Build LoopCaregiver" \
             "Build xDrip4iOS" \
             "Build Glucose Direct" \
-            "Cancel")
+            "Return to Menu")
         actions=(\
             "WHICH=LoopFollow" \
             "WHICH=LoopCaregiver" \
             "WHICH=xDrip4iOS" \
             "WHICH=GlucoseDirect" \
-            "cancel_entry")
+            return)
         menu_select "${options[@]}" "${actions[@]}"
         if [ "$WHICH" = "LoopFollow" ]; then
             run_script "BuildLoopFollow.sh" $CUSTOM_BRANCH
@@ -282,13 +283,13 @@ while true; do
             "Delete Old Downloads"
             "Clean Derived Data"
             "Xcode Cleanup"
-            "Cancel"
+            "Return to Menu"
         )
         actions=(
             "run_script 'DeleteOldDownloads.sh'"
             "run_script 'CleanDerived.sh'"
             "run_script 'XcodeClean.sh'"
-            "cancel_entry"
+            return
         )
         menu_select "${options[@]}" "${actions[@]}"
 
@@ -308,12 +309,12 @@ while true; do
         options=(
             "Loop Customizations"
             "Placeholder"
-            "Cancel"
+            "Return to Menu"
         )
         actions=(
             "run_script 'CustomizationSelect.sh'"
             "placeholder"
-            "cancel_entry"
+            return
         )
         menu_select "${options[@]}" "${actions[@]}"
     fi

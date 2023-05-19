@@ -41,7 +41,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     section_divider
 
     options=("Continue" "Cancel")
-    actions=("choose_main_branch" "cancel_entry")
+    actions=("choose_main_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH

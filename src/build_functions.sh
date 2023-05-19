@@ -107,7 +107,7 @@ function ensure_a_year() {
                 break
                 ;;
             "Quit Scipt")
-                cancel_entry
+                exit_script
                 ;;
             *) # Invalid option
                 invalid_entry
@@ -229,7 +229,7 @@ function verify_xcode_path() {
                     break
                     ;;
                 "Quit Script")
-                    cancel_entry
+                    exit_script
                     ;;
                 *) # Invalid option
                     invalid_entry

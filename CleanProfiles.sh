@@ -84,30 +84,31 @@ if [ "$0" != "_" ]; then
     fi
 fi
 
-function choose_or_cancel() {
+function choose_option() {
     echo -e "Type a number from the list below and return to proceed."
-    echo -e "${INFO_FONT}  To cancel, any entry not in list also works${NC}"
     section_divider
 }
 
-function cancel_entry() {
-    echo -e "\n${INFO_FONT}User canceled${NC}\n"
+function exit_script() {
+    echo -e "\n${INFO_FONT}Exit Script selected${NC}\n"
     exit_message
 }
 
 function invalid_entry() {
-    echo -e "\n${ERROR_FONT}User canceled by entering an invalid option${NC}\n"
-    exit_message
+    echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
 }
 
 function exit_message() {
     section_divider
-    echo -e "${SUCCESS_FONT}Shell Script Completed${NC}"
-    echo -e " * You may close the terminal window now if you want"
-    echo -e " or"
-    echo -e " * You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning.\n\n"
+    echo -e "${SUCCESS_FONT}Selection Completed${NC}"
     exit 0
+}
+
+function quit_message() {
+    section_divider
+    echo -e "${INFO_FONT}Exiting Script${NC}"
+    echo "  You may close the terminal"
+    exit 1
 }
 
 function do_continue() {
@@ -115,7 +116,7 @@ function do_continue() {
 }
 
 function menu_select() {
-    choose_or_cancel
+    choose_option
 
     local options=("${@:1:$#/2}")
     local actions=("${@:$(($# + 1))/2+1}")

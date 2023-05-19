@@ -23,7 +23,7 @@ function list_build_folders() {
     section_divider
 
     options=("Continue" "Skip" "Exit script")
-    actions=("return" "skip_all" "cancel_entry")
+    actions=("return" "skip_all" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 }
 
@@ -71,7 +71,7 @@ function delete_folders_except_latest() {
     section_divider
 
     options=("Delete these Folders" "Skip delete at this location" "Skip delete at all locations" "Exit script")
-    actions=("delete_selected_folders \"$pattern\"" "return" "skip_all" "cancel_entry")
+    actions=("delete_selected_folders \"$pattern\"" "return" "skip_all" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 }
 

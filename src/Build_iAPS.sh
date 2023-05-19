@@ -54,7 +54,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e ""
 
     options=("iAPS main" "iAPS dev" "Cancel")
-    actions=("select_iaps_main" "select_iaps_dev" "cancel_entry")
+    actions=("select_iaps_main" "select_iaps_dev" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH

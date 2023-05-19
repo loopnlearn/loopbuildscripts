@@ -14,7 +14,7 @@ function placeholder() {
 # The rest of this is specific to the particular script
 ############################################################
 
-FIRST_TIME_SHOWN=0
+FIRST_TIME="1"
 
 function first_time_menu() {
     section_separator
@@ -28,7 +28,7 @@ function first_time_menu() {
     echo ""
     echo "After completing a given option, you can choose another or exit the script"
     section_divider
-    FIRST_TIME_SHOWN=1
+    FIRST_TIME="0"
 }
 
 function repeat_menu() {
@@ -43,7 +43,7 @@ function repeat_menu() {
 ############################################################
 
 while true; do
-    if [ FIRST_TIME_SHOWN -eq 0 ]; then
+    if [ "${FIRST_TIME}" = "1" ]; then
         first_time_menu
     else
         repeat_menu
@@ -60,7 +60,7 @@ while true; do
         "WHICH=OtherApps" \
         "WHICH=UtilityScripts" \
         "WHICH=CustomizationScripts" \
-        "cancel_entry")
+        "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 
     if [ "$WHICH" = "Loop" ]; then
@@ -79,13 +79,13 @@ while true; do
             "Build LoopCaregiver" \
             "Build xDrip4iOS" \
             "Build Glucose Direct" \
-            "Cancel")
+            "Return to Menu")
         actions=(\
             "WHICH=LoopFollow" \
             "WHICH=LoopCaregiver" \
             "WHICH=xDrip4iOS" \
             "WHICH=GlucoseDirect" \
-            "cancel_entry")
+            return)
         menu_select "${options[@]}" "${actions[@]}"
         if [ "$WHICH" = "LoopFollow" ]; then
             run_script "BuildLoopFollow.sh" $CUSTOM_BRANCH
@@ -118,13 +118,13 @@ while true; do
             "Delete Old Downloads"
             "Clean Derived Data"
             "Xcode Cleanup"
-            "Cancel"
+            "Return to Menu"
         )
         actions=(
             "run_script 'DeleteOldDownloads.sh'"
             "run_script 'CleanDerived.sh'"
             "run_script 'XcodeClean.sh'"
-            "cancel_entry"
+            return
         )
         menu_select "${options[@]}" "${actions[@]}"
 
@@ -144,12 +144,12 @@ while true; do
         options=(
             "Loop Customizations"
             "Placeholder"
-            "Cancel"
+            "Return to Menu"
         )
         actions=(
             "run_script 'CustomizationSelect.sh'"
             "placeholder"
-            "cancel_entry"
+            return
         )
         menu_select "${options[@]}" "${actions[@]}"
     fi

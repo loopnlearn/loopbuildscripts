@@ -15,7 +15,6 @@ DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
 # The rest of this is specific to the particular script
 ############################################################
 
-echo "about to call open_source_warning"
 open_source_warning
 
 
@@ -46,7 +45,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     section_divider
 
     options=("Loop" "Loop with Patches" "Cancel")
-    actions=("choose_loop" "choose_loop_with_patches" "cancel_entry")
+    actions=("choose_loop" "choose_loop_with_patches" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     section_separator

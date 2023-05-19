@@ -103,30 +103,31 @@ if [ "$0" != "_" ]; then
     fi
 fi
 
-function choose_or_cancel() {
+function choose_option() {
     echo -e "Type a number from the list below and return to proceed."
-    echo -e "${INFO_FONT}  To cancel, any entry not in list also works${NC}"
     section_divider
 }
 
-function cancel_entry() {
-    echo -e "\n${INFO_FONT}User canceled${NC}\n"
+function exit_script() {
+    echo -e "\n${INFO_FONT}Exit Script selected${NC}\n"
     exit_message
 }
 
 function invalid_entry() {
-    echo -e "\n${ERROR_FONT}User canceled by entering an invalid option${NC}\n"
-    exit_message
+    echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
 }
 
 function exit_message() {
     section_divider
-    echo -e "${SUCCESS_FONT}Shell Script Completed${NC}"
-    echo -e " * You may close the terminal window now if you want"
-    echo -e " or"
-    echo -e " * You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning.\n\n"
+    echo -e "${SUCCESS_FONT}Selection Completed${NC}"
     exit 0
+}
+
+function quit_message() {
+    section_divider
+    echo -e "${INFO_FONT}Exiting Script${NC}"
+    echo "  You may close the terminal"
+    exit 1
 }
 
 function do_continue() {
@@ -134,7 +135,7 @@ function do_continue() {
 }
 
 function menu_select() {
-    choose_or_cancel
+    choose_option
 
     local options=("${@:1:$#/2}")
     local actions=("${@:$(($# + 1))/2+1}")
@@ -197,8 +198,6 @@ function menu_select() {
 ############################################################
 
 function open_source_warning() {
-    echo "inside open_source_warning"
-    echo "SKIP_OPEN_SOURCE_WARNING = ${SKIP_OPEN_SOURCE_WARNING}"
     # Skip initial greeting if opted out using env variable or previously used
     if [ "${SKIP_OPEN_SOURCE_WARNING}" = "1" ]; then return; fi
 
@@ -406,7 +405,7 @@ function check_config_override_existence_offer_to_configure() {
             echo -e "\nIf you choose Sign Automatically, script guides you"
             echo -e "  to create a permanent signing file"
             echo -e "  containing your Apple Developer ID"
-            choose_or_cancel
+            choose_option
             options=("Sign Automatically" "Sign Manually" "Cancel")
             select opt in "${options[@]}"
             do
@@ -419,7 +418,7 @@ function check_config_override_existence_offer_to_configure() {
                         break
                         ;;
                     "Cancel")
-                        cancel_entry
+                        exit_script
                         ;;
                     *) # Invalid option
                         invalid_entry
@@ -463,7 +462,7 @@ function report_persistent_config_override() {
                 break
                 ;;
             "Quit Scipt")
-                cancel_entry
+                exit_script
                 ;;
             *) # Invalid option
                 invalid_entry
@@ -555,7 +554,7 @@ function ensure_a_year() {
                 break
                 ;;
             "Quit Scipt")
-                cancel_entry
+                exit_script
                 ;;
             *) # Invalid option
                 invalid_entry
@@ -677,7 +676,7 @@ function verify_xcode_path() {
                     break
                     ;;
                 "Quit Script")
-                    cancel_entry
+                    exit_script
                     ;;
                 *) # Invalid option
                     invalid_entry
@@ -736,7 +735,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     section_divider
 
     options=("Continue" "Cancel")
-    actions=("choose_main_branch" "cancel_entry")
+    actions=("choose_main_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH

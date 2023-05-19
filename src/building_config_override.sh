@@ -44,7 +44,7 @@ function check_config_override_existence_offer_to_configure() {
             echo -e "\nIf you choose Sign Automatically, script guides you"
             echo -e "  to create a permanent signing file"
             echo -e "  containing your Apple Developer ID"
-            choose_or_cancel
+            choose_option
             options=("Sign Automatically" "Sign Manually" "Cancel")
             select opt in "${options[@]}"
             do
@@ -57,7 +57,7 @@ function check_config_override_existence_offer_to_configure() {
                         break
                         ;;
                     "Cancel")
-                        cancel_entry
+                        exit_script
                         ;;
                     *) # Invalid option
                         invalid_entry
@@ -101,7 +101,7 @@ function report_persistent_config_override() {
                 break
                 ;;
             "Quit Scipt")
-                cancel_entry
+                exit_script
                 ;;
             *) # Invalid option
                 invalid_entry

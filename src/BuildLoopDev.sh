@@ -50,7 +50,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "\n** You can choose the dev branch or a lightly tested earlier commit of dev **"
 
     options=("Choose dev" "Choose dev lightly tested" "Cancel")
-    actions=("choose_dev_branch" "choose_fixed_dev_branch" "cancel_entry")
+    actions=("choose_dev_branch" "choose_fixed_dev_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH

@@ -3,8 +3,6 @@
 ############################################################
 
 function open_source_warning() {
-    echo "inside open_source_warning"
-    echo "SKIP_OPEN_SOURCE_WARNING = ${SKIP_OPEN_SOURCE_WARNING}"
     # Skip initial greeting if opted out using env variable or previously used
     if [ "${SKIP_OPEN_SOURCE_WARNING}" = "1" ]; then return; fi
 
