@@ -427,7 +427,7 @@ function report_persistent_config_override() {
     echo -e "Your Apple Developer ID was found automatically:"
     grep "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}
     echo -e "\nIf that is correct your app will be automatically signed\n"
-    options=("ID is OK" "Editing Instructions" "Quit Scipt")
+    options=("ID is OK" "Editing Instructions" "$(exit_or_return_menu)")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -455,7 +455,7 @@ function report_persistent_config_override() {
                 return_when_ready
                 break
                 ;;
-            "Quit Scipt")
+            "$(exit_or_return_menu)")
                 exit_script
                 ;;
             *) # Invalid option
@@ -533,7 +533,7 @@ function ensure_a_year() {
 
     echo -e "${INFO_FONT}Ensure a year by deleting old provisioning profiles${NC}"
     echo -e "  Unless you have a specific reason, choose option 1\n"
-    options=("Ensure a Year" "Skip" "Quit Scipt")
+    options=("Ensure a Year" "Skip" "$(exit_or_return_menu)")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -547,7 +547,7 @@ function ensure_a_year() {
             "Skip")
                 break
                 ;;
-            "Quit Scipt")
+            "$(exit_or_return_menu)")
                 exit_script
                 ;;
             *) # Invalid option
@@ -646,7 +646,7 @@ function verify_xcode_path() {
         echo -e "❌ ${ERROR_FONT}xcode-select is not pointing to the correct Xcode path."
         echo -e "     It is set to: $xcode_path${NC}"
         echo -e "Please choose an option below to proceed:\n"
-        options=("Correct xcode-select path" "Skip" "Quit Script")
+        options=("Correct xcode-select path" "Skip" "$(exit_or_return_menu)")
         select opt in "${options[@]}"
         do
             case $opt in
@@ -669,7 +669,7 @@ function verify_xcode_path() {
                 "Skip")
                     break
                     ;;
-                "Quit Script")
+                "$(exit_or_return_menu)")
                     exit_script
                     ;;
                 *) # Invalid option

@@ -72,7 +72,7 @@ function report_persistent_config_override() {
     echo -e "Your Apple Developer ID was found automatically:"
     grep "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}
     echo -e "\nIf that is correct your app will be automatically signed\n"
-    options=("ID is OK" "Editing Instructions" "Quit Scipt")
+    options=("ID is OK" "Editing Instructions" "$(exit_or_return_menu)")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -100,7 +100,7 @@ function report_persistent_config_override() {
                 return_when_ready
                 break
                 ;;
-            "Quit Scipt")
+            "$(exit_or_return_menu)")
                 exit_script
                 ;;
             *) # Invalid option
