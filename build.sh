@@ -6,7 +6,9 @@ DEST_DIR="."
 
 # List of scripts to process
 SCRIPTS=(
+  "BuildSelectScript.sh"
   "BuildLoop.sh"
+  "BuildLoopReleased.sh"
   "BuildLoopFollow.sh"
   "BuildLoopCaregiver.sh"
   "CustomizationSelect.sh"
@@ -17,7 +19,6 @@ SCRIPTS=(
   "Build_iAPS.sh"
   "CleanProfiles.sh"
   "CleanDerived.sh"
-  "CleanCartDerived.sh"
   "DeleteOldDownloads.sh"
   "XcodeClean.sh")
 

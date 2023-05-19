@@ -9,8 +9,6 @@ BUILD_DIR=~/Downloads/BuildLoop
 # The rest of this is specific to the particular script
 ############################################################
 
-initial_greeting
-
 function display_applied_patches() {
     has_applied_patches=false
     for i in ${!name[@]}; do
@@ -117,7 +115,7 @@ function cleanup {
     echo "Deleting temp working directory $mytmpdir"
     rm -r "$mytmpdir"
     tput cuu1 && tput el
-    exit_message
+    exit_or_return_menu
 }
 
 section_separator
@@ -207,8 +205,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         if [ "$has_applied_patches" = true ]; then
             echo "$((${#name[@]}+1))) Remove a customization"
         fi
-        echo "$((${#name[@]}+2))) Quit"
-        echo "$((${#name[@]}+3))) Quit and open Xcode"
+        echo "$((${#name[@]}+2))) $(exit_or_return_menu)"
+        echo "$((${#name[@]}+3))) $(exit_or_return_menu) and open Xcode"
 
         read -p "Enter your choice: " choice
         if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $((${#name[@]}+3)) ]]; then

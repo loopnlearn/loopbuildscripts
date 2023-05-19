@@ -58,7 +58,7 @@ if [ "$0" != "_" ]; then
         "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
-        "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
+        "SKIP_OPEN_SOURCE_WARNING: If set, skips the open source warning for build scripts."
         "CUSTOM_URL: Overrides the repo url."
         "CUSTOM_BRANCH: Overrides the branch used for git clone."
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."
@@ -96,72 +96,24 @@ if [ "$0" != "_" ]; then
     fi
 fi
 
-function initial_greeting() {
-    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
-    if [ "${SKIP_INITIAL_GREETING}" = "1" ] || [ "$0" = "_" ]; then return; fi
-
-    local documentation_link="${1:-}"
-
-    section_separator
-
-    echo -e "${INFO_FONT}*** IMPORTANT ***${NC}\n"
-    echo -e "This project is:"
-    echo -e "${INFO_FONT}  Open Source software"
-    echo -e "  Not \"approved\" for therapy${NC}"
-    echo -e ""
-    echo -e "  You take full responsibility when you build"
-    echo -e "  or run an open source app, and"
-    echo -e "  ${INFO_FONT}you do so at your own risk.${NC}"
-    echo -e ""
-    echo -e "To increase (decrease) font size"
-    echo -e "  Hold down the CMD key and hit + (-)"
-    echo -e "\n${INFO_FONT}By typing 1 and ENTER, you indicate you understand"
-    echo -e "\n--------------------------------\n${NC}"
-
-    options=("Agree" "Cancel")
-    select opt in "${options[@]}"; do
-        case $opt in
-        "Agree")
-            break
-            ;;
-        "Cancel")
-            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
-            ;;
-        *)
-            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
-            ;;
-        esac
-    done
-
-    echo -e "${NC}\n\n\n\n"
-}
-
-function choose_or_cancel() {
+function choose_option() {
     echo -e "Type a number from the list below and return to proceed."
-    echo -e "${INFO_FONT}  To cancel, any entry not in list also works${NC}"
     section_divider
 }
 
-function cancel_entry() {
-    echo -e "\n${INFO_FONT}User canceled${NC}\n"
-    exit_message
+function exit_script() {
+    section_divider
+    echo -e "${INFO_FONT}Exit from Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
 }
 
 function invalid_entry() {
-    echo -e "\n${ERROR_FONT}User canceled by entering an invalid option${NC}\n"
-    exit_message
-}
-
-function exit_message() {
-    section_divider
-    echo -e "${SUCCESS_FONT}Shell Script Completed${NC}"
-    echo -e " * You may close the terminal window now if you want"
-    echo -e " or"
-    echo -e " * You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning.\n\n"
-    exit 0
+    echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
 }
 
 function do_continue() {
@@ -169,7 +121,7 @@ function do_continue() {
 }
 
 function menu_select() {
-    choose_or_cancel
+    choose_option
 
     local options=("${@:1:$#/2}")
     local actions=("${@:$(($# + 1))/2+1}")
@@ -186,6 +138,14 @@ function menu_select() {
             break
         done
     done
+}
+
+function exit_or_return_menu() {
+    if [ "$0" != "_" ]; then
+        echo "Exit Script"
+    else
+        echo "Return to Menu"
+    fi
 }
 # *** End of inlined file: src/common.sh ***
 
@@ -223,6 +183,61 @@ function menu_select() {
 
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
+
+# Accept build_warning before creating folders
+
+# *** Start of inlined file: src/build_warning.sh ***
+############################################################
+# warning used by all scripts that build an app
+############################################################
+
+function open_source_warning() {
+    # Skip open source warning if opted out using env variable or this script is run from another script
+    if [ "${SKIP_OPEN_SOURCE_WARNING}" = "1" ] || [ "$0" = "_" ]; then return; fi
+
+    local documentation_link="${1:-}"
+
+    section_separator
+
+    echo -e "${INFO_FONT}*** IMPORTANT ***${NC}\n"
+    echo -e "This project is:"
+    echo -e "${INFO_FONT}  Open Source software"
+    echo -e "  Not \"approved\" for therapy${NC}"
+    echo -e ""
+    echo -e "  You take full responsibility when you build"
+    echo -e "  or run an open source app, and"
+    echo -e "  ${INFO_FONT}you do so at your own risk.${NC}"
+    echo -e ""
+    echo -e "To increase (decrease) font size"
+    echo -e "  Hold down the CMD key and hit + (-)"
+    echo -e "\n${INFO_FONT}By typing 1 and ENTER, you indicate you understand"
+    echo -e "\n--------------------------------\n${NC}"
+
+    options=("Agree" "Cancel")
+    select opt in "${options[@]}"; do
+        case $opt in
+        "Agree")
+            break
+            ;;
+        "Cancel")
+            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
+            exit_script
+            ;;
+        *)
+            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
+            invalid_entry
+            exit_script
+            ;;
+        esac
+    done
+
+    # Warning has been issued
+    SKIP_OPEN_SOURCE_WARNING=1
+
+    echo -e "${NC}\n\n\n\n"
+}
+# *** End of inlined file: src/build_warning.sh ***
+
 
 ############################################################
 # Common functions used by multiple build scripts
@@ -294,7 +309,7 @@ function check_versions() {
 
     if ! command -v xcodebuild >/dev/null; then
         echo "Xcode not found. Please install Xcode and try again."
-        exit_message
+        exit_or_return_menu
     fi
 
     if [ -n "$CUSTOM_XCODE_VER" ]; then
@@ -317,7 +332,7 @@ function check_versions() {
         echo "Please verify your versions using https://www.loopandlearn.org/version-updates/ and https://developer.apple.com/support/xcode/"
 
         options=("Continue" "Exit")
-        actions=("return" "exit_message")
+        actions=("return" "exit_or_return_menu")
         menu_select "${options[@]}" "${actions[@]}"
     # Check if Xcode version is less than the lowest required version
     elif [ "$(compare_versions "$XCODE_VER" "$LOWEST_XCODE_VER")" = "$XCODE_VER" ] && [ "$XCODE_VER" != "$LOWEST_XCODE_VER" ]; then
@@ -329,7 +344,7 @@ function check_versions() {
         echo "You need to upgrade Xcode to version $LOWEST_XCODE_VER or later to build for iOS $LATEST_IOS_VER."
 
         options=("Continue with lower iOS version" "Exit")
-        actions=("return" "exit_message")
+        actions=("return" "exit_or_return_menu")
         menu_select "${options[@]}" "${actions[@]}"
     else 
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
@@ -385,8 +400,8 @@ function check_config_override_existence_offer_to_configure() {
             echo -e "\nIf you choose Sign Automatically, script guides you"
             echo -e "  to create a permanent signing file"
             echo -e "  containing your Apple Developer ID"
-            choose_or_cancel
-            options=("Sign Automatically" "Sign Manually" "Cancel")
+            choose_option
+            options=("Sign Automatically" "Sign Manually" "$(exit_or_return_menu)")
             select opt in "${options[@]}"
             do
                 case $opt in
@@ -397,8 +412,8 @@ function check_config_override_existence_offer_to_configure() {
                     "Sign Manually")
                         break
                         ;;
-                    "Cancel")
-                        cancel_entry
+                    "$(exit_or_return_menu)")
+                        exit_script
                         ;;
                     *) # Invalid option
                         invalid_entry
@@ -413,7 +428,7 @@ function report_persistent_config_override() {
     echo -e "Your Apple Developer ID was found automatically:"
     grep "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}
     echo -e "\nIf that is correct your app will be automatically signed\n"
-    options=("ID is OK" "Editing Instructions" "Quit Scipt")
+    options=("ID is OK" "Editing Instructions" "$(exit_or_return_menu)")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -441,8 +456,8 @@ function report_persistent_config_override() {
                 return_when_ready
                 break
                 ;;
-            "Quit Scipt")
-                cancel_entry
+            "$(exit_or_return_menu)")
+                exit_script
                 ;;
             *) # Invalid option
                 invalid_entry
@@ -519,7 +534,7 @@ function ensure_a_year() {
 
     echo -e "${INFO_FONT}Ensure a year by deleting old provisioning profiles${NC}"
     echo -e "  Unless you have a specific reason, choose option 1\n"
-    options=("Ensure a Year" "Skip" "Quit Scipt")
+    options=("Ensure a Year" "Skip" "$(exit_or_return_menu)")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -533,8 +548,8 @@ function ensure_a_year() {
             "Skip")
                 break
                 ;;
-            "Quit Scipt")
-                cancel_entry
+            "$(exit_or_return_menu)")
+                exit_script
                 ;;
             *) # Invalid option
                 invalid_entry
@@ -586,12 +601,12 @@ function clone_repo() {
 function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
-        # Use this flag to modify exit_message
+        # Use this flag to modify exit_or_return_menu
         echo -e "✅ ${SUCCESS_FONT}Successful Download. Proceed to the next step...${NC}"
         return_when_ready
     else
         echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
-        exit_message
+        exit_or_return_menu
     fi
 }
 
@@ -632,7 +647,7 @@ function verify_xcode_path() {
         echo -e "❌ ${ERROR_FONT}xcode-select is not pointing to the correct Xcode path."
         echo -e "     It is set to: $xcode_path${NC}"
         echo -e "Please choose an option below to proceed:\n"
-        options=("Correct xcode-select path" "Skip" "Quit Script")
+        options=("Correct xcode-select path" "Skip" "$(exit_or_return_menu)")
         select opt in "${options[@]}"
         do
             case $opt in
@@ -649,14 +664,14 @@ function verify_xcode_path() {
                         break
                     else
                         echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
-                        exit_message
+                        exit_or_return_menu
                     fi
                     ;;
                 "Skip")
                     break
                     ;;
-                "Quit Script")
-                    cancel_entry
+                "$(exit_or_return_menu)")
+                    exit_script
                     ;;
                 *) # Invalid option
                     invalid_entry
@@ -692,7 +707,7 @@ function branch_select() {
 # The rest of this is specific to the particular script
 ############################################################
 
-initial_greeting
+open_source_warning
 
 
 ############################################################
@@ -721,8 +736,8 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  https://www.loopandlearn.org/loop-follow/"
     section_divider
     
-    options=("Main Branch" "Dev Branch" "Cancel")
-    actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
+    options=("Main Branch" "Dev Branch" "$(exit_or_return_menu)")
+    actions=("choose_main_branch" "choose_dev_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
@@ -746,6 +761,6 @@ echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
-exit_message
+exit_or_return_menu
 # *** End of inlined file: src/BuildLoopFollow.sh ***
 

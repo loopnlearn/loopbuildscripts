@@ -44,8 +44,8 @@ function check_config_override_existence_offer_to_configure() {
             echo -e "\nIf you choose Sign Automatically, script guides you"
             echo -e "  to create a permanent signing file"
             echo -e "  containing your Apple Developer ID"
-            choose_or_cancel
-            options=("Sign Automatically" "Sign Manually" "Cancel")
+            choose_option
+            options=("Sign Automatically" "Sign Manually" "$(exit_or_return_menu)")
             select opt in "${options[@]}"
             do
                 case $opt in
@@ -56,8 +56,8 @@ function check_config_override_existence_offer_to_configure() {
                     "Sign Manually")
                         break
                         ;;
-                    "Cancel")
-                        cancel_entry
+                    "$(exit_or_return_menu)")
+                        exit_script
                         ;;
                     *) # Invalid option
                         invalid_entry
@@ -72,7 +72,7 @@ function report_persistent_config_override() {
     echo -e "Your Apple Developer ID was found automatically:"
     grep "^$DEV_TEAM_SETTING_NAME" ${OVERRIDE_FULLPATH}
     echo -e "\nIf that is correct your app will be automatically signed\n"
-    options=("ID is OK" "Editing Instructions" "Quit Scipt")
+    options=("ID is OK" "Editing Instructions" "$(exit_or_return_menu)")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -100,8 +100,8 @@ function report_persistent_config_override() {
                 return_when_ready
                 break
                 ;;
-            "Quit Scipt")
-                cancel_entry
+            "$(exit_or_return_menu)")
+                exit_script
                 ;;
             *) # Invalid option
                 invalid_entry

@@ -34,6 +34,9 @@
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
 
+# Accept build_warning before creating folders
+#!inline build_warning.sh
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
@@ -89,7 +92,7 @@ function ensure_a_year() {
 
     echo -e "${INFO_FONT}Ensure a year by deleting old provisioning profiles${NC}"
     echo -e "  Unless you have a specific reason, choose option 1\n"
-    options=("Ensure a Year" "Skip" "Quit Scipt")
+    options=("Ensure a Year" "Skip" "$(exit_or_return_menu)")
     select opt in "${options[@]}"
     do
         case $opt in
@@ -103,8 +106,8 @@ function ensure_a_year() {
             "Skip")
                 break
                 ;;
-            "Quit Scipt")
-                cancel_entry
+            "$(exit_or_return_menu)")
+                exit_script
                 ;;
             *) # Invalid option
                 invalid_entry
@@ -156,12 +159,12 @@ function clone_repo() {
 function automated_clone_download_error_check() {
     # Check if the clone was successful
     if [ $clone_exit_status -eq 0 ]; then
-        # Use this flag to modify exit_message
+        # Use this flag to modify exit_or_return_menu
         echo -e "✅ ${SUCCESS_FONT}Successful Download. Proceed to the next step...${NC}"
         return_when_ready
     else
         echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
-        exit_message
+        exit_or_return_menu
     fi
 }
 
@@ -202,7 +205,7 @@ function verify_xcode_path() {
         echo -e "❌ ${ERROR_FONT}xcode-select is not pointing to the correct Xcode path."
         echo -e "     It is set to: $xcode_path${NC}"
         echo -e "Please choose an option below to proceed:\n"
-        options=("Correct xcode-select path" "Skip" "Quit Script")
+        options=("Correct xcode-select path" "Skip" "$(exit_or_return_menu)")
         select opt in "${options[@]}"
         do
             case $opt in
@@ -219,14 +222,14 @@ function verify_xcode_path() {
                         break
                     else
                         echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
-                        exit_message
+                        exit_or_return_menu
                     fi
                     ;;
                 "Skip")
                     break
                     ;;
-                "Quit Script")
-                    cancel_entry
+                "$(exit_or_return_menu)")
+                    exit_script
                     ;;
                 *) # Invalid option
                     invalid_entry

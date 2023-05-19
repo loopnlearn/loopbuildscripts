@@ -21,7 +21,7 @@ CLONE_SUB_MODULES="0"
 # The rest of this is specific to the particular script
 ############################################################
 
-initial_greeting
+open_source_warning
 
 
 ############################################################
@@ -53,8 +53,8 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  https://iaps.readthedocs.io/en/latest/"
     echo -e ""
 
-    options=("iAPS main" "iAPS dev" "Cancel")
-    actions=("select_iaps_main" "select_iaps_dev" "cancel_entry")
+    options=("iAPS main" "iAPS dev" "$(exit_or_return_menu)")
+    actions=("select_iaps_main" "select_iaps_dev" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
@@ -77,4 +77,4 @@ echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
-exit_message
+exit_or_return_menu

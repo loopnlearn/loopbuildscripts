@@ -46,7 +46,7 @@ if [ "$0" != "_" ]; then
         "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
-        "SKIP_INITIAL_GREETING: If set, skips the initial greeting when running the script."
+        "SKIP_OPEN_SOURCE_WARNING: If set, skips the open source warning for build scripts."
         "CUSTOM_URL: Overrides the repo url."
         "CUSTOM_BRANCH: Overrides the branch used for git clone."
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."
@@ -84,72 +84,24 @@ if [ "$0" != "_" ]; then
     fi
 fi
 
-function initial_greeting() {
-    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
-    if [ "${SKIP_INITIAL_GREETING}" = "1" ] || [ "$0" = "_" ]; then return; fi
-
-    local documentation_link="${1:-}"
-
-    section_separator
-
-    echo -e "${INFO_FONT}*** IMPORTANT ***${NC}\n"
-    echo -e "This project is:"
-    echo -e "${INFO_FONT}  Open Source software"
-    echo -e "  Not \"approved\" for therapy${NC}"
-    echo -e ""
-    echo -e "  You take full responsibility when you build"
-    echo -e "  or run an open source app, and"
-    echo -e "  ${INFO_FONT}you do so at your own risk.${NC}"
-    echo -e ""
-    echo -e "To increase (decrease) font size"
-    echo -e "  Hold down the CMD key and hit + (-)"
-    echo -e "\n${INFO_FONT}By typing 1 and ENTER, you indicate you understand"
-    echo -e "\n--------------------------------\n${NC}"
-
-    options=("Agree" "Cancel")
-    select opt in "${options[@]}"; do
-        case $opt in
-        "Agree")
-            break
-            ;;
-        "Cancel")
-            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
-            ;;
-        *)
-            echo -e "\n${INFO_FONT}User did not agree to terms of use.${NC}\n\n"
-            exit_message
-            ;;
-        esac
-    done
-
-    echo -e "${NC}\n\n\n\n"
-}
-
-function choose_or_cancel() {
+function choose_option() {
     echo -e "Type a number from the list below and return to proceed."
-    echo -e "${INFO_FONT}  To cancel, any entry not in list also works${NC}"
     section_divider
 }
 
-function cancel_entry() {
-    echo -e "\n${INFO_FONT}User canceled${NC}\n"
-    exit_message
+function exit_script() {
+    section_divider
+    echo -e "${INFO_FONT}Exit from Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
 }
 
 function invalid_entry() {
-    echo -e "\n${ERROR_FONT}User canceled by entering an invalid option${NC}\n"
-    exit_message
-}
-
-function exit_message() {
-    section_divider
-    echo -e "${SUCCESS_FONT}Shell Script Completed${NC}"
-    echo -e " * You may close the terminal window now if you want"
-    echo -e " or"
-    echo -e " * You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning.\n\n"
-    exit 0
+    echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
 }
 
 function do_continue() {
@@ -157,7 +109,7 @@ function do_continue() {
 }
 
 function menu_select() {
-    choose_or_cancel
+    choose_option
 
     local options=("${@:1:$#/2}")
     local actions=("${@:$(($# + 1))/2+1}")
@@ -174,6 +126,14 @@ function menu_select() {
             break
         done
     done
+}
+
+function exit_or_return_menu() {
+    if [ "$0" != "_" ]; then
+        echo "Exit Script"
+    else
+        echo "Return to Menu"
+    fi
 }
 # *** End of inlined file: src/common.sh ***
 

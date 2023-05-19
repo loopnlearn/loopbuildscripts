@@ -17,7 +17,7 @@ CLONE_SUB_MODULES="0"
 # The rest of this is specific to the particular script
 ############################################################
 
-initial_greeting
+open_source_warning
 
 
 ############################################################
@@ -46,8 +46,8 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  https://www.loopandlearn.org/loop-follow/"
     section_divider
     
-    options=("Main Branch" "Dev Branch" "Cancel")
-    actions=("choose_main_branch" "choose_dev_branch" "cancel_entry")
+    options=("Main Branch" "Dev Branch" "$(exit_or_return_menu)")
+    actions=("choose_main_branch" "choose_dev_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
@@ -71,4 +71,4 @@ echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
-exit_message
+exit_or_return_menu
