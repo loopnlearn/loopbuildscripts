@@ -36,9 +36,9 @@ unset CUSTOM_XCODE_VER
 #   Pair this with FRESH_CLONE="0"
 #export CLONE_STATUS="1"
 
-# SKIP_OPEN_SOURCE_WARNING can be set to 1 to skip the initial greeting
+# SKIP_OPEN_SOURCE_WARNING can be set to 1 to skip the open source warning
 #   Uncomment the line
-#   Set the value to 1 to skip the initial greeting dialog
+#   Set the value to 1 to skip the open source warning
 #export SKIP_OPEN_SOURCE_WARNING="1"
 
 # CUSTOM_BRANCH overrides the branch used for git clone

@@ -48,7 +48,7 @@ if [ "$0" != "_" ]; then
         "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
-        "SKIP_OPEN_SOURCE_WARNING: If set, skips the initial greeting when running the script."
+        "SKIP_OPEN_SOURCE_WARNING: If set, skips the open source warning for build scripts."
         "CUSTOM_URL: Overrides the repo url."
         "CUSTOM_BRANCH: Overrides the branch used for git clone."
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."

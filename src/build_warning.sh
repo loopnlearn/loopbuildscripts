@@ -3,7 +3,7 @@
 ############################################################
 
 function open_source_warning() {
-    # Skip initial greeting if opted out using env variable or this script is run from BuildLoop
+    # Skip open source warning if opted out using env variable or this script is run from another script
     if [ "${SKIP_OPEN_SOURCE_WARNING}" = "1" ] || [ "$0" = "_" ]; then return; fi
 
     local documentation_link="${1:-}"
