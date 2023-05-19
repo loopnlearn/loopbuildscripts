@@ -102,7 +102,7 @@ function choose_option() {
 
 function exit_script() {
     section_divider
-    echo -e "${INFO_FONT}Exit from Build Select Script${NC}\n"
+    echo -e "${INFO_FONT}Exit from Script${NC}\n"
     echo -e "  You may close the terminal"
     echo -e "or"
     echo -e "  You can press the up arrow ⬆️  on the keyboard"
