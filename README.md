@@ -45,9 +45,8 @@ This is documented in
 2. Copy/Paste this code into terminal (use copy icon, bottom right): 
 
 ```
-export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildSelectScript.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildSelectScript.sh)"
 ```
 
 3. Hit Enter and follow prompts
@@ -61,12 +60,6 @@ The other scripts can be run directly with the commands listed below.
 2. Copy/Paste selected code into terminal (use copy icon, bottom right):
 3. Hit Enter and follow prompts
 
-#### loopbuildscripts - other branches
-
-Each command below uses an export command to select the dev branch from loopbuildscripts. If you are looking at this README file from another branch, modify the export command to the branch of interest.
-
-Note that the export sets an enviroment variable that remains set (and used) in that terminal until it it cleared. Starting a new terminal clears all environment variables.
-
 #### Scripts included in BuildSelectScript.sh
 
 Use these commands to run a script directly instead of using the **BuildSelectScript.sh** menu.
@@ -76,48 +69,42 @@ Use these commands to run a script directly instead of using the **BuildSelectSc
 This builds the released version of Loop or Loop with Patches.
 
 ```
-export SCRIPT_BRANCH=dev && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopReleased.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopReleased.sh)"
 ```
 #### BuildLoopFollow
 
 ```
-export SCRIPT_BRANCH=dev && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopFollow.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopFollow.sh)"
 ```
 
 #### BuildLoopCaregiver
 
 ```
-export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopCaregiver.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopCaregiver.sh)"
 ```
 
 #### BuildxDrip4iOS
 
 ```
-export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildxDrip4iOS.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildxDrip4iOS.sh)"
 ```
 
 #### DeleteOldDownloads
 
 ```
-export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/DeleteOldDownloads.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/DeleteOldDownloads.sh)"
 ```
 
 #### CustomizationSelect
 
 ```
-export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/CustomizationSelect.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/CustomizationSelect.sh)"
 ```
 
 #### Scripts not included in Build-Select-Script
@@ -135,25 +122,22 @@ If you want to build a different branch, for example `branch_name`
 * This bypasses the menu and downloads the desired branch from LoopKit/LoopWorkspace
 
 ```
-export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopDev.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopDev.sh)"
 ```
 
 #### BuildFreeAPS
 
 ```
-export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildFreeAPS.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildFreeAPS.sh)"
 ```
 
 #### Build_iAPS
 
 ```
-export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/Build_iAPS.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/Build_iAPS.sh)"
 ```
 
 ## Developer Tips
