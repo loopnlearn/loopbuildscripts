@@ -34,7 +34,7 @@ There are several build scripts for specific code not included in **BuildSelectS
 * [Build_iAPS.sh](#build_iaps)
 
 
-### Build-Select-Script
+### Build Select Script
 
 This is documented in
 
@@ -65,12 +65,21 @@ The other scripts can be run directly with the commands listed below.
 
 Each command below uses an export command to select the dev branch from loopbuildscripts. If you are looking at this README file from another branch, modify the export command to the branch of interest.
 
-Note that the export sets an enviroment variable that remains set (and used) in that terminal until it it cleared. Starting a new terminal to clears all environment variables.
+Note that the export sets an enviroment variable that remains set (and used) in that terminal until it it cleared. Starting a new terminal clears all environment variables.
 
 #### Scripts included in BuildSelectScript.sh
 
 Use these commands to run a script directly instead of using the **BuildSelectScript.sh** menu.
 
+#### BuildLoopReleased
+
+This builds the released version of Loop or Loop with Patches.
+
+```
+export SCRIPT_BRANCH=dev && \
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoopReleased.sh)"
+```
 #### BuildLoopFollow
 
 ```
