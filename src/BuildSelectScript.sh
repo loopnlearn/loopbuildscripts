@@ -29,7 +29,6 @@ function first_time_menu() {
     echo "  5 Exit Script"
     echo ""
     echo "After completing a given option, you can choose another or exit the script"
-    section_divider
     FIRST_TIME="0"
 }
 
@@ -41,6 +40,7 @@ while true; do
     if [ "${FIRST_TIME}" = "1" ]; then
         first_time_menu
     fi
+    section_divider
 
     options=(\
         "Build Loop" \
