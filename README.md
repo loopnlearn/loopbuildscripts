@@ -111,12 +111,13 @@ These scripts can only be run directly.
 
 #### BuildLoopDev
 
-This script enables building the dev branch, a lightly tested version of the dev branch.
+This script enables building the dev branch. The menu provides the choice of dev or a lightly tested version (specific commit) of the dev branch.
 
 If you want to build a different branch, for example `branch_name`
 
 * Add ` - branch_name` to the end of the command below
 * There must be a space after the ending quote followed by hyphen, another space and then the branch name
+* This bypasses the menu and downloads the desired branch from LoopKit/LoopWorkspace
 
 ```
 export SCRIPT_BRANCH="dev" && \
