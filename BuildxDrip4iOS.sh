@@ -108,17 +108,6 @@ function choose_option() {
     section_divider
 }
 
-function exit_script() {
-    section_divider
-    echo -e "${INFO_FONT}Exit from Script${NC}\n"
-    echo -e "  You may close the terminal"
-    echo -e "or"
-    echo -e "  You can press the up arrow ⬆️  on the keyboard"
-    echo -e "    and return to repeat script from beginning"
-    section_divider
-    exit 0
-}
-
 function invalid_entry() {
     echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
 }
@@ -149,10 +138,33 @@ function menu_select() {
 
 function exit_or_return_menu() {
     if [ "$0" != "_" ]; then
+        # Called directly
         echo "Exit Script"
     else
+        # Called from BuildSelectScript
         echo "Return to Menu"
     fi
+}
+
+function exit_script() {
+    if [ "$0" != "_" ]; then
+        # Called directly
+        exit_message
+    else
+        # Called from BuildSelectScript
+        exit 0
+    fi
+}
+
+function exit_message() {
+    section_divider
+    echo -e "${INFO_FONT}Exit from Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
 }
 # *** End of inlined file: src/common.sh ***
 
@@ -758,6 +770,6 @@ echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
-exit_or_return_menu
+exit_script
 # *** End of inlined file: src/BuildxDrip4iOS.sh ***
 
