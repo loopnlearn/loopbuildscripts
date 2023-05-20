@@ -2,28 +2,32 @@
 
 These scripts simplify some tasks for building Loop and other DIY code from the GitHub repositories.
 
-Most users should use the BuildLoop.sh script, otherwise known as the **Build-Select-Script**. This script has a menu for users to choose the option they want.
+Most users should use the BuildSelectScript.sh script, otherwise known as the **Build Select Script**. This script has a menu for users to choose the option they want.
 
-As of 15-May-2023 for the dev branch, the **Build-Select-Script** options were updated and expanded. The scripts are now significantly easier to create and maintain. All Build scripts include automatic signing.
+As of 15-May-2023, the **BuildSelectScript.sh** replaces the old BuildLoop.sh.
 
-The **Build-Select-Script** will help you to:
+* Menu options were updated and expanded
+* Script returns to top-menu after each option completes
+* All Build scripts include automatic signing
+
+The **Build Select Script** will help you to:
 
 1. Download and Build Loop
 2. Download and Build Related Apps
 3. Run Maintenance Utilities
 4. Run Customization Utilities
 
-The Build Loop option offers the released version of Loop and a released version with some commonly requested patches added (Loop with Patches).
+The `Download and Build Loop` option offers the released version of Loop and a released version with some commonly requested patches added (Loop with Patches).
 
-The Build Related Apps option includes Loop Follow, LoopCaregiver and xDrip4iOS. (Yes, GlucoseDirect is planned).
+The `Download and Build Related Apps` option includes Loop Follow, LoopCaregiver, xDrip4iOS and GlucoseDirect.
 
-The Maintenance Utilities option will soon include the Delete Old Downloads as well as other Xcode clean-up options.
+The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
 
-The Run Customization Utilities option leads to the Customization Select script and has a placeholder for other customization scripts that are planned, but not yet ready.
+The `Run Customization Utilities` option leads to the Customization Select script and has a placeholder for other customization scripts that are planned, but not yet ready.
 
-In addition to selecting options with the **Build-Select-Script** (BuildLoop.sh), each of the scripts can be run directly.
+In addition to selecting options from the top-menu of **BuildSelectScript.sh**, each of the scripts can be run directly.
 
-There are several build scripts for specific code not included in **Build-Select-Script**. These are:
+There are several build scripts for specific code not included in **BuildSelectScript.sh**. These are:
 
 * [BuildLoopDev.sh](#buildloopdev)
 * [BuildFreeAPS.sh](#buildfreeaps)
@@ -32,7 +36,7 @@ There are several build scripts for specific code not included in **Build-Select
 
 ### Build-Select-Script
 
-This is documented (note - for main only, not for dev) in
+This is documented in
 
 * [LnL: Build-Select](https://www.loopandlearn.org/build-select)
 * [LoopDocs: Build-Select](https://loopkit.github.io/loopdocs/build/step14/#download-loop)
@@ -43,7 +47,7 @@ This is documented (note - for main only, not for dev) in
 ```
 export SCRIPT_BRANCH="dev" && \
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildLoop.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/BuildSelectScript.sh)"
 ```
 
 3. Hit Enter and follow prompts
@@ -51,19 +55,21 @@ export SCRIPT_BRANCH="dev" && \
 
 ### Other Scripts
 
-The other scripts can be run with the following commands
+The other scripts can be run directly with the commands listed below.
 
 1. Open terminal
 2. Copy/Paste selected code into terminal (use copy icon, bottom right):
 3. Hit Enter and follow prompts
 
-#### Branches other than main
+#### loopbuildscripts - other branches
 
-Each command below has an export command to select the correct branch from loopbuildscripts. This will be modified prior to merge to main. Note that the export sets an enviroment variable that remains set (and used) until it it cleared.
+Each command below uses an export command to select the dev branch from loopbuildscripts. If you are looking at this README file from another branch, modify the export command to the branch of interest.
 
-#### Scripts included in Build-Select-Script
+Note that the export sets an enviroment variable that remains set (and used) in that terminal until it it cleared. Starting a new terminal to clears all environment variables.
 
-Use these commands to run a script directly instead of using the **Build-Select-Script** menu.
+#### Scripts included in BuildSelectScript.sh
+
+Use these commands to run a script directly instead of using the **BuildSelectScript.sh** menu.
 
 #### BuildLoopFollow
 
@@ -111,7 +117,7 @@ These scripts can only be run directly.
 
 #### BuildLoopDev
 
-This script enables building the dev branch. The menu provides the choice of dev or a lightly tested version (specific commit) of the dev branch.
+This script enables building the Loop dev branch. The menu provides the choice of dev or a lightly tested version (specific commit) of the dev branch.
 
 If you want to build a different branch, for example `branch_name`
 
@@ -143,9 +149,11 @@ export SCRIPT_BRANCH="dev" && \
 
 ## Developer Tips
 
+The scripts are now significantly easier to create and maintain.
+
 When these scripts are being modified and tested, the developers use some special flags to make it easy to test quickly.
 
-Be sure to modify the README file to use main instead of $SCRIPT_BRANCH prior to merging from dev (or other branch) to main.
+Be sure to modify the README file to use main instead of $SCRIPT_BRANCH after merging from dev (or other branch) to main.
 
 When testing locally, there are other test variables you can configure. Be sure to read these two files:
 * custom_config.sh
@@ -157,7 +165,7 @@ This project uses a script inlining system to generate executable scripts from s
 
 To modify a script, simply edit the corresponding source file in the src directory, and then run the build script (./build.sh) to regenerate the output file. The build script will inline any required files and generate the final executable script.
 
-For example, if you want to modify the BuildLoop.sh script, you would edit the src/BuildLoop.sh file, and then run type `./build.sh` in the root directory. The build.sh script will then generate the BuildLoop.sh file in the root directory, which can be executed.
+For example, if you want to modify the BuildSelectScript.sh script, you would edit the src/BuildSelectScript.sh file, and then run type `./build.sh` in the root directory. The build.sh script will then generate the BuildSelectScript.sh file in the root directory, which can be executed.
 
 Note that the build system uses special comments to indicate which files should be inlined. Any line in a script that starts with #!inline will be replaced with the contents of the specified file. The build system will inline files up to a maximum depth of 10, to prevent infinite recursion.
 
