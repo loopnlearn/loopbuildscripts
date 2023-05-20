@@ -234,6 +234,9 @@ run_script() {
 # *** End of inlined file: src/run_script.sh ***
 
 
+# Set default values only if they haven't been defined as environment variables
+: ${SCRIPT_BRANCH:="main"}
+
 function placeholder() {
     section_divider
     echo -e "  The feature is not available, coming soon"
