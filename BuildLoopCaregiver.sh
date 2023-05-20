@@ -629,7 +629,7 @@ function before_final_return_message() {
     echo -e "               Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e " *** Xcode will open automatically, please wait"
+    echo -e "${INFO_FONT}Xcode will open automatically if not already open"
 }
 
 function before_final_return_message_without_watch() {
@@ -638,7 +638,7 @@ function before_final_return_message_without_watch() {
     echo -e "     Trust computer if asked"
     ios16_warning
     echo -e ""
-    echo -e " *** Xcode will open automatically, please wait"
+    echo -e "${INFO_FONT}Xcode will open automatically if not already open"
 }
 
 function verify_xcode_path() {
