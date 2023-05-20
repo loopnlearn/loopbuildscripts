@@ -8,7 +8,7 @@ function placeholder() {
     section_divider
     echo -e "  The feature is not available, coming soon"
     echo -e "  This is a placeholder"
-    exit_or_return_menu
+    return
 }
 
 ############################################################

@@ -99,4 +99,4 @@ before_final_return_message
 echo -e ""
 return_when_ready
 xed . 
-exit_or_return_menu
+exit_script

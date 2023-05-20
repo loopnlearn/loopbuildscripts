@@ -251,7 +251,7 @@ function cleanup {
     echo "Deleting temp working directory $mytmpdir"
     rm -r "$mytmpdir"
     tput cuu1 && tput el
-    exit_or_return_menu
+    exit_script
 }
 
 section_separator

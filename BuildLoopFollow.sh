@@ -760,6 +760,6 @@ echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
-exit_or_return_menu
+exit_script
 # *** End of inlined file: src/BuildLoopFollow.sh ***
 

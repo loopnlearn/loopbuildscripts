@@ -152,6 +152,6 @@ echo -e "✅ Removing Developer DerivedData\n"
 rm -rf "$HOME/Library/Developer/Xcode/DerivedData"
 
 echo -e "🛑  Please Reboot Now\n\n";
-exit 0
+exit_script
 # *** End of inlined file: src/XcodeClean.sh ***
 
