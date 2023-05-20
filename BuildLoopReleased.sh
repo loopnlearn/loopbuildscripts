@@ -541,7 +541,6 @@ function ensure_a_year() {
                 rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
                 echo -e "✅ ${SUCCESS_FONT}Profiles were cleaned${NC}"
                 echo -e "   Next app you build with Xcode will last a year"
-                return_when_ready
                 break
                 ;;
             "Skip")
@@ -755,7 +754,7 @@ standard_build_train
 # Open Xcode
 ############################################################
 
-section_separator
+section_divider
 before_final_return_message
 echo -e ""
 return_when_ready

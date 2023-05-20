@@ -71,7 +71,7 @@ standard_build_train
 # Open Xcode
 ############################################################
 
-section_separator
+section_divider
 before_final_return_message
 echo -e ""
 return_when_ready

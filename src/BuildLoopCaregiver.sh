@@ -59,7 +59,7 @@ standard_build_train
 # Open Xcode
 ############################################################
 
-section_separator
+section_divider
 before_final_return_message_without_watch
 echo -e ""
 return_when_ready
