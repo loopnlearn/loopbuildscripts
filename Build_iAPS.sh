@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildFreeAPS.sh
+#!/bin/bash # script Build_iAPS.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,9 +10,14 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/BuildLoop
-OVERRIDE_FILE=LoopConfigOverride.xcconfig
-DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
+BUILD_DIR=~/Downloads/"Build_iAPS"
+# For iAPS, OVERRIDE_FILE is inside newly downloaded iAPS folder
+USE_OVERRIDE_IN_REPO="1"
+OVERRIDE_FILE="ConfigOverride.xcconfig"
+DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
+
+# sub modules are not required
+CLONE_SUB_MODULES="0"
 
 
 # *** Start of inlined file: src/build_functions.sh ***
@@ -724,25 +729,33 @@ open_source_warning
 # Welcome & Branch Selection
 ############################################################
 
-URL_THIS_SCRIPT="https://github.com/loopnlearn/LoopWorkspace.git"
+URL_THIS_SCRIPT="https://github.com/Artificial-Pancreas/iAPS.git"
 
-function choose_main_branch() {
-    branch_select ${URL_THIS_SCRIPT} freeaps FreeAPS
+
+function select_iaps_main() {
+    branch_select ${URL_THIS_SCRIPT} main
+}
+
+function select_iaps_dev() {
+    branch_select ${URL_THIS_SCRIPT} dev
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${INFO_FONT}You are running the script to build FreeAPS"
-    echo -e " This app is a fork based off of Loop 2.2.x."
-    echo -e " Please consider Loop 3 instead.${NC}"
-    echo -e " You need Xcode and Xcode command line tools installed"
+    echo -e "\n ${INFO_FONT}You are running the script to build iAPS${NC}"
+    echo -e "Before you continue, please ensure"
+    echo -e "  you have Xcode and Xcode command line tools installed\n"
+    echo -e "Please select which branch of iAPS to download and build."
+    echo -e "Most people should choose main branch"
     echo -e ""
-    echo -e " If you have not read this page - please review before continuing"
-    echo -e "    https://www.loopandlearn.org/freeapsdoc"
-    section_divider
+    echo -e "Documentation is found at:"
+    echo -e "  https://github.com/Artificial-Pancreas/iAPS#iaps"
+    echo -e "       and"
+    echo -e "  https://iaps.readthedocs.io/en/latest/"
+    echo -e ""
 
-    options=("Continue" "$(exit_or_return_menu)")
-    actions=("choose_main_branch" "exit_script")
+    options=("iAPS main" "iAPS dev" "$(exit_or_return_menu)")
+    actions=("select_iaps_main" "select_iaps_dev" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
@@ -753,6 +766,7 @@ fi
 ############################################################
 
 standard_build_train
+
 
 ############################################################
 # Open Xcode
@@ -765,5 +779,5 @@ return_when_ready
 cd $REPO_NAME
 xed . 
 exit_script
-# *** End of inlined file: src/BuildFreeAPS.sh ***
+# *** End of inlined file: src/Build_iAPS.sh ***
 

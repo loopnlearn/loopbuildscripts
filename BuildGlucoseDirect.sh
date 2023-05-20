@@ -1,4 +1,4 @@
-#!/bin/bash # script BuildFreeAPS.sh
+#!/bin/bash # script BuildGlucoseDirect.sh
 # -----------------------------------------------------------------------------
 # This file is GENERATED. DO NOT EDIT directly.
 # If you want to modify this file, edit the corresponding file in the src/
@@ -10,9 +10,15 @@
 #   inline build_functions
 ############################################################
 
-BUILD_DIR=~/Downloads/BuildLoop
-OVERRIDE_FILE=LoopConfigOverride.xcconfig
-DEV_TEAM_SETTING_NAME="LOOP_DEVELOPMENT_TEAM"
+BUILD_DIR=~/Downloads/"BuildGlucoseDirect"
+OVERRIDE_FILE=GlucoseDirectOverride.xcconfig
+DEV_TEAM_SETTING_NAME="DEVELOPMENT_TEAM"
+
+#  1 create the file in the repo and add development team
+USE_OVERRIDE_IN_REPO="1"
+
+# sub modules are not required
+CLONE_SUB_MODULES="0"
 
 
 # *** Start of inlined file: src/build_functions.sh ***
@@ -724,21 +730,19 @@ open_source_warning
 # Welcome & Branch Selection
 ############################################################
 
-URL_THIS_SCRIPT="https://github.com/loopnlearn/LoopWorkspace.git"
+URL_THIS_SCRIPT="https://github.com/creepymonster/GlucoseDirect.git"
 
 function choose_main_branch() {
-    branch_select ${URL_THIS_SCRIPT} freeaps FreeAPS
+    branch_select ${URL_THIS_SCRIPT} main GlucoseDirect
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${INFO_FONT}You are running the script to build FreeAPS"
-    echo -e " This app is a fork based off of Loop 2.2.x."
-    echo -e " Please consider Loop 3 instead.${NC}"
+    echo -e "\n${INFO_FONT}You are running the script to build GlucoseDirect${NC}"
     echo -e " You need Xcode and Xcode command line tools installed"
     echo -e ""
-    echo -e " If you have not read this page - please review before continuing"
-    echo -e "    https://www.loopandlearn.org/freeapsdoc"
+    echo -e " If you have not read the docs - please review before continuing"
+    echo -e "    https://github.com/creepymonster/GlucoseDirect#readme"
     section_divider
 
     options=("Continue" "$(exit_or_return_menu)")
@@ -759,11 +763,12 @@ standard_build_train
 ############################################################
 
 section_divider
-before_final_return_message
+before_final_return_message_without_watch
+echo -e " *** Be patient while packages are downloaded"
 echo -e ""
 return_when_ready
 cd $REPO_NAME
 xed . 
 exit_script
-# *** End of inlined file: src/BuildFreeAPS.sh ***
+# *** End of inlined file: src/BuildGlucoseDirect.sh ***
 
