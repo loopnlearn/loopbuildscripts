@@ -4,6 +4,8 @@ BUILD_DIR=~/Downloads/BuildLoop
 
 #!inline common.sh
 
+# Set default values only if they haven't been defined as environment variables
+: ${SCRIPT_BRANCH:="main"}
 
 ############################################################
 # The rest of this is specific to the particular script

@@ -192,9 +192,6 @@ function exit_message() {
 #    in that case, set CLONE_SUB_MODULES to 0 in the src/Build script
 : ${CLONE_SUB_MODULES:="1"}
 
-# Set default values only if they haven't been defined as environment variables
-: ${SCRIPT_BRANCH:="main"}
-
 # Accept build_warning before creating folders
 
 # *** Start of inlined file: src/build_warning.sh ***
