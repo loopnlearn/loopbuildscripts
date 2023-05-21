@@ -38,8 +38,8 @@ There are several build scripts for specific code not included in **BuildSelectS
 
 This is documented in
 
-* [LnL: Build-Select](https://www.loopandlearn.org/build-select)
-* [LoopDocs: Build-Select](https://loopkit.github.io/loopdocs/build/step14/#download-loop)
+* [LnL: Build Select Script](https://www.loopandlearn.org/build-select)
+* [LoopDocs: Build Select Script](https://loopkit.github.io/loopdocs/build/step14/#download-loop)
 
 #### main branch
 
@@ -113,7 +113,7 @@ This builds the released version of Loop or Loop with Patches.
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/CustomizationSelect.sh)"
 ```
 
-### Scripts not included in Build-Select-Script
+### Scripts not included in Build Select Script
 
 These scripts can only be run directly.
 
@@ -152,7 +152,7 @@ As of 20-May-2023, the **BuildSelectScript.sh** replaces the old BuildLoop.sh. I
 
 The scripts are now significantly easier to create and maintain.
 
-When these scripts are being modified and tested, the developers will be working in a feature or development (dev) branch. In addition, they can use some special flags to make it simplify and speed up testing.
+When these scripts are being modified and tested, the developers will be working in a feature or development (dev) branch. In addition, they can use some special flags to simplify and speed up testing.
 
 In order to test with a different branch, first configure that branch in your terminal with the export command. If using a branch other than dev, then modify the command with that branch name:
 
