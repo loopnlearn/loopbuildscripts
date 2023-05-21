@@ -1,12 +1,12 @@
 # loopbuildscripts
 
+## Introduction
+
 These scripts simplify some tasks for building Loop and other DIY code from the GitHub repositories.
 
 Most users should use the BuildSelectScript.sh script, otherwise known as the **Build Select Script**. This script has a menu for users to choose the option they want.
 
-As of 15-May-2023, the **BuildSelectScript.sh** replaces the old BuildLoop.sh.
-
-* Menu options were updated and expanded
+* Menu options are updated and expanded
 * Script returns to top-menu after each option completes
 * All Build scripts include automatic signing
 
@@ -41,6 +41,12 @@ This is documented in
 * [LnL: Build-Select](https://www.loopandlearn.org/build-select)
 * [LoopDocs: Build-Select](https://loopkit.github.io/loopdocs/build/step14/#download-loop)
 
+#### main branch
+
+Note: the commands in the README are for the main branch of the scripts. If you are a developer or tester using a different branch, please read [Developer Tips](#developer-tips).
+
+### Command to Execute Build Select Script
+
 1. Open terminal
 2. Copy/Paste this code into terminal (use copy icon, bottom right): 
 
@@ -52,9 +58,9 @@ This is documented in
 3. Hit Enter and follow prompts
 
 
-### Other Scripts
+### Individual Scripts
 
-The other scripts can be run directly with the commands listed below.
+Each scripts can be run directly with the commands listed below.
 
 1. Open terminal
 2. Copy/Paste selected code into terminal (use copy icon, bottom right):
@@ -107,7 +113,7 @@ This builds the released version of Loop or Loop with Patches.
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/CustomizationSelect.sh)"
 ```
 
-#### Scripts not included in Build-Select-Script
+### Scripts not included in Build-Select-Script
 
 These scripts can only be run directly.
 
@@ -142,11 +148,19 @@ If you want to build a different branch, for example `branch_name`
 
 ## Developer Tips
 
+As of 20-May-2023, the **BuildSelectScript.sh** replaces the old BuildLoop.sh. If anyone executes the old BuildLoop script, they are given the correct command to run the BuildSelectScript.sh.
+
 The scripts are now significantly easier to create and maintain.
 
-When these scripts are being modified and tested, the developers use some special flags to make it easy to test quickly.
+When these scripts are being modified and tested, the developers will be working in a feature or development (dev) branch. In addition, they can use some special flags to make it simplify and speed up testing.
 
-Be sure to modify the README file to use main instead of $SCRIPT_BRANCH after merging from dev (or other branch) to main.
+In order to test with a different branch, first configure that branch in your terminal with the export command. If using a branch other than dev, then modify the command with that branch name:
+
+```
+export SCRIPT_BRANCH=dev
+```
+
+Then for all commands found earlier in this README, replace the word main with $SCRIPT_BRANCH.
 
 When testing locally, there are other test variables you can configure. Be sure to read these two files:
 * custom_config.sh
