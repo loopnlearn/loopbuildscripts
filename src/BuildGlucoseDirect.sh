@@ -62,7 +62,7 @@ standard_build_train
 ############################################################
 
 section_divider
-before_final_return_message_without_watch
+before_final_return_message "no watch"
 echo -e " *** Be patient while packages are downloaded"
 echo -e ""
 return_when_ready

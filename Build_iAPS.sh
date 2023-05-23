@@ -252,6 +252,36 @@ function open_source_warning() {
 # *** End of inlined file: src/build_warning.sh ***
 
 
+# Messages prior to opening xcode
+
+# *** Start of inlined file: src/before_final_return_message.sh ***
+function before_final_return_message() {
+    # Default (no argument) prints watch message
+    # An other argument, skips watch message
+    local default_watch_flag="include_watch_message"
+    local watch_flag=${1:-$default_watch_flag}
+    echo ""
+    echo -e "${INFO_FONT}BEFORE you hit return:${NC}"
+    echo " *** Unlock your phone and plug it into your computer"
+    echo "     Trust computer if asked"
+    if [ "$watch_flag" = "$default_watch_flag" ]; then
+        echo -e " *** Optional: For Apple Watch - if you never built app on it"
+        echo -e "               Watch paired to phone and unlocked (on your wrist)"
+        echo -e "               Trust computer if asked"
+    fi
+    ios16_warning
+    echo ""
+    echo -e "${INFO_FONT}Xcode will open automatically after you hit return${NC}"
+    echo "  Upper middle of Xcode:"
+    echo "    Confirm your phone or simulator choice is selected"
+    echo "  Upper right of Xcode:"
+    echo "    Wait for packages to finish being copied or downloaded"
+    echo "    When you see indexing, you can build to phone or simulator"
+    echo "  Click on Play button or Command-B or Xcode Menu: Product, Build"
+}
+# *** End of inlined file: src/before_final_return_message.sh ***
+
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
@@ -620,27 +650,6 @@ function automated_clone_download_error_check() {
         echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
         exit_or_return_menu
     fi
-}
-
-function before_final_return_message() {
-    echo -e "\n${INFO_FONT}BEFORE you hit return:${NC}"
-    echo -e " *** Unlock your phone and plug it into your computer"
-    echo -e "     Trust computer if asked"
-    echo -e " *** Optional: For Apple Watch - if you never built app on it"
-    echo -e "               Watch paired to phone and unlocked (on your wrist)"
-    echo -e "               Trust computer if asked"
-    ios16_warning
-    echo -e ""
-    echo -e "${INFO_FONT}Xcode will open automatically after you hit return, if not already open"
-}
-
-function before_final_return_message_without_watch() {
-    echo -e "\n${INFO_FONT}BEFORE you hit return:${NC}"
-    echo -e " *** Unlock your phone and plug it into your computer"
-    echo -e "     Trust computer if asked"
-    ios16_warning
-    echo -e ""
-    echo -e "${INFO_FONT}Xcode will open automatically after you hit return, if not already open"
 }
 
 function verify_xcode_path() {

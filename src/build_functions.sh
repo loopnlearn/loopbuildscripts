@@ -34,6 +34,9 @@
 # Accept build_warning before creating folders
 #!inline build_warning.sh
 
+# Messages prior to opening xcode
+#!inline before_final_return_message.sh
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
@@ -162,27 +165,6 @@ function automated_clone_download_error_check() {
         echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
         exit_or_return_menu
     fi
-}
-
-function before_final_return_message() {
-    echo -e "\n${INFO_FONT}BEFORE you hit return:${NC}"
-    echo -e " *** Unlock your phone and plug it into your computer"
-    echo -e "     Trust computer if asked"
-    echo -e " *** Optional: For Apple Watch - if you never built app on it"
-    echo -e "               Watch paired to phone and unlocked (on your wrist)"
-    echo -e "               Trust computer if asked"
-    ios16_warning
-    echo -e ""
-    echo -e "${INFO_FONT}Xcode will open automatically after you hit return, if not already open"
-}
-
-function before_final_return_message_without_watch() {
-    echo -e "\n${INFO_FONT}BEFORE you hit return:${NC}"
-    echo -e " *** Unlock your phone and plug it into your computer"
-    echo -e "     Trust computer if asked"
-    ios16_warning
-    echo -e ""
-    echo -e "${INFO_FONT}Xcode will open automatically after you hit return, if not already open"
 }
 
 function verify_xcode_path() {
