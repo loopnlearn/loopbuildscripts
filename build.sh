@@ -12,6 +12,7 @@ SCRIPTS=(
   "BuildLoopFollow.sh"
   "BuildLoopCaregiver.sh"
   "CustomizationSelect.sh"
+  "LnL_with_PatchesSelect.sh"
   "BuildFreeAPS.sh"
   "BuildLoopDev.sh"
   "BuildxDrip4iOS.sh"
