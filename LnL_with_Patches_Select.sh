@@ -402,5 +402,5 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 else
     exit 1
 fi
-# *** End of inlined file: src/LnL_with_PatchesSelect.sh ***
+# *** End of inlined file: src/LnL_with_Patches_Select.sh ***
 
