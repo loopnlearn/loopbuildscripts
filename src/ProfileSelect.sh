@@ -158,8 +158,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     folder=() #Optional folder if the patch is not workspace level
     url=() #Optional url to patch, it will be stored as "file"-name
 
-    add_patch "Apply Profiles Patch to released Loop" "profile_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_profile/profile.patch"
-    add_patch "Apply Profiles Patch to Loop dev" "profile_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_profile/profile_dev.patch"
+    add_patch "Profile for released Loop" "profile_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_profile/profile.patch"
+    add_patch "Profile for Loop dev" "profile_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_profile/profile_dev.patch"
 
 
 
@@ -178,9 +178,10 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     echo
     while true; do
-        echo "Only one version of the patch will work, the other will not be valid"
+        echo "Only one version of this customization will work"
         echo
-        echo "This script lets you add or remove the valid patch"
+        echo "This script informs you which one is valid"
+        echo "   You can choose to add or remove the valid customization"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"

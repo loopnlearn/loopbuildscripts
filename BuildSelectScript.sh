@@ -376,7 +376,7 @@ while true; do
 
         options=(
             "Loop Customizations"
-            "Add Profile Feature"
+            "Profile Feature Customization"
             "Return to Menu"
         )
         actions=(
