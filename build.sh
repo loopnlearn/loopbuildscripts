@@ -20,7 +20,9 @@ SCRIPTS=(
   "CleanProfiles.sh"
   "CleanDerived.sh"
   "DeleteOldDownloads.sh"
-  "XcodeClean.sh")
+  "XcodeClean.sh"
+  "BuildLoopProfiles.sh"
+  )
 
 generated_comment="# -----------------------------------------------------------------------------\n\
 # This file is GENERATED. DO NOT EDIT directly.\n\

@@ -278,6 +278,7 @@ function delete_old_downloads() {
         "BuildGlucoseDirect/GlucoseDirect*"
         "Build_iAPS/iAPS_main*"
         "Build_iAPS/iAPS_dev*"
+        "BuildLoop/Loop_profiles-*"
     )
 
     list_build_folders_when_testing
