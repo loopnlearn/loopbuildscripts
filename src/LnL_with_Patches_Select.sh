@@ -160,8 +160,17 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     add_patch "Add CGM interface: xDrip4iOS and GlucoseDirect" "add_cgm_interface" "" "https://github.com/loopnlearn/LoopWorkspace/commit/4092277a21fa44a1258b693a5fbcce4d8d9dbd17.patch"
     add_patch "Modify Logo with LnL icon" "lnl_icon" "" "https://github.com/loopnlearn/LoopWorkspace/commit/7c1dd02e74508a171128de85741e44b09ccee118.patch"
-    add_patch "Add CustomTypeOne LoopPatches - part 1" "cto_looppatches_loop" "Loop" "https://raw.githubusercontent.com/CustomTypeOne/LoopPatches/main/LoopPatch.txt"
-    add_patch "Add CustomTypeOne LoopPatches - part 2" "cto_looppatches_loopkit" "LoopKit" "https://raw.githubusercontent.com/CustomTypeOne/LoopPatches/main/LoopkitPatch.txt"
+    add_patch "CustomTypeOne LoopPatches - part 1" "cto_main_loop" "Loop" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/cto_Loop_3.2.x.patch"
+    add_patch "CustomTypeOne LoopPatches - part 2" "cto_main_loopkit" "LoopKit" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/cto_LoopKit_3.2.x.patch"
+    add_patch "CustomTypeOne LoopPatches Single Patch" "cto_main_loopworkspace" "" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/cto_LoopWorkspace_3.2.x.patch"
+    add_patch "Replace switcher with ramp in AB strategy v3.2.2" "cto_with_ramp_main" "" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/cto_LoopWorkspace_3.2.x.patch"
+    add_patch "Replace switcher with ramp in AB strategy dev_0493004" "cto_with_ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/cto_LoopWorkspace_3.2.x.patch"
+    add_patch "Replace switcher with ramp ramp in AB strategy dev" "cto_with_ramp_dev" "" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev.patch"
+    add_patch "Add ramp in AB strategy v3.2.2" "ramp_main" "" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/add_ab_ramp_option_LoopWorkspace_3.2.x.patch"
+    add_patch "Add ramp in AB strategy dev_0493004" "ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/add_ab_ramp_option_LoopWorkspace_dev_0493004.patch"
+    add_patch "Add ramp in AB strategy dev" "ramp_dev" "" "https://raw.githubusercontent.com/loopbuildscripts/patch_cto/$SCRIPT_BRANCH/add_ab_ramp_option_LoopWorkspace_dev.patch"
+
+
 
     echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
     cd $mytmpdir
