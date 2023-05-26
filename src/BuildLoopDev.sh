@@ -24,8 +24,8 @@ open_source_warning
 ############################################################
 
 # Stable Dev SHA
-FIXED_SHA=00f7b05
-FIXED_TESTED_DATE="2023 May 06"
+FIXED_SHA=0493004
+FIXED_COMMIT_DATE="2023-May-09"
 FLAG_USE_SHA=0
 
 URL_THIS_SCRIPT="https://github.com/LoopKit/LoopWorkspace.git"
@@ -41,13 +41,17 @@ function choose_fixed_dev_branch() {
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
-    echo -e "\n ${INFO_FONT}You are running the script for the development version for Loop${NC}"
-    echo -e "\n** Be aware that a development version may require frequent rebuilds **${NC}\n"
-    echo -e " You need Xcode and Xcode command line tools installed"
-    echo -e ""
-    echo -e " If you have not read this section of LoopDocs - please review before continuing"
-    echo -e "    https://loopkit.github.io/loopdocs/faqs/branch-faqs/#whats-going-on-in-the-dev-branch"
-    echo -e "\n** You can choose the dev branch or a lightly tested earlier commit of dev **"
+    echo -e "${INFO_FONT}You are running the script for the development version for Loop${NC}"
+    echo
+    echo "  You should be following zulipchat and have read LoopDocs:"
+    echo
+    echo "https://loopkit.github.io/loopdocs/faqs/branch-faqs/#whats-going-on-in-the-dev-branch"
+    echo
+    echo -e "${INFO_FONT}Be aware that a development version may require frequent rebuilds${NC}"
+    echo "  1. If you choose dev, you get the most recent commit"
+    echo "  2. If you choose lightly tested, you will get:"
+    echo -e "    commit ${INFO_FONT}${FIXED_SHA}${NC}, from ${INFO_FONT}${FIXED_COMMIT_DATE}${NC}"
+    section_divider
 
     options=("Choose dev" "Choose dev lightly tested" "$(exit_or_return_menu)")
     actions=("choose_dev_branch" "choose_fixed_dev_branch" "exit_script")
