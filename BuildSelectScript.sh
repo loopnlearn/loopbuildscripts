@@ -376,12 +376,12 @@ while true; do
 
         options=(
             "Loop Customizations"
-            "Placeholder"
+            "Add Profile Feature"
             "Return to Menu"
         )
         actions=(
             "run_script 'CustomizationSelect.sh'"
-            "placeholder"
+            "run_script 'ProfileSelect.sh'"
             return
         )
         menu_select "${options[@]}" "${actions[@]}"
