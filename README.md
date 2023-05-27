@@ -128,9 +128,12 @@ These scripts can only be run directly.
 
 The Special in this case means a code change has been requested but not yet accepted.
 
-This provides an alternative to the Switcher Patch many people use from the CustomTypeOne LoopPatches (CTO_LP) (for building Loop with Patches with Build Select script).
+This provides an alternative to the Switcher Patch many people use from the CustomTypeOne LoopPatches (CTO_LP). Those customization are included if you chose to build Loop with Patches using the Build Select Script.
 
-The script allows you to remove the original CTO_LP and add back in either just the new feature or both the new feature and a compatible version of CTO_LP.
+The script below allows you to remove the original CTO_LP and add either:
+
+* Automatic Bolus Dosing Strategy Enhancement
+* or Automatic Bolus Dosing Strategy Enhancement with a compatible version of CTO_LP
 
 Please read the information here:
 
