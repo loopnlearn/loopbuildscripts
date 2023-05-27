@@ -167,6 +167,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     add_patch "CAGE: Upload Pod Start to Nightscout" "cage" "" ""
     add_patch "SAGE: Upload G6 Sensor Start to Nightscout" "sage" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/777c7e36de64bdc060973a6628a02add0917520e.patch"
     add_patch "Change Default to Upload Dexcom Readings" "g6g7_upload_readings" "" ""
+    add_patch "Modify Logo with LnL icon" "lnl_icon" "" "https://github.com/loopnlearn/LoopWorkspace/commit/7c1dd02e74508a171128de85741e44b09ccee118.patch"
 
     echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
     cd $mytmpdir
