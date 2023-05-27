@@ -23,7 +23,7 @@ The `Download and Build Related Apps` option includes Loop Follow, LoopCaregiver
 
 The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
 
-The `Run Customization Utilities` option leads to the Customization Select script and has a placeholder for other customization scripts that are planned, but not yet ready.
+The `Run Customization Utilities` option leads to the Customization Select script and Profile Feature Customization script.
 
 In addition to selecting options from the top-menu of **BuildSelectScript.sh**, each of the scripts can be run directly.
 
@@ -111,6 +111,13 @@ This builds the released version of Loop or Loop with Patches.
 ```
 /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/CustomizationSelect.sh)"
+```
+
+#### ProfileSelect
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/ProfileSelect.sh)"
 ```
 
 ### Scripts not included in Build Select Script
