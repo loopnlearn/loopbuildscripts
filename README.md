@@ -23,7 +23,7 @@ The `Download and Build Related Apps` option includes Loop Follow, LoopCaregiver
 
 The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
 
-The `Run Customization Utilities` option leads to the Customization Select script and Profile Feature Customization script.
+The `Run Customization Utilities` option leads to the Customization Select script and the Profile Feature Customization script.
 
 In addition to selecting options from the top-menu of **BuildSelectScript.sh**, each of the scripts can be run directly.
 
