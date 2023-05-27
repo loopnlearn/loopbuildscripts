@@ -1,6 +1,6 @@
 Submodule Loop contains modified content
 diff --git a/Loop/Loop.xcodeproj/project.pbxproj b/Loop/Loop.xcodeproj/project.pbxproj
-index 360db94c..9c95453a 100644
+index a4236b3e..e727c768 100644
 --- a/Loop/Loop.xcodeproj/project.pbxproj
 +++ b/Loop/Loop.xcodeproj/project.pbxproj
 @@ -425,6 +425,7 @@
@@ -198,18 +198,18 @@ index a62fc138..2dc64f18 100644
 +    static let maxGlucoseSlidingScale = 200.0 // mg/dL
  }
 diff --git a/Loop/Loop/View Controllers/StatusTableViewController.swift b/Loop/Loop/View Controllers/StatusTableViewController.swift
-index da707249..e3b4e146 100644
+index 0af4bcea..48e62098 100644
 --- a/Loop/Loop/View Controllers/StatusTableViewController.swift	
 +++ b/Loop/Loop/View Controllers/StatusTableViewController.swift	
-@@ -1547,6 +1547,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
-                                           initialDosingEnabled: deviceManager.loopManager.settings.dosingEnabled,
+@@ -1546,6 +1546,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
                                            isClosedLoopAllowed: automaticDosingStatus.$isAutomaticDosingAllowed,
+                                           supportInfoProvider: deviceManager,
                                            automaticDosingStrategy: deviceManager.loopManager.settings.automaticDosingStrategy,
 +                                          applyLinearRampToBolusApplicationFactor: deviceManager.loopManager.settings.applyLinearRampToBolusApplicationFactor,
                                            availableSupports: supportManager.availableSupports,
                                            isOnboardingComplete: onboardingManager.isComplete,
                                            therapySettingsViewModelDelegate: deviceManager,
-@@ -2145,6 +2146,12 @@ extension StatusTableViewController: SettingsViewModelDelegate {
+@@ -2148,6 +2149,12 @@ extension StatusTableViewController: SettingsViewModelDelegate {
          }
      }
  
@@ -219,11 +219,11 @@ index da707249..e3b4e146 100644
 +        }
 +    }
 +
-     func didTapIssueReport() {
+     func didTapIssueReport(title: String) {
          // TODO: this dismiss here is temporary, until we know exactly where
          // we want this screen to belong in the navigation flow
 diff --git a/Loop/Loop/View Models/SettingsViewModel.swift b/Loop/Loop/View Models/SettingsViewModel.swift
-index 3e3c20be..13ff5556 100644
+index c24876e2..762c0ccf 100644
 --- a/Loop/Loop/View Models/SettingsViewModel.swift	
 +++ b/Loop/Loop/View Models/SettingsViewModel.swift	
 @@ -52,6 +52,7 @@ public typealias PumpManagerViewModel = DeviceViewModel<PumpManagerDescriptor>
@@ -231,10 +231,10 @@ index 3e3c20be..13ff5556 100644
      func dosingEnabledChanged(_: Bool)
      func dosingStrategyChanged(_: AutomaticDosingStrategy)
 +    func applyLinearRampToBolusApplicationFactorChanged(_: Bool)
-     func didTapIssueReport()
+     func didTapIssueReport(title: String)
      var closedLoopDescriptiveText: String? { get }
  }
-@@ -93,6 +94,12 @@ public class SettingsViewModel: ObservableObject {
+@@ -94,6 +95,12 @@ public class SettingsViewModel: ObservableObject {
          }
      }
  
@@ -247,32 +247,32 @@ index 3e3c20be..13ff5556 100644
      var closedLoopPreference: Bool {
         didSet {
             delegate?.dosingEnabledChanged(closedLoopPreference)
-@@ -113,6 +120,7 @@ public class SettingsViewModel: ObservableObject {
-                 initialDosingEnabled: Bool,
+@@ -115,6 +122,7 @@ public class SettingsViewModel: ObservableObject {
                  isClosedLoopAllowed: Published<Bool>.Publisher,
+                 supportInfoProvider: SupportInfoProvider,
                  automaticDosingStrategy: AutomaticDosingStrategy,
 +                applyLinearRampToBolusApplicationFactor: Bool,
                  availableSupports: [SupportUI],
                  isOnboardingComplete: Bool,
                  therapySettingsViewModelDelegate: TherapySettingsViewModelDelegate?,
-@@ -130,6 +138,7 @@ public class SettingsViewModel: ObservableObject {
+@@ -132,6 +140,7 @@ public class SettingsViewModel: ObservableObject {
          self.closedLoopPreference = initialDosingEnabled
          self.isClosedLoopAllowed = false
          self.automaticDosingStrategy = automaticDosingStrategy
 +        self.applyLinearRampToBolusApplicationFactor = applyLinearRampToBolusApplicationFactor
+         self.supportInfoProvider = supportInfoProvider
          self.availableSupports = availableSupports
          self.isOnboardingComplete = isOnboardingComplete
-         self.therapySettingsViewModelDelegate = therapySettingsViewModelDelegate
-@@ -178,6 +187,7 @@ extension SettingsViewModel {
-                                  initialDosingEnabled: true,
+@@ -198,6 +207,7 @@ extension SettingsViewModel {
                                   isClosedLoopAllowed: FakeClosedLoopAllowedPublisher().$mockIsClosedLoopAllowed,
+                                  supportInfoProvider: MockSupportInfoProvider(),
                                   automaticDosingStrategy: .automaticBolus,
 +                                 applyLinearRampToBolusApplicationFactor: false,
                                   availableSupports: [],
                                   isOnboardingComplete: false,
                                   therapySettingsViewModelDelegate: nil,
 diff --git a/Loop/Loop/Views/DosingStrategySelectionView.swift b/Loop/Loop/Views/DosingStrategySelectionView.swift
-index f447b032..5846654a 100644
+index f447b032..056b2442 100644
 --- a/Loop/Loop/Views/DosingStrategySelectionView.swift
 +++ b/Loop/Loop/Views/DosingStrategySelectionView.swift
 @@ -14,11 +14,13 @@ import LoopKitUI
@@ -291,7 +291,7 @@ index f447b032..5846654a 100644
          self._internalDosingStrategy = State(initialValue: automaticDosingStrategy.wrappedValue)
      }
      
-@@ -45,27 +47,51 @@ public struct DosingStrategySelectionView: View {
+@@ -45,13 +47,34 @@ public struct DosingStrategySelectionView: View {
                              self.internalDosingStrategy = strategy // Hack to force update. :(
                          }
                      }
@@ -327,11 +327,7 @@ index f447b032..5846654a 100644
  extension AutomaticDosingStrategy {
      var informationalText: String {
          switch self {
-         case .tempBasalOnly:
-             return NSLocalizedString("Loop will set temporary basal rates to increase and decrease insulin delivery.", comment: "Description string for temp basal only dosing strategy")
-         case .automaticBolus:
--            return NSLocalizedString("Loop will automatically bolus when insulin needs are above scheduled basal, and will use temporary basal rates when needed to reduce insulin delivery below scheduled basal.", comment: "Description string for automatic bolus dosing strategy")
-+            return NSLocalizedString("Loop will automatically bolus 40% of recommended bolus when insulin needs are above scheduled basal, and will use temporary basal rates when needed to reduce insulin delivery below scheduled basal.", comment: "Description string for automatic bolus dosing strategy")
+@@ -62,10 +85,13 @@ extension AutomaticDosingStrategy {
          }
      }
  
@@ -347,10 +343,10 @@ index f447b032..5846654a 100644
      }
  }
 diff --git a/Loop/Loop/Views/SettingsView.swift b/Loop/Loop/Views/SettingsView.swift
-index dc3f6ec3..7c9b217e 100644
+index 22c10d48..71947324 100644
 --- a/Loop/Loop/Views/SettingsView.swift
 +++ b/Loop/Loop/Views/SettingsView.swift
-@@ -165,7 +165,7 @@ extension SettingsView {
+@@ -125,7 +125,7 @@ extension SettingsView {
      private var dosingStrategySection: some View {
          Section(header: SectionHeader(label: NSLocalizedString("Dosing Strategy", comment: "The title of the Dosing Strategy section in settings"))) {
              

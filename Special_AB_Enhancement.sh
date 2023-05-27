@@ -1,8 +1,156 @@
 #!/bin/bash # script CustomTypeOne_LoopPatches_Special.sh
+# -----------------------------------------------------------------------------
+# This file is GENERATED. DO NOT EDIT directly.
+# If you want to modify this file, edit the corresponding file in the src/
+# directory and then run the build script to regenerate this output file.
+# -----------------------------------------------------------------------------
 
 BUILD_DIR=~/Downloads/BuildLoop
 
-#!inline common.sh
+
+# *** Start of inlined file: src/common.sh ***
+STARTING_DIR="${PWD}"
+
+############################################################
+# define some font styles and colors
+############################################################
+
+# remove special font
+NC='\033[0m'
+# add special font
+#INFO_FONT='\033[1;36m'
+INFO_FONT='\033[1m'
+SUCCESS_FONT='\033[1;32m'
+ERROR_FONT='\033[1;31m'
+
+function section_divider() {
+    echo -e ""
+    echo -e "--------------------------------"
+    echo -e ""
+}
+
+function section_separator() {
+    clear
+    section_divider
+}
+
+function return_when_ready() {
+    echo -e "${INFO_FONT}Return when ready to continue${NC}"
+    read -p "" dummy
+}
+
+# Skip if this script is called from another script, then this has already been displayed
+if [ "$0" != "_" ]; then
+    # Inform the user about env variables set
+    # Variables definition
+    variables=(
+        "SCRIPT_BRANCH: Indicates the loopbuildscripts branch in use."
+        "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
+        "FRESH_CLONE: Lets you use an existing clone (saves time)."
+        "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
+        "SKIP_OPEN_SOURCE_WARNING: If set, skips the open source warning for build scripts."
+        "CUSTOM_URL: Overrides the repo url."
+        "CUSTOM_BRANCH: Overrides the branch used for git clone."
+        "CUSTOM_MACOS_VER: Overrides the detected macOS version."
+        "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
+        "DELETE_SELECTED_FOLDERS: Echoes folder names but does not delete them"
+    )
+
+    # Flag to check if any variable is set
+    any_variable_set=false
+
+    # Iterate over each variable
+    for var in "${variables[@]}"; do
+        # Split the variable name and description
+        IFS=":" read -r name description <<<"$var"
+
+        # Check if the variable is set
+        if [ -n "${!name}" ]; then
+            # If this is the first variable set, print the initial message
+            if ! $any_variable_set; then
+                section_separator
+                echo -e "For your information, you are running this script in customized mode"
+                echo -e "You might be using a branch other than main, and using SCRIPT_BRANCH"
+                echo -e "Developers might have additional environment variables set:"
+                any_variable_set=true
+            fi
+
+            # Print the variable name, value, and description
+            echo "  - $name: ${!name}"
+            echo "    $description"
+        fi
+    done
+    if $any_variable_set; then
+        echo -e "\nTo clear the values, close this terminal and start a new one."
+        return_when_ready
+    fi
+fi
+
+function choose_option() {
+    echo -e "Type a number from the list below and return to proceed."
+    section_divider
+}
+
+function invalid_entry() {
+    echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
+}
+
+function do_continue() {
+    :
+}
+
+function menu_select() {
+    choose_option
+
+    local options=("${@:1:$#/2}")
+    local actions=("${@:$(($# + 1))/2+1}")
+
+    while true; do
+        select opt in "${options[@]}"; do
+            for i in $(seq 0 $((${#options[@]} - 1))); do
+                if [ "$opt" = "${options[$i]}" ]; then
+                    eval "${actions[$i]}"
+                    return
+                fi
+            done
+            invalid_entry
+            break
+        done
+    done
+}
+
+function exit_or_return_menu() {
+    if [ "$0" != "_" ]; then
+        # Called directly
+        echo "Exit Script"
+    else
+        # Called from BuildSelectScript
+        echo "Return to Menu"
+    fi
+}
+
+function exit_script() {
+    if [ "$0" != "_" ]; then
+        # Called directly
+        exit_message
+    else
+        # Called from BuildSelectScript
+        exit 0
+    fi
+}
+
+function exit_message() {
+    section_divider
+    echo -e "${INFO_FONT}Exit from Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
+}
+# *** End of inlined file: src/common.sh ***
+
 
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
@@ -121,7 +269,7 @@ function cleanup {
 }
 
 section_separator
-echo -e "${INFO_FONT}Special Version: Test AB Dosing Strategy Enhancement${NC}"
+echo -e "${INFO_FONT}Special: Test AB Dosing Strategy Enhancement${NC}"
 
 cd "$STARTING_DIR"
 
@@ -158,16 +306,10 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     folder=() #Optional folder if the patch is not workspace level
     url=() #Optional url to patch, it will be stored as "file"-name
 
-    add_patch "AB Enhancement; v3.2.2" "ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_3.2.x.patch"
-    add_patch "AB Enhancement; dev_0493004" "ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev_0493004.patch"
-    add_patch "AB Enhancement; dev" "ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev.patch"
+    add_patch "AB Enhancement + Modified LoopPatches" "cto_with_ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_3.2.x.patch"
+    add_patch "AB Enhancement" "ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_3.2.x.patch"
     add_patch "CustomTypeOne LoopPatches - part 1" "cto_main_loop" "Loop" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_Loop_3.2.x.patch"
     add_patch "CustomTypeOne LoopPatches - part 2" "cto_main_loopkit" "LoopKit" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_LoopKit_3.2.x.patch"
-    add_patch "New CTO with AB Enhancement; v3.2.2" "cto_with_ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_3.2.x.patch"
-    add_patch "New CTO with AB Enhancement; dev_0493004" "cto_with_ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev_0493004.patch"
-    add_patch "New CTO with AB Enhancement; dev" "cto_with_ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev.patch"
-
-
 
     echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
     cd $mytmpdir
@@ -184,18 +326,17 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     echo
     while true; do
-        echo "This script enables users to test:"
-        echo "  A proposed enhancement for Automatic Bolus Dosing Strategy"
+        echo "This script is for released Loop - it enables users to test:"
+        echo "  a proposed enhancement for Automatic Bolus Dosing Strategy"
         echo "  (see https://https://github.com/LoopKit/Loop/pull/1988)"
         echo "  This can be done with or without the CustomTypeOne LoopPatches"
         echo
-        echo "If you want CustomTypeOne LoopPatches with this proposed enhancement"
-        echo "  You must remove the original LoopPatches and add the Special Version"
-        echo "  Remove both part 1 and part 2"
-        echo "  The AB Dosing Strategy Enhancement replaces the switcher patch"
+        echo "If you have CustomTypeOne LoopPatches in your download"
+        echo "  You must remove those: both part 1 and part 2"
         echo
-        echo "There are multiple versions for main, older dev and newer dev"
-        echo " Only one will be compatible with your downloaded code"
+        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
+        echo
+        echo "If you are running dev, use Special_AB_EnhancementDev script"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
@@ -261,3 +402,5 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 else
     exit 1
 fi
+# *** End of inlined file: src/Special_AB_Enhancement.sh ***
+
