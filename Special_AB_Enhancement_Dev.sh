@@ -327,8 +327,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     echo
     while true; do
         echo "This script is for people running a development branch of Loop"
-        echo "  to test:"a proposed enhancement for Automatic Bolus Dosing Strategy"
-        echo "  (see https://https://github.com/LoopKit/Loop/pull/1988)"
+        echo "  to test a proposed enhancement for Automatic Bolus Dosing Strategy"
+        echo "  (see https://github.com/LoopKit/Loop/pull/1988)"
         echo "  Your dev branch should NOT have CustomTypeOne LoopPatches applied"
         echo
         echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
