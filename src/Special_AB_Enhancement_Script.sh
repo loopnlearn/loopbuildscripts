@@ -1,4 +1,4 @@
-#!/bin/bash # script CustomizationSelect.sh
+#!/bin/bash # script CustomTypeOne_LoopPatches_Special.sh
 
 BUILD_DIR=~/Downloads/BuildLoop
 
@@ -121,7 +121,7 @@ function cleanup {
 }
 
 section_separator
-echo -e "${INFO_FONT}Loop with Patches Add or Reverse Feature${NC}"
+echo -e "${INFO_FONT}Special Version: Test AB Dosing Strategy Enhancement${NC}"
 
 cd "$STARTING_DIR"
 
@@ -158,17 +158,14 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     folder=() #Optional folder if the patch is not workspace level
     url=() #Optional url to patch, it will be stored as "file"-name
 
-    add_patch "Add CGM interface: xDrip4iOS and GlucoseDirect" "add_cgm_interface" "" "https://github.com/loopnlearn/LoopWorkspace/commit/4092277a21fa44a1258b693a5fbcce4d8d9dbd17.patch"
-    add_patch "Modify Logo with LnL icon" "lnl_icon" "" "https://github.com/loopnlearn/LoopWorkspace/commit/7c1dd02e74508a171128de85741e44b09ccee118.patch"
-    add_patch "CustomTypeOne LoopPatches - part 1" "cto_main_loop" "Loop" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_Loop_3.2.x.patch"
-    add_patch "CustomTypeOne LoopPatches - part 2" "cto_main_loopkit" "LoopKit" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_LoopKit_3.2.x.patch"
-    add_patch "CustomTypeOne LoopPatches Single Patch" "cto_main_loopworkspace" "" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_LoopWorkspace_3.2.x.patch"
-    add_patch "Replace switcher with ramp in AB strategy v3.2.2" "cto_with_ramp_main" "" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_LoopWorkspace_3.2.x.patch"
-    add_patch "Replace switcher with ramp in AB strategy dev_0493004" "cto_with_ramp_dev_0493004" "" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_LoopWorkspace_3.2.x.patch"
-    add_patch "Replace switcher with ramp in AB strategy dev" "cto_with_ramp_dev" "" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev.patch"
-    add_patch "Add ramp in AB strategy v3.2.2" "ramp_main" "" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_3.2.x.patch"
-    add_patch "Add ramp in AB strategy dev_0493004" "ramp_dev_0493004" "" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev_0493004.patch"
-    add_patch "Add ramp in AB strategy dev" "ramp_dev" "" "https://raw.githubusercontent.com/marionbarker/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev.patch"
+    add_patch "AB Enhancement; v3.2.2" "ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_3.2.x.patch"
+    add_patch "AB Enhancement; dev_0493004" "ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev_0493004.patch"
+    add_patch "AB Enhancement; dev" "ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev.patch"
+    add_patch "CustomTypeOne LoopPatches - part 1" "cto_main_loop" "Loop" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_Loop_3.2.x.patch"
+    add_patch "CustomTypeOne LoopPatches - part 2" "cto_main_loopkit" "LoopKit" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_LoopKit_3.2.x.patch"
+    add_patch "New CTO with AB Enhancement; v3.2.2" "cto_with_ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_3.2.x.patch"
+    add_patch "New CTO with AB Enhancement; dev_0493004" "cto_with_ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev_0493004.patch"
+    add_patch "New CTO with AB Enhancement; dev" "cto_with_ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev.patch"
 
 
 
@@ -187,17 +184,18 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     echo
     while true; do
-        echo "This script enables addition or removal of features"
-        echo "  that are provided as part of the Loop with Patches selection"
-        echo "  in the Build Select Script"
+        echo "This script enables users to test:"
+        echo "  A proposed enhancement for Automatic Bolus Dosing Strategy"
+        echo "  (see https://https://github.com/LoopKit/Loop/pull/1988)"
+        echo "  This can be done with or without the CustomTypeOne LoopPatches"
         echo
-        echo "These features are documented on the Loop and Learn web site"
-        echo "  https://www.loopandlearn.org/main-lnl-patches/"
+        echo "If you want CustomTypeOne LoopPatches with this proposed enhancement"
+        echo "  You must remove the original LoopPatches and add the Special Version"
+        echo "  Remove both part 1 and part 2"
+        echo "  The AB Dosing Strategy Enhancement replaces the switcher patch"
         echo
-        echo "This script lets you add or remove these features individually"
-        echo
-        echo "For proper operation, add or remove both"
-        echo "  CustomTypeOne LoopPatches part 1 and 2"
+        echo "There are multiple versions for main, older dev and newer dev"
+        echo " Only one will be compatible with your downloaded code"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
