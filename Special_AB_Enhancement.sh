@@ -354,8 +354,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     echo
     while true; do
-        echo "This script is for released Loop - it enables users to test"
-        echo "  a proposed enhancement for Automatic Bolus Dosing Strategy"
+        echo "This script is for people running the released version of Loop"
+        echo "  to test a proposed enhancement for Automatic Bolus Dosing Strategy"
         echo "    see https://https://github.com/LoopKit/Loop/pull/1988"
         echo
         echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"

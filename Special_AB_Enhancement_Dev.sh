@@ -328,15 +328,17 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     while true; do
         echo "This script is for people running a development branch of Loop"
         echo "  to test a proposed enhancement for Automatic Bolus Dosing Strategy"
-        echo "  (see https://github.com/LoopKit/Loop/pull/1988)"
-        echo "  Your dev branch should NOT have CustomTypeOne LoopPatches (CTO_LP) applied"
+        echo "    see https://https://github.com/LoopKit/Loop/pull/1988"
         echo
-        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch;${NC}"
-        echo "  Other CTO_LP features can be included if desired"
-        echo "  Or just the enhancement can be added"
+        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
+        echo
+        echo -e "${INFO_FONT}If you have ${paired_patch_name}${NC}"
+        echo -e "${INFO_FONT}  customization in your download, you must first remove it${NC}"
         echo
         echo "Several versions are provided for different commits of dev"
         echo "If an item in not compatible - it is not meant for your commit"
+        echo
+        echo "If you are running released Loop, use Special_AB_Enhancement script"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
