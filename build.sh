@@ -13,7 +13,6 @@ SCRIPTS=(
   "BuildLoopCaregiver.sh"
   "CustomizationSelect.sh"
   "Special_AB_Enhancement.sh"
-  "Special_AB_Enhancement_Dev.sh"
   "ProfileSelect.sh"
   "BuildFreeAPS.sh"
   "BuildLoopDev.sh"

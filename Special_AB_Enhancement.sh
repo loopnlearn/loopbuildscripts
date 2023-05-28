@@ -228,7 +228,6 @@ function apply() {
                 git apply "${mytmpdir}/${paired_file}" --directory="${paired_folder}"
                 exit_code_2=$?
             else
-                echo "not customtypeone patch"
                 exit_code_2=0
             fi
             if [ $exit_code -eq 0 ] && [ $exit_code_2 -eq 0 ]; then
@@ -331,6 +330,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     add_patch "AB Enhancement + Modified LoopPatches" "cto_with_ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_3.2.x.patch"
     add_patch "AB Enhancement" "ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_3.2.x.patch"
+    add_patch "Loop-dev: AB Enhancement + Modified LoopPatches" "cto_with_ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev.patch"
+    add_patch "Loop-dev: AB Enhancement" "ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev.patch"
     add_patch "${paired_patch_name}" "cto_main_loop" "Loop" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_main_Loop.patch"
 
     echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
@@ -354,8 +355,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     echo
     while true; do
-        echo "This script is for people running the released version of Loop"
-        echo "  to test a proposed enhancement for Automatic Bolus Dosing Strategy"
+        echo "This script provides a proposed enhancement for Automatic Bolus Dosing Strategy"
         echo "    see https://https://github.com/LoopKit/Loop/pull/1988"
         echo
         echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
@@ -363,7 +363,8 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo -e "${INFO_FONT}If you have ${paired_patch_name}${NC}"
         echo -e "${INFO_FONT}  customization in your download, you must first remove it${NC}"
         echo
-        echo "If you are running dev, use Special_AB_Enhancement_Dev script"
+        echo "This script works for released code."
+        echo "If dev shows as incompatible, it will be fixed soon, or back up a commit"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
