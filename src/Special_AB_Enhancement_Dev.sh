@@ -11,6 +11,11 @@ BUILD_DIR=~/Downloads/BuildLoop
 # The rest of this is specific to the particular script
 ############################################################
 
+# the paired_patch_name is used in echo statement
+# the rest of the paired protocol might get added later
+paired_patch_name="CustomTypeOne LoopPatches main branch"
+
+
 function display_applied_patches() {
     has_applied_patches=false
     for i in ${!name[@]}; do
