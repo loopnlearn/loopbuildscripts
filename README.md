@@ -124,6 +124,36 @@ This builds the released version of Loop or Loop with Patches.
 
 These scripts can only be run directly.
 
+#### Special_AB_Enhancement.sh
+
+The Special in this case means a code change has been requested but not yet accepted.
+
+This provides an alternative to the Switcher Patch many people use from the CustomTypeOne LoopPatches (CTO_LP). The CTO_LP are included in your download if you chose to build Loop with Patches using the Build Select Script.
+
+The script below allows you to remove the original CTO_LP and then add either:
+
+* Automatic Bolus Dosing Strategy Enhancement with a compatible version of CTO_LP
+* or
+* Automatic Bolus Dosing Strategy Enhancement alone
+
+Please read the information here:
+
+* [Automatic Bolus Dosing Strategy Enhancement](https://github.com/LoopKit/Loop/pull/1988#issuecomment-1558051294)
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/Special_AB_Enhancement.sh)"
+```
+
+#### Special_AB_Enhancement_Dev.sh
+
+See information above. This script is for anyone running a development branch. There are several possible patches depending on the commit you are running. It is assumed anyone running a dev branch knows how to remove unwanted customizations prior to running this script.
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/Special_AB_Enhancement_Dev.sh)"
+```
+
 #### BuildLoopDev
 
 This script enables building the Loop dev branch. The menu provides the choice of dev or a lightly tested version (specific commit) of the dev branch.

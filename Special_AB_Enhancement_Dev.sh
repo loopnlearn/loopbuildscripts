@@ -1,8 +1,156 @@
-#!/bin/bash # script CustomizationSelect.sh
+#!/bin/bash # script CustomTypeOne_LoopPatches_Special.sh
+# -----------------------------------------------------------------------------
+# This file is GENERATED. DO NOT EDIT directly.
+# If you want to modify this file, edit the corresponding file in the src/
+# directory and then run the build script to regenerate this output file.
+# -----------------------------------------------------------------------------
 
 BUILD_DIR=~/Downloads/BuildLoop
 
-#!inline common.sh
+
+# *** Start of inlined file: src/common.sh ***
+STARTING_DIR="${PWD}"
+
+############################################################
+# define some font styles and colors
+############################################################
+
+# remove special font
+NC='\033[0m'
+# add special font
+#INFO_FONT='\033[1;36m'
+INFO_FONT='\033[1m'
+SUCCESS_FONT='\033[1;32m'
+ERROR_FONT='\033[1;31m'
+
+function section_divider() {
+    echo -e ""
+    echo -e "--------------------------------"
+    echo -e ""
+}
+
+function section_separator() {
+    clear
+    section_divider
+}
+
+function return_when_ready() {
+    echo -e "${INFO_FONT}Return when ready to continue${NC}"
+    read -p "" dummy
+}
+
+# Skip if this script is called from another script, then this has already been displayed
+if [ "$0" != "_" ]; then
+    # Inform the user about env variables set
+    # Variables definition
+    variables=(
+        "SCRIPT_BRANCH: Indicates the loopbuildscripts branch in use."
+        "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
+        "FRESH_CLONE: Lets you use an existing clone (saves time)."
+        "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
+        "SKIP_OPEN_SOURCE_WARNING: If set, skips the open source warning for build scripts."
+        "CUSTOM_URL: Overrides the repo url."
+        "CUSTOM_BRANCH: Overrides the branch used for git clone."
+        "CUSTOM_MACOS_VER: Overrides the detected macOS version."
+        "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
+        "DELETE_SELECTED_FOLDERS: Echoes folder names but does not delete them"
+    )
+
+    # Flag to check if any variable is set
+    any_variable_set=false
+
+    # Iterate over each variable
+    for var in "${variables[@]}"; do
+        # Split the variable name and description
+        IFS=":" read -r name description <<<"$var"
+
+        # Check if the variable is set
+        if [ -n "${!name}" ]; then
+            # If this is the first variable set, print the initial message
+            if ! $any_variable_set; then
+                section_separator
+                echo -e "For your information, you are running this script in customized mode"
+                echo -e "You might be using a branch other than main, and using SCRIPT_BRANCH"
+                echo -e "Developers might have additional environment variables set:"
+                any_variable_set=true
+            fi
+
+            # Print the variable name, value, and description
+            echo "  - $name: ${!name}"
+            echo "    $description"
+        fi
+    done
+    if $any_variable_set; then
+        echo -e "\nTo clear the values, close this terminal and start a new one."
+        return_when_ready
+    fi
+fi
+
+function choose_option() {
+    echo -e "Type a number from the list below and return to proceed."
+    section_divider
+}
+
+function invalid_entry() {
+    echo -e "\n${ERROR_FONT}Invalid option${NC}\n"
+}
+
+function do_continue() {
+    :
+}
+
+function menu_select() {
+    choose_option
+
+    local options=("${@:1:$#/2}")
+    local actions=("${@:$(($# + 1))/2+1}")
+
+    while true; do
+        select opt in "${options[@]}"; do
+            for i in $(seq 0 $((${#options[@]} - 1))); do
+                if [ "$opt" = "${options[$i]}" ]; then
+                    eval "${actions[$i]}"
+                    return
+                fi
+            done
+            invalid_entry
+            break
+        done
+    done
+}
+
+function exit_or_return_menu() {
+    if [ "$0" != "_" ]; then
+        # Called directly
+        echo "Exit Script"
+    else
+        # Called from BuildSelectScript
+        echo "Return to Menu"
+    fi
+}
+
+function exit_script() {
+    if [ "$0" != "_" ]; then
+        # Called directly
+        exit_message
+    else
+        # Called from BuildSelectScript
+        exit 0
+    fi
+}
+
+function exit_message() {
+    section_divider
+    echo -e "${INFO_FONT}Exit from Script${NC}\n"
+    echo -e "  You may close the terminal"
+    echo -e "or"
+    echo -e "  You can press the up arrow ⬆️  on the keyboard"
+    echo -e "    and return to repeat script from beginning"
+    section_divider
+    exit 0
+}
+# *** End of inlined file: src/common.sh ***
+
 
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
@@ -10,6 +158,11 @@ BUILD_DIR=~/Downloads/BuildLoop
 ############################################################
 # The rest of this is specific to the particular script
 ############################################################
+
+# the paired_patch_name is used in echo statement
+# the rest of the paired protocol might get added later
+paired_patch_name="CustomTypeOne LoopPatches main branch"
+
 
 function display_applied_patches() {
     has_applied_patches=false
@@ -33,7 +186,7 @@ function display_unapplicable_patches() {
         if ! git apply --check "${mytmpdir}/${file[$i]}.patch" --directory="${folder[$i]}" >/dev/null 2>&1 && \
            ! git apply --reverse --check "${mytmpdir}/${file[$i]}.patch" --directory="${folder[$i]}" >/dev/null 2>&1; then
             if [ "$has_unapplicable_patches" = false ]; then
-                echo -e "${INFO_FONT}Unavailable customizations due to conflicts:${NC}"
+                echo -e "${INFO_FONT}These are not compatible with your version of Loop:${NC}"
                 has_unapplicable_patches=true
             fi
             echo "* ${name[$i]}"
@@ -121,7 +274,7 @@ function cleanup {
 }
 
 section_separator
-echo -e "${INFO_FONT}Loop Prepared Customizations Selection${NC}"
+echo -e "${INFO_FONT}Special dev Version: Test AB Dosing Strategy Enhancement${NC}"
 
 cd "$STARTING_DIR"
 
@@ -158,16 +311,10 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     folder=() #Optional folder if the patch is not workspace level
     url=() #Optional url to patch, it will be stored as "file"-name
 
-    add_patch "Increase Future Carbs Limit to 4 hours" "future_carbs_4h" "Loop" "https://github.com/loopnlearn/Loop/commit/a974b6749ef4506ca679a0061c260dabcfbf9ee2.patch"
-    add_patch "Libre Users: Limit Loop to <5 minutes" "limit_loop_cycle_time" "Loop" "https://github.com/loopnlearn/Loop/commit/414588c5e7dc36f692c8bbcf2d97adde1861072a.patch"
-    add_patch "Modify Carb Warning & Limit: Low Carb to 49 & 99" "low_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/d9939c65a6b2fc088ee5acdf0d9dc247ad30986c.patch"
-    add_patch "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/a79482ac638736c2b3b8c5057b48e3097323a522.patch"
-    add_patch "Disable Authentication Requirement" "no_auth" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/77ee44534dd16154d910cfb11dea240cf8a23262.patch"
-    add_patch "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/f35654104f70b7dc70f750d129fbb338b9a4cee0.patch"
-    add_patch "CAGE: Upload Pod Start to Nightscout" "cage" "" ""
-    add_patch "SAGE: Upload G6 Sensor Start to Nightscout" "sage" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/777c7e36de64bdc060973a6628a02add0917520e.patch"
-    add_patch "Change Default to Upload Dexcom Readings" "g6g7_upload_readings" "" ""
-    add_patch "Modify Logo with LnL icon" "lnl_icon" "" "https://github.com/loopnlearn/LoopWorkspace/commit/7c1dd02e74508a171128de85741e44b09ccee118.patch"
+    add_patch "AB Enhancement + Modified LoopPatches; dev" "cto_with_ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev.patch"
+    add_patch "AB Enhancement; dev" "ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev.patch"
+    add_patch "AB Enhancement + Modified LoopPatches; dev_0493004" "cto_with_ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev_0493004.patch"
+    add_patch "AB Enhancement; dev_0493004" "ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev_0493004.patch"
 
     echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
     cd $mytmpdir
@@ -184,8 +331,19 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 
     echo
     while true; do
-        echo "The Prepared Customizations are documented on the Loop and Learn web site"
-        echo "  https://www.loopandlearn.org/custom-code/#custom-list"
+        echo "This script is for people running a development branch of Loop"
+        echo "  to test a proposed enhancement for Automatic Bolus Dosing Strategy"
+        echo "    see https://https://github.com/LoopKit/Loop/pull/1988"
+        echo
+        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
+        echo
+        echo -e "${INFO_FONT}If you have ${paired_patch_name}${NC}"
+        echo -e "${INFO_FONT}  customization in your download, you must first remove it${NC}"
+        echo
+        echo "Several versions are provided for different commits of dev"
+        echo "If an item in not compatible - it is not meant for your commit"
+        echo
+        echo "If you are running released Loop, use Special_AB_Enhancement script"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
@@ -195,7 +353,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         display_unapplicable_patches
 
         if has_available_customizations; then
-            echo -e "${INFO_FONT}Select a customization to apply or another option in the list:${NC}"
+            echo -e "${INFO_FONT}Select customization to apply or another option in the list:${NC}"
         else
             echo -e "${INFO_FONT}There are no available customizations. Select an option in the list:${NC}"
         fi
@@ -251,3 +409,5 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
 else
     exit 1
 fi
+# *** End of inlined file: src/Special_AB_Enhancement_Dev.sh ***
+

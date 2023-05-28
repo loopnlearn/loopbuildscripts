@@ -1,4 +1,4 @@
-#!/bin/bash # script CustomizationSelect.sh
+#!/bin/bash # script CustomTypeOne_LoopPatches_Special.sh
 
 BUILD_DIR=~/Downloads/BuildLoop
 
@@ -10,6 +10,12 @@ BUILD_DIR=~/Downloads/BuildLoop
 ############################################################
 # The rest of this is specific to the particular script
 ############################################################
+
+# when choose paired_patch_name, must also apply or reverse the paired item
+paired_patch_name="CustomTypeOne LoopPatches main branch"
+paired_file="cto_main_loopkit.patch"
+paired_folder="LoopKit"
+paired_URL="https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_main_LoopKit.patch"
 
 function display_applied_patches() {
     has_applied_patches=false
@@ -68,7 +74,16 @@ function apply() {
             echo "${name} - Applying..."
             git apply "${patch_file}" --directory="${directory}"
             exit_code=$?
-            if [ $exit_code -eq 0 ]; then
+            # add a hack for paired patches for CustomTypeOne main
+            if [ "${name}" = "${paired_patch_name}" ]; then
+                # apply the paired patch
+                git apply "${mytmpdir}/${paired_file}" --directory="${paired_folder}"
+                exit_code_2=$?
+            else
+                echo "not customtypeone patch"
+                exit_code_2=0
+            fi
+            if [ $exit_code -eq 0 ] && [ $exit_code_2 -eq 0 ]; then
                 echo -e "  ${SUCCESS_FONT}Successful!${NC}"
             else
                 echo -e "  ${ERROR_FONT}Failed!${NC}"
@@ -89,7 +104,15 @@ function revert() {
         echo "${name} - Removing..."
         git apply --reverse "${patch_file}" --directory="${directory}"
         exit_code=$?
-        if [ $exit_code -eq 0 ]; then
+        # add a hack for paired patches for CustomTypeOne main
+        if [ "${name}" = "${paired_patch_name}" ]; then
+            # reverse the paired patch
+            git apply --reverse "${mytmpdir}/${paired_file}" --directory="${paired_folder}"
+            exit_code_2=$?
+        else
+            exit_code_2=0
+        fi
+        if [ $exit_code -eq 0 ] && [ $exit_code_2 -eq 0 ]; then
             echo -e "  ${SUCCESS_FONT}Successful!${NC}"
         else
             echo -e "  ${ERROR_FONT}Failed!${NC}"
@@ -121,7 +144,7 @@ function cleanup {
 }
 
 section_separator
-echo -e "${INFO_FONT}Loop Prepared Customizations Selection${NC}"
+echo -e "${INFO_FONT}Special: Test AB Dosing Strategy Enhancement${NC}"
 
 cd "$STARTING_DIR"
 
@@ -158,34 +181,41 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     folder=() #Optional folder if the patch is not workspace level
     url=() #Optional url to patch, it will be stored as "file"-name
 
-    add_patch "Increase Future Carbs Limit to 4 hours" "future_carbs_4h" "Loop" "https://github.com/loopnlearn/Loop/commit/a974b6749ef4506ca679a0061c260dabcfbf9ee2.patch"
-    add_patch "Libre Users: Limit Loop to <5 minutes" "limit_loop_cycle_time" "Loop" "https://github.com/loopnlearn/Loop/commit/414588c5e7dc36f692c8bbcf2d97adde1861072a.patch"
-    add_patch "Modify Carb Warning & Limit: Low Carb to 49 & 99" "low_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/d9939c65a6b2fc088ee5acdf0d9dc247ad30986c.patch"
-    add_patch "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_carb_limit" "Loop" "https://github.com/loopnlearn/Loop/commit/a79482ac638736c2b3b8c5057b48e3097323a522.patch"
-    add_patch "Disable Authentication Requirement" "no_auth" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/77ee44534dd16154d910cfb11dea240cf8a23262.patch"
-    add_patch "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens" "LoopKit" "https://github.com/loopnlearn/LoopKit/commit/f35654104f70b7dc70f750d129fbb338b9a4cee0.patch"
-    add_patch "CAGE: Upload Pod Start to Nightscout" "cage" "" ""
-    add_patch "SAGE: Upload G6 Sensor Start to Nightscout" "sage" "CGMBLEKit" "https://github.com/loopnlearn/CGMBLEKit/commit/777c7e36de64bdc060973a6628a02add0917520e.patch"
-    add_patch "Change Default to Upload Dexcom Readings" "g6g7_upload_readings" "" ""
-    add_patch "Modify Logo with LnL icon" "lnl_icon" "" "https://github.com/loopnlearn/LoopWorkspace/commit/7c1dd02e74508a171128de85741e44b09ccee118.patch"
+    add_patch "AB Enhancement + Modified LoopPatches" "cto_with_ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_3.2.x.patch"
+    add_patch "AB Enhancement" "ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_3.2.x.patch"
+    add_patch "${paired_patch_name}" "cto_main_loop" "Loop" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_main_Loop.patch"
 
     echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
     cd $mytmpdir
+    # bring down paired patch as well
+    curl -fsSL --output "${paired_file}" "${paired_URL}"
     for i in ${!name[@]}
     do
         if [ -z "${url[$i]}" ]; then
-            curl -fsSLOJ "https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/patch/${file[$i]}.patch"
+            curl -fsSLOJ "https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/patch_cto/${file[$i]}.patch"
         else
             curl -fsSL --output "${file[$i]}.patch" "${url[$i]}"
         fi
     done
+
+
+
+
     tput cuu1 && tput el
     cd $workingdir
 
     echo
     while true; do
-        echo "The Prepared Customizations are documented on the Loop and Learn web site"
-        echo "  https://www.loopandlearn.org/custom-code/#custom-list"
+        echo "This script is for people running the released version of Loop"
+        echo "  to test a proposed enhancement for Automatic Bolus Dosing Strategy"
+        echo "    see https://https://github.com/LoopKit/Loop/pull/1988"
+        echo
+        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
+        echo
+        echo -e "${INFO_FONT}If you have ${paired_patch_name}${NC}"
+        echo -e "${INFO_FONT}  customization in your download, you must first remove it${NC}"
+        echo
+        echo "If you are running dev, use Special_AB_Enhancement_Dev script"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
@@ -195,7 +225,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         display_unapplicable_patches
 
         if has_available_customizations; then
-            echo -e "${INFO_FONT}Select a customization to apply or another option in the list:${NC}"
+            echo -e "${INFO_FONT}Select customization to apply or another option in the list:${NC}"
         else
             echo -e "${INFO_FONT}There are no available customizations. Select an option in the list:${NC}"
         fi
