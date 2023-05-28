@@ -7,15 +7,15 @@ BUILD_DIR=~/Downloads/BuildLoop
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
 
+############################################################
+# The rest of this is specific to the particular script
+############################################################
+
 # when choose paired_patch_name, must also apply or reverse the paired item
 paired_patch_name="CustomTypeOne LoopPatches main branch"
 paired_file="cto_main_loopkit.patch"
 paired_folder="LoopKit"
 paired_URL="https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_main_LoopKit.patch"
-
-############################################################
-# The rest of this is specific to the particular script
-############################################################
 
 function display_applied_patches() {
     has_applied_patches=false
