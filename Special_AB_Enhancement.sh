@@ -363,8 +363,9 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo -e "${INFO_FONT}If you have ${paired_patch_name}${NC}"
         echo -e "${INFO_FONT}  customization in your download, you must first remove it${NC}"
         echo
-        echo "This script works for released code."
-        echo "If dev shows as incompatible, it will be fixed soon, or back up a commit"
+        echo "This script allows customization for released Loop or Loop-dev"
+        echo "  If you are using released code, Loop-dev options show as unavailable"
+        echo "  For dev code, if Loop-dev options show as unavailable, wait for an update"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
