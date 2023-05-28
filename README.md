@@ -132,8 +132,9 @@ This provides an alternative to the Switcher Patch many people use from the Cust
 
 The script below allows you to remove the original CTO_LP and then add either:
 
-* Automatic Bolus Dosing Strategy Enhancement
-* or Automatic Bolus Dosing Strategy Enhancement with a compatible version of CTO_LP
+* Automatic Bolus Dosing Strategy Enhancement with a compatible version of CTO_LP
+* or
+* Automatic Bolus Dosing Strategy Enhancement alone
 
 Please read the information here:
 

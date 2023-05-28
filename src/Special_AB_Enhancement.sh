@@ -186,7 +186,9 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo "If you have CustomTypeOne LoopPatches in your download"
         echo "  You must remove those: both part 1 and part 2"
         echo
-        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
+        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch;${NC}"
+        echo "  Other CTO_LP features can be included if desired"
+        echo "  Or just the enhancement can be added"
         echo
         echo "If you are running dev, use Special_AB_EnhancementDev script"
         echo
@@ -198,7 +200,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         display_unapplicable_patches
 
         if has_available_customizations; then
-            echo -e "${INFO_FONT}Select a customization to apply or another option in the list:${NC}"
+            echo -e "${INFO_FONT}Select customization to apply or another option in the list:${NC}"
         else
             echo -e "${INFO_FONT}There are no available customizations. Select an option in the list:${NC}"
         fi

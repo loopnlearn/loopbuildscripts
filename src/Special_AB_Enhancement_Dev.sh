@@ -158,10 +158,10 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     folder=() #Optional folder if the patch is not workspace level
     url=() #Optional url to patch, it will be stored as "file"-name
 
-    add_patch "AB Enhancement; dev_0493004" "ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev_0493004.patch"
+    add_patch "AB Enhancement + Modified LoopPatches; dev" "cto_with_ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev.patch"
     add_patch "AB Enhancement; dev" "ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev.patch"
-    add_patch "New CTO with AB Enhancement; dev_0493004" "cto_with_ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev_0493004.patch"
-    add_patch "New CTO with AB Enhancement; dev" "cto_with_ramp_dev" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev.patch"
+    add_patch "AB Enhancement + Modified LoopPatches; dev_0493004" "cto_with_ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_dev_0493004.patch"
+    add_patch "AB Enhancement; dev_0493004" "ramp_dev_0493004" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_dev_0493004.patch"
 
     echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
     cd $mytmpdir
@@ -181,12 +181,14 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo "This script is for people running a development branch of Loop"
         echo "  to test a proposed enhancement for Automatic Bolus Dosing Strategy"
         echo "  (see https://github.com/LoopKit/Loop/pull/1988)"
-        echo "  Your dev branch should NOT have CustomTypeOne LoopPatches applied"
+        echo "  Your dev branch should NOT have CustomTypeOne LoopPatches (CTO_LP) applied"
         echo
-        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
+        echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch;${NC}"
+        echo "  Other CTO_LP features can be included if desired"
+        echo "  Or just the enhancement can be added"
         echo
-        echo "Several version are provided for different commits of dev"
-        echo "If an item is show as incompatible - it is not meant for your commit"
+        echo "Several versions are provided for different commits of dev"
+        echo "If an item in not compatible - it is not meant for your commit"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
@@ -196,7 +198,7 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         display_unapplicable_patches
 
         if has_available_customizations; then
-            echo -e "${INFO_FONT}Select a customization to apply or another option in the list:${NC}"
+            echo -e "${INFO_FONT}Select customization to apply or another option in the list:${NC}"
         else
             echo -e "${INFO_FONT}There are no available customizations. Select an option in the list:${NC}"
         fi
