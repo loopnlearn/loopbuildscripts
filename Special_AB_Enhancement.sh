@@ -329,9 +329,9 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
     folder=() #Optional folder if the patch is not workspace level
     url=() #Optional url to patch, it will be stored as "file"-name
 
-    add_patch "${paired_patch_name}" "cto_main_loop" "Loop" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_main_Loop.patch"
     add_patch "AB Enhancement + Modified LoopPatches" "cto_with_ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_plus_cto_no_switcher_LoopWorkspace_3.2.x.patch"
     add_patch "AB Enhancement" "ramp_main" "" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/add_ab_ramp_option_LoopWorkspace_3.2.x.patch"
+    add_patch "${paired_patch_name}" "cto_main_loop" "Loop" "https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/$SCRIPT_BRANCH/patch_cto/cto_main_Loop.patch"
 
     echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
     cd $mytmpdir
@@ -359,16 +359,14 @@ if [ $(basename $PWD) = "LoopWorkspace" ]; then
         echo "    see https://https://github.com/LoopKit/Loop/pull/1988"
         echo
         echo -e "${INFO_FONT}The AB Dosing Strategy Enhancement replaces the switcher patch${NC}"
-        echo "  Other CTO_LP features can be included if desired"
-        echo "  Or just the enhancement can be added"
+        echo
+        echo -e "${INFO_FONT}If you have ${paired_patch_name}${NC}"
+        echo -e "${INFO_FONT}  customization in your download, you must first remove it${NC}"
         echo
         echo "If you are running dev, use Special_AB_Enhancement_Dev script"
         echo
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
-        echo
-        echo -e "${INFO_FONT}If you have ${paired_patch_name} (CTO_LP)${NC}"
-        echo -e "${INFO_FONT}  customization in your download, you must first remove it${NC}"
         echo
 
         display_applied_patches
