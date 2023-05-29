@@ -370,8 +370,7 @@ function patch_menu {
 
         echo
         while true; do
-            echo "The Prepared Customizations are documented on the Loop and Learn web site"
-            echo "  https://www.loopandlearn.org/custom-code/#custom-list"
+            customization_info
             echo
             echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
             echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
@@ -468,6 +467,11 @@ add_customization "AutoBolus Ramp" "ab_ramp"
 add_customization "AutoBolus Ramp incl CTO" "ab_ramp_cto"
 add_customization "CAGE update for Omnipod" "cage"
 add_customization "Dexcom Upload readings" "dexcom_upload_readings"
+
+function customization_info {
+    echo "The Prepared Customizations are documented on the Loop and Learn web site"
+    echo "  https://www.loopandlearn.org/custom-code/#custom-list"
+}
 
 patch_menu
 # *** End of inlined file: src/CustomizationSelect.sh ***

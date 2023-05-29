@@ -14,4 +14,9 @@ add_customization "AutoBolus Ramp incl CTO" "ab_ramp_cto"
 add_customization "CAGE update for Omnipod" "cage"
 add_customization "Dexcom Upload readings" "dexcom_upload_readings"
 
+function customization_info {
+    echo "The Prepared Customizations are documented on the Loop and Learn web site"
+    echo "  https://www.loopandlearn.org/custom-code/#custom-list"
+}
+
 patch_menu

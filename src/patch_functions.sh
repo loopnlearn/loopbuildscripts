@@ -216,8 +216,7 @@ function patch_menu {
 
         echo
         while true; do
-            echo "The Prepared Customizations are documented on the Loop and Learn web site"
-            echo "  https://www.loopandlearn.org/custom-code/#custom-list"
+            customization_info
             echo
             echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
             echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
