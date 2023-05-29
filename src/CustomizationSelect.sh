@@ -9,8 +9,8 @@ BUILD_DIR=~/Downloads/BuildLoop
 ############################################################
 
 add_customization "Profiles" "profile"
-add_customization "AutoBolus Ramp" "ab_ramp"
-add_customization "AutoBolus Ramp incl CTO" "ab_ramp_cto"
+add_customization "Enhanced AutoBolus" "ab_ramp"
+add_customization "Enhanced AutoBolus with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
 add_customization "CAGE update for Omnipod" "cage"
 add_customization "Dexcom Upload readings" "dexcom_upload_readings"
 

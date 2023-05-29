@@ -159,6 +159,13 @@ function exit_message() {
 
 REPO_NAME=$(basename "${PATCH_REPO}" .git)
 
+# set fixed numbers for certain actions
+remove_customization_menu_item=40
+update_customization_menu_item=45
+exit_menu_item=50
+exit_open_xcode_menu_item=60
+max_menu_item=$exit_open_xcode_menu_item
+
 customization=()
 folder=()
 status=()
@@ -388,21 +395,22 @@ function patch_menu {
             done
 
             if [ "$has_applied_patches" = true ]; then
-                echo "$((${#customization[@]}+1))) Remove a customization"
+                echo "$remove_customization_menu_item) Remove a customization"
             fi
             if [ "$has_updatable_patches" = true ]; then
-                echo "$((${#customization[@]}+2))) Update a customization"
+                echo "${update_customization_menu_item}) Update a customization"
             fi
-            echo "$((${#customization[@]}+3))) $(exit_or_return_menu)"
-            echo "$((${#customization[@]}+4))) $(exit_or_return_menu) and open Xcode"
+
+            echo "${exit_menu_item}) $(exit_or_return_menu)"
+            echo "${exit_open_xcode_menu_item}) $(exit_or_return_menu) and open Xcode"
 
             read -p "Enter your choice: " choice
-            if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $((${#customization[@]}+4)) ]]; then
+            if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $max_menu_item ]]; then
                 if [[ $choice -le ${#customization[@]} ]]; then
                     index=$(($choice-1))
                     apply_patch "$index";
                     return_when_ready
-                elif [[ $choice -eq $((${#customization[@]}+1)) ]]; then
+                elif [[ $choice -eq $remove_customization_menu_item ]]; then
                     section_separator
                     echo -e "${INFO_FONT}Select a customization to remove:${NC}"
 
@@ -437,9 +445,9 @@ function patch_menu {
                         apply_patch "$index";
                         return_when_ready
                     fi
-                elif [[ $choice -eq $((${#customization[@]}+3)) ]]; then
+                elif [ "${choice}" = "${exit_menu_item}" ]; then
                     exit 0
-                elif [[ $choice -eq $((${#customization[@]}+4)) ]]; then
+                elif [[ $choice -eq ${exit_open_xcode_menu_item} ]]; then
                     echo -e "${INFO_FONT}Starting Xcode, please wait...${NC}"
                     xed .
                     exit 0
@@ -463,8 +471,8 @@ function patch_menu {
 ############################################################
 
 add_customization "Profiles" "profile"
-add_customization "AutoBolus Ramp" "ab_ramp"
-add_customization "AutoBolus Ramp incl CTO" "ab_ramp_cto"
+add_customization "Enhanced AutoBolus" "ab_ramp"
+add_customization "Enhanced AutoBolus with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
 add_customization "CAGE update for Omnipod" "cage"
 add_customization "Dexcom Upload readings" "dexcom_upload_readings"
 
