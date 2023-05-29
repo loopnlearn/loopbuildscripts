@@ -4,25 +4,39 @@
 SRC_DIR="src"
 DEST_DIR="."
 
-# List of scripts to process
-SCRIPTS=(
-  "BuildSelectScript.sh"
-  "BuildLoop.sh"
-  "BuildLoopReleased.sh"
-  "BuildLoopFollow.sh"
-  "BuildLoopCaregiver.sh"
-  "CustomizationSelect.sh"
-  "Special_AB_Enhancement.sh"
-  "ProfileSelect.sh"
-  "BuildFreeAPS.sh"
-  "BuildLoopDev.sh"
-  "BuildxDrip4iOS.sh"
-  "BuildGlucoseDirect.sh"
-  "Build_iAPS.sh"
-  "CleanProfiles.sh"
-  "CleanDerived.sh"
-  "DeleteOldDownloads.sh"
-  "XcodeClean.sh")
+
+# If you run ./build.sh with no arguments, it will use the default list of scripts. 
+# If you run ./build.sh CustomizationSelect.sh, it will only use "CustomizationSelect.sh" 
+# as the list of scripts. 
+# You can also pass multiple arguments, like ./build.sh BuildLoop.sh XcodeClean.sh, 
+# and it will use only those scripts.
+
+# Check if any arguments were provided
+if [ $# -eq 0 ]; then
+    # If no arguments were provided, use the default list of scripts
+    SCRIPTS=(
+      "BuildSelectScript.sh"
+      "BuildLoop.sh"
+      "BuildLoopReleased.sh"
+      "BuildLoopFollow.sh"
+      "BuildLoopCaregiver.sh"
+      "CustomizationSelect.sh"
+      "Special_AB_Enhancement.sh"
+      "ProfileSelect.sh"
+      "BuildFreeAPS.sh"
+      "BuildLoopDev.sh"
+      "BuildxDrip4iOS.sh"
+      "BuildGlucoseDirect.sh"
+      "Build_iAPS.sh"
+      "CleanProfiles.sh"
+      "CleanDerived.sh"
+      "DeleteOldDownloads.sh"
+      "XcodeClean.sh"
+    )
+else
+    # If arguments were provided, use them as the list of scripts
+    SCRIPTS=("$@")
+fi
 
 generated_comment="# -----------------------------------------------------------------------------\n\
 # This file is GENERATED. DO NOT EDIT directly.\n\
