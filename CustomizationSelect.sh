@@ -398,11 +398,11 @@ function patch_menu {
                 echo "$remove_customization_menu_item) Remove a customization"
             fi
             if [ "$has_updatable_patches" = true ]; then
-                echo "${update_customization_menu_item}) Update a customization"
+                echo "$update_customization_menu_item) Update a customization"
             fi
 
-            echo "${exit_menu_item}) $(exit_or_return_menu)"
-            echo "${exit_open_xcode_menu_item}) $(exit_or_return_menu) and open Xcode"
+            echo "$exit_menu_item) $(exit_or_return_menu)"
+            echo "$exit_open_xcode_menu_item) $(exit_or_return_menu) and open Xcode"
 
             read -p "Enter your choice: " choice
             if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $max_menu_item ]]; then
@@ -445,9 +445,9 @@ function patch_menu {
                         apply_patch "$index";
                         return_when_ready
                     fi
-                elif [ "${choice}" = "${exit_menu_item}" ]; then
+                elif [[ $choice -eq $exit_menu_item ]]; then
                     exit 0
-                elif [[ $choice -eq ${exit_open_xcode_menu_item} ]]; then
+                elif [[ $choice -eq $exit_open_xcode_menu_item ]]; then
                     echo -e "${INFO_FONT}Starting Xcode, please wait...${NC}"
                     xed .
                     exit 0
@@ -475,6 +475,7 @@ add_customization "Enhanced AutoBolus" "ab_ramp"
 add_customization "Enhanced AutoBolus with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
 add_customization "CAGE update for Omnipod" "cage"
 add_customization "Dexcom Upload readings" "dexcom_upload_readings"
+add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches"
 
 function customization_info {
     echo "The Prepared Customizations are documented on the Loop and Learn web site"

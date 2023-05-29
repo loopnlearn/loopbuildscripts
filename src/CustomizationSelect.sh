@@ -13,6 +13,7 @@ add_customization "Enhanced AutoBolus" "ab_ramp"
 add_customization "Enhanced AutoBolus with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
 add_customization "CAGE update for Omnipod" "cage"
 add_customization "Dexcom Upload readings" "dexcom_upload_readings"
+add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches"
 
 function customization_info {
     echo "The Prepared Customizations are documented on the Loop and Learn web site"
