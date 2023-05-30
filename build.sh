@@ -21,7 +21,6 @@ if [ $# -eq 0 ]; then
       "BuildLoopFollow.sh"
       "BuildLoopCaregiver.sh"
       "CustomizationSelect.sh"
-      "Special_AB_Enhancement.sh"
       "ProfileSelect.sh"
       "BuildFreeAPS.sh"
       "BuildLoopDev.sh"
