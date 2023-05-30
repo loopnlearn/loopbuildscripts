@@ -6,11 +6,23 @@
 REPO_NAME=$(basename "${PATCH_REPO}" .git)
 
 # set fixed numbers for certain actions
+sleep_time_after_success=0.8
+single_digit=9
+max_number_special_menu_items=10
 remove_customization_menu_item=40
 update_customization_menu_item=45
 exit_menu_item=50
 exit_open_xcode_menu_item=60
 max_menu_item=$exit_open_xcode_menu_item
+
+one_time_flag=0
+
+function message_about_display() {
+    echo -e "${INFO_FONT}You may need to scroll up to read everything${NC}"
+    echo -e "${INFO_FONT} or drag corner to make terminal taller${NC}"
+    echo
+    one_time_flag=1
+}
 
 customization=()
 folder=()
@@ -147,12 +159,15 @@ function apply_patch {
     local customization_name="${customization[$index]}"
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn "$patch_file"; then
-            echo "Customization $customization_name applied successfully."
+            echo -e "${SUCCESS_FONT}Customization $customization_name applied successfully${NC}"
+            sleep $sleep_time_after_success
         else
-            echo "Failed to apply customization $customization_name."
+            echo -e "${ERROR_FONT}Failed to apply customization $customization_name${NC}"
+            return_when_ready
         fi
     else
-        echo "Patch file for customization $customization_name does not exist."
+        echo -e "${ERROR_FONT}Patch file for customization $customization_name not available{NC}"
+        return_when_ready
     fi
     refresh_status
 }
@@ -163,12 +178,15 @@ function revert_patch {
     local customization_name="${customization[$index]}"
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn --reverse "$patch_file"; then
-            echo "Customization $customization_name reverted successfully."
+            echo -e "${SUCCESS_FONT}Customization $customization_name reverted successfully${NC}"
+            sleep $sleep_time_after_success
         else
-            echo "Failed to revert customization $customization_name."
+            echo -e "${ERROR_FONT}Failed to revert customization $customization_name${NC}"
+            return_when_ready
         fi
     else
-        echo "Patch file for customization $customization_name does not exist."
+        echo -e "${ERROR_FONT}Patch file for customization $customization_name does not exist${NC}"
+        return_when_return
     fi
     refresh_status
 }
@@ -205,7 +223,7 @@ function patch_menu {
         # Register the cleanup function to be called on the EXIT signal
         trap cleanup EXIT
 
-        echo -e "${INFO_FONT}Downloading customizations, please wait...${NC}"
+        echo -e "${INFO_FONT}Downloading customizations, please wait  ...  patiently  ...${NC}"
         cd $mytmpdir
         git clone --quiet --branch=$PATCH_BRANCH $PATCH_REPO
         clone_exit_status=$?
@@ -219,12 +237,12 @@ function patch_menu {
 
         refresh_status
         #Remove this debug printout before release
-        debug_printout
+        # debug_printout
 
         echo
+
+        ### repeating menu start here:
         while true; do
-            customization_info
-            echo
             echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
             echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
             echo
@@ -232,30 +250,47 @@ function patch_menu {
             display_applied_patches
             display_unapplicable_patches
 
-            echo -e "${INFO_FONT}Select a customization to apply or another option in the list:${NC}"
-
             for ((index=0; index<${#customization[@]}; index++)); do
+                if [ $index -eq $special_menu_item_0 ]; then
+                    message_for_special_menu_item_0
+                elif [ $index -eq $special_menu_item_1 ] &&
+                   [ ${status[$index]} -eq 0 ]; then
+                    message_for_special_menu_item_1
+                elif [ $index -eq $special_menu_item_2 ] &&
+                   [ ${status[$index]} -eq 0 ]; then
+                    message_for_special_menu_item_2
+                fi
                 if [ ${status[$index]} -eq 0 ]; then
-                    echo "$((${index}+1))) ${customization[$index]}"
+                    if [ $index -lt $single_digit ]; then
+                        echo "   $((${index}+1))) ${customization[$index]}"
+                    else
+                        echo "  $((${index}+1))) ${customization[$index]}"
+                    fi
                 fi
             done
 
+            echo
+
             if [ "$has_applied_patches" = true ]; then
-                echo "$remove_customization_menu_item) Remove a customization"
+                echo "  $remove_customization_menu_item) Remove a customization"
             fi
             if [ "$has_updatable_patches" = true ]; then
-                echo "$update_customization_menu_item) Update a customization"
+                echo "  $update_customization_menu_item) Update a customization"
             fi
 
-            echo "$exit_menu_item) $(exit_or_return_menu)"
-            echo "$exit_open_xcode_menu_item) $(exit_or_return_menu) and open Xcode"
+            echo "  $exit_menu_item) $(exit_or_return_menu)"
+            echo "  $exit_open_xcode_menu_item) $(exit_or_return_menu) and open Xcode"
+            echo
 
+            if [ $one_time_flag -eq 0 ]; then
+                message_about_display
+            fi
             read -p "Enter your choice: " choice
             if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $max_menu_item ]]; then
                 if [[ $choice -le ${#customization[@]} ]]; then
                     index=$(($choice-1))
                     apply_patch "$index";
-                    return_when_ready
+                    # return_when_ready
                 elif [[ $choice -eq $remove_customization_menu_item ]]; then
                     section_separator
                     echo -e "${INFO_FONT}Select a customization to remove:${NC}"
@@ -271,9 +306,8 @@ function patch_menu {
                     if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le ${#customization[@]} ]]; then
                         index=$(($choice-1))
                         revert_patch "$index";
-                        return_when_ready
                     fi
-                elif [[ $choice -eq $((${#customization[@]}+2)) ]]; then
+                elif [[ $choice -eq $update_customization_menu_item ]]; then
                     section_separator
                     echo -e "${INFO_FONT}Select a customization to update:${NC}"
 
@@ -297,10 +331,13 @@ function patch_menu {
                     echo -e "${INFO_FONT}Starting Xcode, please wait...${NC}"
                     xed .
                     exit 0
+                else
+                    echo -e "${ERROR_FONT}Your choice of $choice is invalid${NC}"
+                    return_when_ready
                 fi
             else
                 echo
-                echo -e "${ERROR_FONT}Invalid choice.${NC}"
+                echo -e "${ERROR_FONT}Your choice of $choice is invalid${NC}"
                 return_when_ready
             fi            
             section_separator
