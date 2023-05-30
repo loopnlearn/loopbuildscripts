@@ -91,8 +91,10 @@ if [ "$0" != "_" ]; then
         fi
     done
     if $any_variable_set; then
-        echo -e "\nTo clear the values, close this terminal and start a new one."
-        return_when_ready
+        echo
+        echo "To clear the values, close this terminal and start a new one."
+        echo "Sleeping for 2 sec then continuing"
+        sleep 2
     fi
 fi
 
