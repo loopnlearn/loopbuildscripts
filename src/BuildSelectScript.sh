@@ -132,28 +132,6 @@ while true; do
         menu_select "${options[@]}" "${actions[@]}"
 
     else
-        section_separator
-        echo -e "${INFO_FONT}Selectable Customizations for:${NC}"
-        echo -e "    Released code: Loop or Loop with Patches"
-        echo -e "    Might work for development branches of Loop"
-        echo -e ""
-        echo -e "Reports status for each customization:"
-        echo -e "    can be or has been applied or is not applicable"
-        echo -e ""
-        echo -e "Automatically finds most recent Loop download unless"
-        echo -e "    terminal is already at the LoopWorkspace folder level"
-        section_divider
-
-        options=(
-            "Loop Customizations"
-            "Profile Feature Customization"
-            "Return to Menu"
-        )
-        actions=(
-            "run_script 'CustomizationSelect.sh'"
-            "run_script 'ProfileSelect.sh'"
-            return
-        )
-        menu_select "${options[@]}" "${actions[@]}"
+        run_script "CustomizationSelect.sh" $CUSTOM_BRANCH
     fi
 done
