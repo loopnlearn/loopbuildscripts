@@ -7,8 +7,6 @@ REPO_NAME=$(basename "${PATCH_REPO}" .git)
 
 # set fixed numbers for certain actions
 sleep_time_after_success=0.8
-single_digit=9
-max_number_special_menu_items=10
 remove_customization_menu_item=40
 update_customization_menu_item=45
 exit_menu_item=50
@@ -26,12 +24,14 @@ function message_about_display() {
 
 customization=()
 folder=()
+message_function=()
 status=()
 patch=()
 
 function add_customization() {    
     customization+=("$1")
     folder+=("$2")
+    message_function+=("$3")
 }
 
 function refresh_status() {
@@ -43,7 +43,11 @@ function refresh_status() {
     
     # Iterate through each customization
     for ((index=0; index<${#customization[@]}; index++)); do
-        local patch_folder="$mytmpdir/${REPO_NAME}/${folder[$index]}"
+        if [ -z "$LOCAL_PATCH_FOLDER" ]; then
+            local patch_folder="$mytmpdir/${REPO_NAME}/${folder[$index]}"
+        else
+            local patch_folder="$LOCAL_PATCH_FOLDER/${folder[$index]}"
+        fi
         local archive_folder="$patch_folder/archive"
         
         # Initialize status as not applicable
@@ -223,16 +227,18 @@ function patch_menu {
         # Register the cleanup function to be called on the EXIT signal
         trap cleanup EXIT
 
-        echo -e "${INFO_FONT}Downloading customizations, please wait  ...  patiently  ...${NC}"
-        cd $mytmpdir
-        git clone --quiet --branch=$PATCH_BRANCH $PATCH_REPO
-        clone_exit_status=$?
-        if [ $clone_exit_status -eq 0 ]; then
-            tput cuu1 && tput el
-            cd $workingdir
-        else
-            echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
-            exit 1
+        if [ -z "$LOCAL_PATCH_FOLDER" ]; then
+            echo -e "${INFO_FONT}Downloading customizations, please wait  ...  patiently  ...${NC}"
+            cd $mytmpdir
+            git clone --quiet --branch=$PATCH_BRANCH $PATCH_REPO
+            clone_exit_status=$?
+            if [ $clone_exit_status -eq 0 ]; then
+                tput cuu1 && tput el
+                cd $workingdir
+            else
+                echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
+                exit 1
+            fi
         fi
 
         refresh_status
@@ -250,22 +256,14 @@ function patch_menu {
             display_applied_patches
             display_unapplicable_patches
 
+            message_generic
+
             for ((index=0; index<${#customization[@]}; index++)); do
-                if [ $index -eq $special_menu_item_0 ]; then
-                    message_for_special_menu_item_0
-                elif [ $index -eq $special_menu_item_1 ] &&
-                   [ ${status[$index]} -eq 0 ]; then
-                    message_for_special_menu_item_1
-                elif [ $index -eq $special_menu_item_2 ] &&
-                   [ ${status[$index]} -eq 0 ]; then
-                    message_for_special_menu_item_2
-                fi
                 if [ ${status[$index]} -eq 0 ]; then
-                    if [ $index -lt $single_digit ]; then
-                        echo "   $((${index}+1))) ${customization[$index]}"
-                    else
-                        echo "  $((${index}+1))) ${customization[$index]}"
+                    if [ -n "${message_function[$index]}" ]; then
+                        eval "${message_function[$index]}"
                     fi
+                    printf "%4d) %s\n" $((index+1)) "${customization[$index]}"
                 fi
             done
 

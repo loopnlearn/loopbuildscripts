@@ -14,6 +14,9 @@ unset CUSTOM_URL
 unset CUSTOM_BRANCH
 unset CUSTOM_MACOS_VER
 unset CUSTOM_XCODE_VER
+unset PATCH_BRANCH
+unset PATCH_REPO
+unset LOCAL_PATCH_FOLDER
 
 # To Test Scripts as they exist on github
 # SCRIPT_BRANCH is the branch scripts will be sourced from
@@ -65,3 +68,17 @@ unset CUSTOM_XCODE_VER
 #   Uncomment the line
 #   Default is 1 (really delete)
 #export DELETE_SELECTED_FOLDERS=0
+
+# PATCH_BRANCH is the branch from which patches will be sourced
+#   Uncomment the line and replace "main" with the branch you are using
+#export PATCH_BRANCH="main"
+
+# PATCH_REPO is the repository URL from which patches will be sourced
+#   Uncomment the line and replace with your own repository URL if not using the default
+#export PATCH_REPO="https://github.com/bjorkert/patchrepo.git"
+
+# LOCAL_PATCH_FOLDER is the local directory from which patches will be sourced
+#   If not set or empty, patches will be downloaded from the PATCH_REPO
+#   Uncomment the line and replace with your own local directory if not using the default
+#   The path should be absolute or relative to the current script's directory
+#export LOCAL_PATCH_FOLDER="/path/to/your/local/patch/folder"
