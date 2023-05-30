@@ -11,9 +11,7 @@ BUILD_DIR=~/Downloads/BuildLoop
 show_cto_warning_count=0
 
 # this is always used - it is the introductory message
-special_menu_item_0=0
-
-function message_for_special_menu_item_0() {
+function message_generic() {
     show_cto_warning
     echo "The Prepared Customizations are documented on the Loop and Learn web site"
     echo "  https://www.loopandlearn.org/custom-code/#custom-list"
@@ -21,17 +19,12 @@ function message_for_special_menu_item_0() {
 }
 
 # these are modified when a PR is added or removed
-
-special_menu_item_1=11
-
-function message_for_special_menu_item_1() {
+function message_for_profiles() {
     echo
     echo "Loop PR 2002 Profile Switching"
 }
 
-special_menu_item_2=12
-
-function message_for_special_menu_item_2() {
+function message_for_ab_ramp() {
     echo
     echo "Loop PR 1988 Automatic Bolus Dosing Strategy Enhancement"
     show_cto_warning
@@ -62,8 +55,8 @@ add_customization "Libre Users: Limit Loop to <5 minutes" "limit_loop_cycle_time
 add_customization "Modify Logo with LnL icon" "lnl_icon"
 # index 10 to 13
 add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches"
-add_customization "Profiles (PR#2002)" "profile"
-add_customization "Enhanced AutoBolus (PR#1988)" "ab_ramp"
+add_customization "Profiles (PR#2002)" "profile" "message_for_profiles"
+add_customization "Enhanced AutoBolus (PR#1988)" "ab_ramp" "message_for_ab_ramp"
 add_customization "Enhanced AutoBolus (PR#1988) with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
 
 patch_menu

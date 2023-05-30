@@ -161,8 +161,6 @@ REPO_NAME=$(basename "${PATCH_REPO}" .git)
 
 # set fixed numbers for certain actions
 sleep_time_after_success=0.8
-single_digit=9
-max_number_special_menu_items=10
 remove_customization_menu_item=40
 update_customization_menu_item=45
 exit_menu_item=50
@@ -180,12 +178,14 @@ function message_about_display() {
 
 customization=()
 folder=()
+message_function=()
 status=()
 patch=()
 
 function add_customization() {    
     customization+=("$1")
     folder+=("$2")
+    message_function+=("$3")
 }
 
 function refresh_status() {
@@ -197,7 +197,11 @@ function refresh_status() {
     
     # Iterate through each customization
     for ((index=0; index<${#customization[@]}; index++)); do
-        local patch_folder="$mytmpdir/${REPO_NAME}/${folder[$index]}"
+        if [ -z "$LOCAL_PATCH_FOLDER" ]; then
+            local patch_folder="$mytmpdir/${REPO_NAME}/${folder[$index]}"
+        else
+            local patch_folder="$LOCAL_PATCH_FOLDER/${folder[$index]}"
+        fi
         local archive_folder="$patch_folder/archive"
         
         # Initialize status as not applicable
@@ -377,16 +381,18 @@ function patch_menu {
         # Register the cleanup function to be called on the EXIT signal
         trap cleanup EXIT
 
-        echo -e "${INFO_FONT}Downloading customizations, please wait  ...  patiently  ...${NC}"
-        cd $mytmpdir
-        git clone --quiet --branch=$PATCH_BRANCH $PATCH_REPO
-        clone_exit_status=$?
-        if [ $clone_exit_status -eq 0 ]; then
-            tput cuu1 && tput el
-            cd $workingdir
-        else
-            echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
-            exit 1
+        if [ -z "$LOCAL_PATCH_FOLDER" ]; then
+            echo -e "${INFO_FONT}Downloading customizations, please wait  ...  patiently  ...${NC}"
+            cd $mytmpdir
+            git clone --quiet --branch=$PATCH_BRANCH $PATCH_REPO
+            clone_exit_status=$?
+            if [ $clone_exit_status -eq 0 ]; then
+                tput cuu1 && tput el
+                cd $workingdir
+            else
+                echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
+                exit 1
+            fi
         fi
 
         refresh_status
@@ -404,22 +410,14 @@ function patch_menu {
             display_applied_patches
             display_unapplicable_patches
 
+            message_generic
+
             for ((index=0; index<${#customization[@]}; index++)); do
-                if [ $index -eq $special_menu_item_0 ]; then
-                    message_for_special_menu_item_0
-                elif [ $index -eq $special_menu_item_1 ] &&
-                   [ ${status[$index]} -eq 0 ]; then
-                    message_for_special_menu_item_1
-                elif [ $index -eq $special_menu_item_2 ] &&
-                   [ ${status[$index]} -eq 0 ]; then
-                    message_for_special_menu_item_2
-                fi
                 if [ ${status[$index]} -eq 0 ]; then
-                    if [ $index -lt $single_digit ]; then
-                        echo "   $((${index}+1))) ${customization[$index]}"
-                    else
-                        echo "  $((${index}+1))) ${customization[$index]}"
+                    if [ -n "${message_function[$index]}" ]; then
+                        eval "${message_function[$index]}"
                     fi
+                    printf "%4d) %s\n" $((index+1)) "${customization[$index]}"
                 fi
             done
 
@@ -510,9 +508,7 @@ function patch_menu {
 show_cto_warning_count=0
 
 # this is always used - it is the introductory message
-special_menu_item_0=0
-
-function message_for_special_menu_item_0() {
+function message_generic() {
     show_cto_warning
     echo "The Prepared Customizations are documented on the Loop and Learn web site"
     echo "  https://www.loopandlearn.org/custom-code/#custom-list"
@@ -520,17 +516,12 @@ function message_for_special_menu_item_0() {
 }
 
 # these are modified when a PR is added or removed
-
-special_menu_item_1=11
-
-function message_for_special_menu_item_1() {
+function message_for_profiles() {
     echo
     echo "Loop PR 2002 Profile Switching"
 }
 
-special_menu_item_2=12
-
-function message_for_special_menu_item_2() {
+function message_for_ab_ramp() {
     echo
     echo "Loop PR 1988 Automatic Bolus Dosing Strategy Enhancement"
     show_cto_warning
@@ -561,8 +552,8 @@ add_customization "Libre Users: Limit Loop to <5 minutes" "limit_loop_cycle_time
 add_customization "Modify Logo with LnL icon" "lnl_icon"
 # index 10 to 13
 add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches"
-add_customization "Profiles (PR#2002)" "profile"
-add_customization "Enhanced AutoBolus (PR#1988)" "ab_ramp"
+add_customization "Profiles (PR#2002)" "profile" "message_for_profiles"
+add_customization "Enhanced AutoBolus (PR#1988)" "ab_ramp" "message_for_ab_ramp"
 add_customization "Enhanced AutoBolus (PR#1988) with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
 
 patch_menu
