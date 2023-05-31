@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 
-# *** Start of inlined file: src/common.sh ***
+# *** Start of inlined file: inline_functions/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -149,7 +149,7 @@ function exit_message() {
     section_divider
     exit 0
 }
-# *** End of inlined file: src/common.sh ***
+# *** End of inlined file: inline_functions/common.sh ***
 
 
 section_separator
