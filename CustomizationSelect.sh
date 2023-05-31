@@ -284,14 +284,14 @@ function display_applied_patches() {
     for ((index=0; index<${#customization[@]}; index++)); do
         if [[ ${status[$index]} -eq 1 || ${status[$index]} -eq 2 ]]; then
             if [ "$has_applied_patches" = false ]; then
-                echo -e "${INFO_FONT}Currently applied customizations:${NC}"
+                echo -e "${INFO_FONT}  Currently applied customizations:${NC}"
                 has_applied_patches=true
             fi
             if [[ ${status[$index]} -eq 2 ]]; then
-                echo "* ${customization[$index]} (Update available)"
+                echo "     * ${customization[$index]} (Update available)"
                 has_updatable_patches=true
             else
-                echo "* ${customization[$index]}"
+                echo "     * ${customization[$index]}"
             fi
         fi
     done
@@ -305,10 +305,10 @@ function display_unapplicable_patches() {
     for ((index=0; index<${#customization[@]}; index++)); do
         if [ ${status[$index]} -eq 3 ]; then
             if [ "$has_unapplicable_patches" = false ]; then
-                echo -e "${INFO_FONT}Unavailable customizations due to conflicts:${NC}"
+                echo -e "${INFO_FONT}  Unavailable customizations (due to conflicts):${NC}"
                 has_unapplicable_patches=true
             fi
-            echo "* ${customization[$index]}"
+            echo "    * ${customization[$index]}"
         fi
     done
     if [ "$has_unapplicable_patches" = true ]; then
@@ -356,7 +356,7 @@ function revert_patch {
 
 function patch_menu {
     section_separator
-    echo -e "${INFO_FONT}Loop Prepared Customizations Selection${NC}"
+    echo -e "${INFO_FONT}Loop Customization Select Script${NC}"
 
     cd "$STARTING_DIR"
 
