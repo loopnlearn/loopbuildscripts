@@ -8,37 +8,38 @@ BUILD_DIR=~/Downloads/BuildLoop
 # The rest of this is specific to the particular script
 ############################################################
 
-show_cto_warning_count=0
+message_incompatible_count=0
 
-# this is always used - it is the introductory message
+# this is always used - it is the introductory message - it can be blank
 function message_generic() {
-    show_cto_warning
-    echo "The Prepared Customizations are documented on the Loop and Learn web site"
-    echo "  https://www.loopandlearn.org/custom-code/#custom-list"
+    echo "  These Customizations are documented on the Loop and Learn web site"
+    echo "        https://www.loopandlearn.org/custom-code/#custom-list"
     echo
 }
+
+# this is always used - it is the incompatible patches message - it can be blank
+function message_incompatible() {
+    if [ $message_incompatible_count -lt 1 ]; then
+        echo "          CustomTypeOne LoopPatches (original) and"
+        echo "          Enhanced Automatic Bolus (PR 1988) are incompatible"
+        ((message_incompatible_count++))
+    fi
+}
+
 
 # these are modified when a PR is added or removed
 function message_for_profiles() {
     echo
-    echo "Loop PR 2002 Profile Switching"
+    echo "  PR 2002 Profile Switching"
+    echo "        https://github.com/LoopKit/Loop/pull/2002"
 }
 
 function message_for_ab_ramp() {
     echo
-    echo "Loop PR 1988 Automatic Bolus Dosing Strategy Enhancement"
-    show_cto_warning
-}
-
-function show_cto_warning() {
-    # echo "show_cto_warning_count = $show_cto_warning_count"
-    if [ $show_cto_warning_count -le 2 ]; then
-        echo -e "${INFO_FONT}  You cannot have the (original) CustomTypeOne LoopPatches installed${NC}"
-        echo -e "${INFO_FONT}  with the Enhanced Automatic Bolus customization${NC}"
-        echo -e "  This enhancement replaces the ${INFO_FONT}\"switcher patch\"${NC}"
-        echo
-        ((show_cto_warning_count++))
-    fi
+    echo "  PR 1988 Automatic Bolus Dosing Strategy Enhancement"
+    echo "        https://github.com/LoopKit/Loop/pull/1988"
+    echo -e "        Enchancement replaces CustomTypeOne ${INFO_FONT}\"switcher patch\"${NC}"
+    message_incompatible
 }
 
 # index 0 to 4
@@ -51,12 +52,12 @@ add_customization "Modify Carb Warning & Limit: Low Carb to 49 & 99" "low_carb_l
 add_customization "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_carb_limit"
 add_customization "Disable Authentication Requirement" "no_auth"
 add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens"
-add_customization "Libre Users: Limit Loop to <5 minutes" "limit_loop_cycle_time"
+add_customization "Libre Users: Limit Loop to 5 minute update" "limit_loop_cycle_time"
 add_customization "Modify Logo with LnL icon" "lnl_icon"
 # index 10 to 13
-add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches"
-add_customization "Profiles (PR#2002)" "profile" "message_for_profiles"
-add_customization "Enhanced AutoBolus (PR#1988)" "ab_ramp" "message_for_ab_ramp"
-add_customization "Enhanced AutoBolus (PR#1988) with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
+add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches" "message_incompatible"
+add_customization "Profiles (PR 2002)" "profile" "message_for_profiles"
+add_customization "Enhanced AutoBolus (PR 1988)" "ab_ramp" "message_for_ab_ramp"
+add_customization "Enhanced AutoBolus (PR 1988) with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
 
 patch_menu

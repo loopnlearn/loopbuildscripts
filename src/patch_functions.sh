@@ -6,7 +6,7 @@
 REPO_NAME=$(basename "${PATCH_REPO}" .git)
 
 # set fixed numbers for certain actions
-sleep_time_after_success=1.0
+sleep_time_after_success=1
 remove_customization_menu_item=40
 update_customization_menu_item=45
 exit_menu_item=50
@@ -18,9 +18,9 @@ one_time_flag=0
 function message_about_display() {
     echo -e "${INFO_FONT}You may need to scroll up to read everything${NC}"
     echo -e "${INFO_FONT} or drag corner to make terminal taller${NC}"
-    echo -e "${SUCCESS_FONT}There is brief pause for a success message${NC}"
+    echo -e "${SUCCESS_FONT}There is $sleep_time_after_success second pause for a success message${NC}"
     echo "  Do not worry if it goes by too quickly to read"
-    echo -e "${ERROR_FONT}Errors will be reported and script will wait for a return${NC}"
+    echo -e "${ERROR_FONT}Errors will be reported and script will wait for user${NC}"
     echo
     one_time_flag=1
 }
@@ -156,6 +156,7 @@ function display_unapplicable_patches() {
         fi
     done
     if [ "$has_unapplicable_patches" = true ]; then
+        message_incompatible
         echo
     fi
 }
