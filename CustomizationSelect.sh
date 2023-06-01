@@ -156,6 +156,10 @@ function exit_message() {
 # *** End of inlined file: inline_functions/common.sh ***
 
 
+# set to 1 for debug (verbose output) mode at beginning of script
+# set to 2 for debug (verbose output) mode for every refresh
+DEBUG_FLAG=0
+
 : ${PATCH_BRANCH:="main"}
 : ${PATCH_REPO:="https://github.com/bjorkert/patchrepo.git"}
 
@@ -176,7 +180,7 @@ function message_about_display() {
     echo -e "${INFO_FONT} or drag corner to make terminal taller${NC}"
     echo -e "${SUCCESS_FONT}There is $sleep_time_after_success second pause for a success message${NC}"
     echo "  Do not worry if it goes by too quickly to read"
-    echo -e "${ERROR_FONT}Errors will be reported and script will wait for user${NC}"
+    echo -e "${INFO_FONT}Errors will be reported and script will wait for user${NC}"
     echo
     one_time_flag=1
 }
@@ -246,6 +250,9 @@ function refresh_status() {
             done
         fi
     done
+    if [ $DEBUG_FLAG -eq 2 ]; then
+        debug_printout
+    fi
 }
 
 function debug_printout() {
@@ -288,7 +295,7 @@ function display_applied_patches() {
                 has_applied_patches=true
             fi
             if [[ ${status[$index]} -eq 2 ]]; then
-                echo "     * ${customization[$index]} (Update available)"
+                echo -e "     * ${customization[$index]} ${SUCCESS_FONT}(Update available)${NC}"
                 has_updatable_patches=true
             else
                 echo "     * ${customization[$index]}"
@@ -323,14 +330,14 @@ function apply_patch {
     local customization_name="${customization[$index]}"
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn "$patch_file"; then
-            echo -e "${SUCCESS_FONT}Customization $customization_name applied successfully${NC}"
+            echo -e "${SUCCESS_FONT}  Customization $customization_name applied successfully${NC}"
             sleep $sleep_time_after_success
         else
-            echo -e "${ERROR_FONT}Failed to apply customization $customization_name${NC}"
+            echo -e "${ERROR_FONT}  Failed to apply customization $customization_name${NC}"
             return_when_ready
         fi
     else
-        echo -e "${ERROR_FONT}Patch file for customization $customization_name not available{NC}"
+        echo -e "${ERROR_FONT}  Patch file for customization $customization_name not available{NC}"
         return_when_ready
     fi
     refresh_status
@@ -342,14 +349,14 @@ function revert_patch {
     local customization_name="${customization[$index]}"
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn --reverse "$patch_file"; then
-            echo -e "${SUCCESS_FONT}Customization $customization_name reverted successfully${NC}"
+            echo -e "${SUCCESS_FONT}  Customization $customization_name reverted successfully${NC}"
             sleep $sleep_time_after_success
         else
-            echo -e "${ERROR_FONT}Failed to revert customization $customization_name${NC}"
+            echo -e "${ERROR_FONT}  Failed to revert customization $customization_name${NC}"
             return_when_ready
         fi
     else
-        echo -e "${ERROR_FONT}Patch file for customization $customization_name does not exist${NC}"
+        echo -e "${ERROR_FONT}  Patch file for customization $customization_name does not exist${NC}"
         return_when_return
     fi
     refresh_status
@@ -402,8 +409,9 @@ function patch_menu {
         fi
 
         refresh_status
-        #Remove this debug printout before release
-        # debug_printout
+        if [ $DEBUG_FLAG -eq 1 ]; then
+            debug_printout
+        fi
 
         echo
 
@@ -433,7 +441,7 @@ function patch_menu {
                 echo "  $remove_customization_menu_item) Remove a customization"
             fi
             if [ "$has_updatable_patches" = true ]; then
-                echo "  $update_customization_menu_item) Update a customization"
+                echo -e "${SUCCESS_FONT}  $update_customization_menu_item) Update a customization${NC}"
             fi
 
             echo "  $exit_menu_item) $(exit_or_return_menu)"
@@ -489,7 +497,9 @@ function patch_menu {
                     if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le ${#customization[@]} ]]; then
                         index=$(($choice-1))
                         if [ ${status[$index]} -eq 2 ]; then
+                            echo "First reverse older version"
                             revert_patch "$index";
+                            echo "Now apply newer version"
                             apply_patch "$index";
                             return_when_ready
                         else
