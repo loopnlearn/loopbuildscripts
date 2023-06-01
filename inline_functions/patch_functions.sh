@@ -291,7 +291,12 @@ function patch_menu {
             if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $max_menu_item ]]; then
                 if [[ $choice -le ${#customization[@]} ]]; then
                     index=$(($choice-1))
-                    apply_patch "$index";
+                    if [ ${status[$index]} -eq 0 ]; then
+                        apply_patch "$index";
+                    else
+                        echo -e "${ERROR_FONT}Your selection of $choice is not valid${NC}"
+                        return_when_ready
+                    fi
                     # return_when_ready
                 elif [[ $choice -eq $remove_customization_menu_item ]]; then
                     section_separator
@@ -307,7 +312,12 @@ function patch_menu {
                     read -p "Enter your choice: " choice
                     if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le ${#customization[@]} ]]; then
                         index=$(($choice-1))
-                        revert_patch "$index";
+                        if [ ${status[$index]} -eq 0 ]; then
+                            revert_patch "$index";
+                        else
+                            echo -e "${ERROR_FONT}Your selection of $choice is not valid${NC}"
+                            return_when_ready
+                        fi
                     fi
                 elif [[ $choice -eq $update_customization_menu_item ]]; then
                     section_separator
@@ -323,9 +333,14 @@ function patch_menu {
                     read -p "Enter your choice: " choice
                     if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le ${#customization[@]} ]]; then
                         index=$(($choice-1))
-                        revert_patch "$index";
-                        apply_patch "$index";
-                        return_when_ready
+                        if [ ${status[$index]} -eq 0 ]; then
+                            revert_patch "$index";
+                            apply_patch "$index";
+                            return_when_ready
+                        else
+                            echo -e "${ERROR_FONT}Your selection of $choice is not valid${NC}"
+                            return_when_ready
+                        fi
                     fi
                 elif [[ $choice -eq $exit_menu_item ]]; then
                     exit 0
