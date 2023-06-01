@@ -453,7 +453,6 @@ function patch_menu {
                         echo -e "${ERROR_FONT}Your selection of $choice is not valid${NC}"
                         return_when_ready
                     fi
-                    # return_when_ready
                 elif [[ $choice -eq $remove_customization_menu_item ]]; then
                     section_separator
                     echo -e "${INFO_FONT}Select a customization to remove:${NC}"
@@ -468,7 +467,7 @@ function patch_menu {
                     read -p "Enter your choice: " choice
                     if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le ${#customization[@]} ]]; then
                         index=$(($choice-1))
-                        if [ ${status[$index]} -eq 0 ]; then
+                        if [ ${status[$index]} -eq 1 ]; then
                             revert_patch "$index";
                         else
                             echo -e "${ERROR_FONT}Your selection of $choice is not valid${NC}"
@@ -489,7 +488,7 @@ function patch_menu {
                     read -p "Enter your choice: " choice
                     if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le ${#customization[@]} ]]; then
                         index=$(($choice-1))
-                        if [ ${status[$index]} -eq 0 ]; then
+                        if [ ${status[$index]} -eq 2 ]; then
                             revert_patch "$index";
                             apply_patch "$index";
                             return_when_ready
