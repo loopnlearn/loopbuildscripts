@@ -20,8 +20,9 @@ function message_generic() {
 # this is always used - it is the incompatible patches message - it can be blank
 function message_incompatible() {
     if [ $message_incompatible_count -lt 1 ]; then
-        echo "          CustomTypeOne LoopPatches (original) and"
-        echo "          Enhanced Automatic Bolus (PR 1988) are incompatible"
+        echo
+        echo "  CustomTypeOne LoopPatches (original) and"
+        echo "    Enhanced Automatic Bolus (PR 1988) are incompatible"
         ((message_incompatible_count++))
     fi
 }
