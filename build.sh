@@ -2,6 +2,7 @@
 
 # Define the source and destination directories
 SRC_DIR="src"
+INLINE_DIR="inline_functions"
 DEST_DIR="."
 
 
@@ -70,7 +71,7 @@ inline_file() {
   do
     if [[ $line == "#!inline "* ]]; then
       COMMON_FILE=${line#*#!inline }
-      inline_file "$SRC_DIR/$COMMON_FILE" "$output_file" $((depth+1))
+      inline_file "$INLINE_DIR/$COMMON_FILE" "$output_file" $((depth+1))
     else
       echo "$line" >> "$output_file"
     fi

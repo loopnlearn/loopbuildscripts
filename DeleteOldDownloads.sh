@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 
-# *** Start of inlined file: src/common.sh ***
+# *** Start of inlined file: inline_functions/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -149,11 +149,11 @@ function exit_message() {
     section_divider
     exit 0
 }
-# *** End of inlined file: src/common.sh ***
+# *** End of inlined file: inline_functions/common.sh ***
 
 
 
-# *** Start of inlined file: src/delete_old_downloads.sh ***
+# *** Start of inlined file: inline_functions/delete_old_downloads.sh ***
 # Flag to skip all deletions
 SKIP_ALL=false
 folder_count=0
@@ -313,7 +313,7 @@ function delete_old_downloads() {
         echo -e "  So folders marked successfully deleted are still there${NC}"
     fi
 }
-# *** End of inlined file: src/delete_old_downloads.sh ***
+# *** End of inlined file: inline_functions/delete_old_downloads.sh ***
 
 
 delete_old_downloads

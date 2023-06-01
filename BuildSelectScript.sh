@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 
-# *** Start of inlined file: src/common.sh ***
+# *** Start of inlined file: inline_functions/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -149,10 +149,10 @@ function exit_message() {
     section_divider
     exit 0
 }
-# *** End of inlined file: src/common.sh ***
+# *** End of inlined file: inline_functions/common.sh ***
 
 
-# *** Start of inlined file: src/build_warning.sh ***
+# *** Start of inlined file: inline_functions/build_warning.sh ***
 ############################################################
 # warning used by all scripts that build an app
 ############################################################
@@ -202,10 +202,10 @@ function open_source_warning() {
 
     echo -e "${NC}\n\n\n\n"
 }
-# *** End of inlined file: src/build_warning.sh ***
+# *** End of inlined file: inline_functions/build_warning.sh ***
 
 
-# *** Start of inlined file: src/run_script.sh ***
+# *** Start of inlined file: inline_functions/run_script.sh ***
 # The function fetches and executes a script either from LnL GitHub repository
 # or from the current local directory (if LOCAL_SCRIPT is set to "1").
 # The script is executed with "_" as parameter $0, telling the script that it is
@@ -233,7 +233,7 @@ run_script() {
         exit 1
     fi
 }
-# *** End of inlined file: src/run_script.sh ***
+# *** End of inlined file: inline_functions/run_script.sh ***
 
 
 # Set default values only if they haven't been defined as environment variables

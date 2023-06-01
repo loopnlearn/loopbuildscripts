@@ -8,9 +8,9 @@
 BUILD_DIR=~/Downloads/BuildLoop
 
 
-# *** Start of inlined file: src/patch_functions.sh ***
+# *** Start of inlined file: inline_functions/patch_functions.sh ***
 
-# *** Start of inlined file: src/common.sh ***
+# *** Start of inlined file: inline_functions/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -153,7 +153,7 @@ function exit_message() {
     section_divider
     exit 0
 }
-# *** End of inlined file: src/common.sh ***
+# *** End of inlined file: inline_functions/common.sh ***
 
 
 : ${PATCH_BRANCH:="main"}
@@ -504,7 +504,7 @@ function patch_menu {
         exit 1
     fi
 }
-# *** End of inlined file: src/patch_functions.sh ***
+# *** End of inlined file: inline_functions/patch_functions.sh ***
 
 
 ############################################################
