@@ -63,6 +63,9 @@ if [ "$0" != "_" ]; then
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."
         "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
         "DELETE_SELECTED_FOLDERS: Echoes folder names but does not delete them"
+        "PATCH_BRANCH: Indicates the source branch for patches."
+        "PATCH_REPO: Specifies the URL of the patch source repository."
+        "LOCAL_PATCH_FOLDER: Defines a local directory for sourcing patches."
     )
 
     # Flag to check if any variable is set
