@@ -181,7 +181,7 @@ function apply_patch {
             return_when_ready
         fi
     else
-        echo -e "${ERROR_FONT}  Patch file for customization $customization_name not available{NC}"
+        echo -e "${ERROR_FONT}  Patch file for customization $customization_name not available${NC}"
         return_when_ready
     fi
     refresh_status
