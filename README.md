@@ -114,6 +114,13 @@ This builds the released version of Loop or Loop with Patches.
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildxDrip4iOS.sh)"
 ```
 
+#### BuildGlucoseDirect
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildGlucoseDirect.sh)"
+```
+
 ### Scripts not included in Build Select Script
 
 These scripts can only be run directly.
