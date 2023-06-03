@@ -169,19 +169,19 @@ DEBUG_FLAG=0
 REPO_NAME=$(basename "${PATCH_REPO}" .git)
 
 # set fixed numbers for certain actions
-sleep_time_after_success=1
-remove_customization_menu_item=40
-update_customization_menu_item=45
-exit_menu_item=50
-exit_open_xcode_menu_item=60
-max_menu_item=$exit_open_xcode_menu_item
+SLEEP_TIME_AFTER_SUCCESS=1
+REMOVE_CUSTOMIZATION_MENU_ITEM=40
+UPDATE_CUSTOMIZATION_MENU_ITEM=45
+EXIT_MENU_ITEM=50
+EXIT_OPEN_XCODE_MENU_ITEM=60
+MAX_MENU_ITEM=$EXIT_OPEN_XCODE_MENU_ITEM
 
 one_time_flag=0
 
 function message_about_display() {
     echo -e "${INFO_FONT}You may need to scroll up to read everything${NC}"
     echo -e "${INFO_FONT} or drag corner to make terminal taller${NC}"
-    echo -e "${SUCCESS_FONT}There is $sleep_time_after_success second pause for a success message${NC}"
+    echo -e "${SUCCESS_FONT}There is $SLEEP_TIME_AFTER_SUCCESS second pause for a success message${NC}"
     echo "  Do not worry if it goes by too quickly to read"
     echo -e "${INFO_FONT}Errors will be reported and script will wait for user${NC}"
     echo
@@ -334,7 +334,7 @@ function apply_patch {
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn "$patch_file"; then
             echo -e "${SUCCESS_FONT}  Customization $customization_name applied successfully${NC}"
-            sleep $sleep_time_after_success
+            sleep $SLEEP_TIME_AFTER_SUCCESS
         else
             echo -e "${ERROR_FONT}  Failed to apply customization $customization_name${NC}"
             return_when_ready
@@ -353,7 +353,7 @@ function revert_patch {
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn --reverse "$patch_file"; then
             echo -e "${SUCCESS_FONT}  Customization $customization_name reverted successfully${NC}"
-            sleep $sleep_time_after_success
+            sleep $SLEEP_TIME_AFTER_SUCCESS
         else
             echo -e "${ERROR_FONT}  Failed to revert customization $customization_name${NC}"
             return_when_ready
@@ -441,21 +441,21 @@ function patch_menu {
             echo
 
             if [ "$has_applied_patches" = true ]; then
-                echo "  $remove_customization_menu_item) Remove a customization"
+                echo "  $REMOVE_CUSTOMIZATION_MENU_ITEM) Remove a customization"
             fi
             if [ "$has_updatable_patches" = true ]; then
-                echo -e "${SUCCESS_FONT}  $update_customization_menu_item) Update a customization${NC}"
+                echo -e "${SUCCESS_FONT}  $UPDATE_CUSTOMIZATION_MENU_ITEM) Update a customization${NC}"
             fi
 
-            echo "  $exit_menu_item) $(exit_or_return_menu)"
-            echo "  $exit_open_xcode_menu_item) $(exit_or_return_menu) and open Xcode"
+            echo "  $EXIT_MENU_ITEM) $(exit_or_return_menu)"
+            echo "  $EXIT_OPEN_XCODE_MENU_ITEM) $(exit_or_return_menu) and open Xcode"
             echo
 
             if [ $one_time_flag -eq 0 ]; then
                 message_about_display
             fi
             read -p "Enter your choice: " choice
-            if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $max_menu_item ]]; then
+            if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $MAX_MENU_ITEM ]]; then
                 if [[ $choice -le ${#customization[@]} ]]; then
                     index=$(($choice-1))
                     if [ ${status[$index]} -eq 0 ]; then
@@ -464,7 +464,7 @@ function patch_menu {
                         echo -e "${ERROR_FONT}Your selection of $choice is not valid${NC}"
                         return_when_ready
                     fi
-                elif [[ $choice -eq $remove_customization_menu_item ]]; then
+                elif [[ $choice -eq $REMOVE_CUSTOMIZATION_MENU_ITEM ]]; then
                     section_separator
                     echo -e "${INFO_FONT}Select a customization to remove:${NC}"
 
@@ -485,7 +485,7 @@ function patch_menu {
                             return_when_ready
                         fi
                     fi
-                elif [[ $choice -eq $update_customization_menu_item ]]; then
+                elif [[ $choice -eq $UPDATE_CUSTOMIZATION_MENU_ITEM ]]; then
                     section_separator
                     echo -e "${INFO_FONT}Select a customization to update:${NC}"
 
@@ -510,9 +510,9 @@ function patch_menu {
                             return_when_ready
                         fi
                     fi
-                elif [[ $choice -eq $exit_menu_item ]]; then
+                elif [[ $choice -eq $EXIT_MENU_ITEM ]]; then
                     exit 0
-                elif [[ $choice -eq $exit_open_xcode_menu_item ]]; then
+                elif [[ $choice -eq $EXIT_OPEN_XCODE_MENU_ITEM ]]; then
                     echo -e "${INFO_FONT}Starting Xcode, please wait...${NC}"
                     xed .
                     exit 0
