@@ -4,6 +4,8 @@
 
 These scripts simplify some tasks for building Loop and other DIY code from the GitHub repositories.
 
+The downloaded code that these scripts help you build or modify, are provided open source and it is your responsibility to review the code. Open source code is experimental for testing, research, and education and is not approved for therapy. Patches or customizations are even more experimental. You take full responsibility for building and running this system and do so at your own risk.
+
 Most users should use the BuildSelectScript.sh script, otherwise known as the **Build Select Script**. This script has a menu for users to choose the option they want.
 
 * Menu options are updated and expanded
@@ -71,6 +73,9 @@ Each scripts can be run directly with the commands listed below.
 Use these commands to run a script directly instead of using the **BuildSelectScript.sh** menu.
 
 #### CustomizationSelect
+
+Patches or customizations are even more experimental than the released version of Loop. It is your responsibility to understand the changes made to the Loop code when you apply, remove or update one of these customizations. Review the documentation: [CustomizationSelect](https://www.loopandlearn.org/build-select/#customization-select).
+
 
 ```
 /bin/bash -c "$(curl -fsSL \
