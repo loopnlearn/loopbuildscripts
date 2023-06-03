@@ -1,0 +1,906 @@
+Submodule Loop contains modified content
+diff --git a/Loop/Loop.xcodeproj/project.pbxproj b/Loop/Loop.xcodeproj/project.pbxproj
+index 31b6ebff..195fab67 100644
+--- a/Loop/Loop.xcodeproj/project.pbxproj
++++ b/Loop/Loop.xcodeproj/project.pbxproj
+@@ -425,6 +425,7 @@
+ 		B4E96D5D248A82A2002DABAD /* StatusBarHUDView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B4E96D5C248A82A2002DABAD /* StatusBarHUDView.xib */; };
+ 		B4F3D25124AF890C0095CE44 /* BluetoothStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3D25024AF890C0095CE44 /* BluetoothStateManager.swift */; };
+ 		B4FEEF7D24B8A71F00A8DF9B /* DeviceDataManager+DeviceStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FEEF7C24B8A71F00A8DF9B /* DeviceDataManager+DeviceStatus.swift */; };
++		B633A70E291011EE00A39E1D /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B633A70D291011EE00A39E1D /* Settings.bundle */; };
+ 		C1004DF22981F5B700B8CF94 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1004DF02981F5B700B8CF94 /* InfoPlist.strings */; };
+ 		C1004DF52981F5B700B8CF94 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1004DF32981F5B700B8CF94 /* Localizable.strings */; };
+ 		C1004DF82981F5B700B8CF94 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1004DF62981F5B700B8CF94 /* InfoPlist.strings */; };
+@@ -1405,6 +1406,7 @@
+ 		B4E96D5C248A82A2002DABAD /* StatusBarHUDView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StatusBarHUDView.xib; sourceTree = "<group>"; };
+ 		B4F3D25024AF890C0095CE44 /* BluetoothStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStateManager.swift; sourceTree = "<group>"; };
+ 		B4FEEF7C24B8A71F00A8DF9B /* DeviceDataManager+DeviceStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceDataManager+DeviceStatus.swift"; sourceTree = "<group>"; };
++		B633A70D291011EE00A39E1D /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+ 		C1004DEF2981F5B700B8CF94 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+ 		C1004DF12981F5B700B8CF94 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+ 		C1004DF42981F5B700B8CF94 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+@@ -2063,6 +2065,7 @@
+ 		43776F831B8022E90074EA36 = {
+ 			isa = PBXGroup;
+ 			children = (
++				B633A70D291011EE00A39E1D /* Settings.bundle */,
+ 				C18A491122FCC20B00FDA733 /* Scripts */,
+ 				4FF4D0FA1E1834BD00846527 /* Common */,
+ 				43776F8E1B8022E90074EA36 /* Loop */,
+@@ -3503,6 +3506,7 @@
+ 				A966152723EA5A26005D8B29 /* DerivedAssets.xcassets in Resources */,
+ 				7D70764F1FE06EE1004AC8EA /* InfoPlist.strings in Resources */,
+ 				7D7076631FE06EE4004AC8EA /* Localizable.strings in Resources */,
++				B633A70E291011EE00A39E1D /* Settings.bundle in Resources */,
+ 				43776F971B8022E90074EA36 /* Main.storyboard in Resources */,
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+diff --git a/Loop/Loop/Managers/DoseMath.swift b/Loop/Loop/Managers/DoseMath.swift
+index e13a3613..009c23e8 100644
+--- a/Loop/Loop/Managers/DoseMath.swift
++++ b/Loop/Loop/Managers/DoseMath.swift
+@@ -398,13 +398,30 @@ extension Collection where Element: GlucoseValue {
+             maxBasalRate = Swift.min(maxThirtyMinuteRateToKeepIOBBelowLimit, maxBasalRate)
+         }
+ 
+-        let temp = correction?.asTempBasal(
++        var temp = correction?.asTempBasal(
+             scheduledBasalRate: scheduledBasalRate,
+             maxBasalRate: maxBasalRate,
+             duration: duration,
+             rateRounder: rateRounder
+         )
+ 
++        // Basal Lock threshold - Jon Fawcett
++        let basalLockEnabled = UserDefaults.standard.bool(forKey: "basalLockEnabled")
++        let basalLockThreshold = UserDefaults.standard.double(forKey: "basalLockThreshold")
++        let glucoseUnit = UserDefaults.standard.string(forKey: "settingsGlucoseUnit")
++        let hkUnit = glucoseUnit == HKUnit.millimolesPerLiter.unitString ? HKUnit.millimolesPerLiter : HKUnit.milligramsPerDeciliter
++
++        if (basalLockEnabled && basalLockThreshold != 0) {
++            if (( temp?.unitsPerHour ?? scheduledBasalRate < scheduledBasalRate  ||
++                 lastTempBasal?.unitsPerHour ?? scheduledBasalRate < scheduledBasalRate
++                 ) &&
++                 self[0 as! Self.Index].quantity > HKQuantity(unit : hkUnit, doubleValue: basalLockThreshold))
++            {
++                print("####### Temp Basal Lock On #########")
++                temp = TempBasalRecommendation(unitsPerHour: scheduledBasalRate, duration: 1800)
++            }
++        }
++
+         return temp?.ifNecessary(
+             at: date,
+             scheduledBasalRate: scheduledBasalRate,
+@@ -488,6 +505,23 @@ extension Collection where Element: GlucoseValue {
+             volumeRounder: volumeRounder
+         )
+ 
++        // Basal Lock threshold - Jon Fawcett
++        let basalLockEnabled = UserDefaults.standard.bool(forKey: "basalLockEnabled")
++        let basalLockThreshold = UserDefaults.standard.double(forKey: "basalLockThreshold")
++        let glucoseUnit = UserDefaults.standard.string(forKey: "settingsGlucoseUnit")
++        let hkUnit = glucoseUnit == HKUnit.millimolesPerLiter.unitString ? HKUnit.millimolesPerLiter : HKUnit.milligramsPerDeciliter
++
++        if (basalLockEnabled && basalLockThreshold != 0) {
++            if ( (temp?.unitsPerHour ?? scheduledBasalRate < scheduledBasalRate ||
++                  lastTempBasal?.unitsPerHour ?? scheduledBasalRate < scheduledBasalRate
++                  ) &&
++                 self[0 as! Self.Index].quantity > HKQuantity(unit : hkUnit, doubleValue: basalLockThreshold))
++            {
++                temp = TempBasalRecommendation(unitsPerHour: scheduledBasalRate, duration: 1800)
++                print("####### Temp Basal Lock On #########")
++            }
++        }
++
+         if temp != nil || bolusUnits > 0 {
+             return AutomaticDoseRecommendation(basalAdjustment: temp, bolusUnits: bolusUnits)
+         }
+diff --git a/Loop/Loop/Managers/LoopDataManager.swift b/Loop/Loop/Managers/LoopDataManager.swift
+index 18a08166..4f574c96 100644
+--- a/Loop/Loop/Managers/LoopDataManager.swift
++++ b/Loop/Loop/Managers/LoopDataManager.swift
+@@ -67,6 +67,21 @@ final class LoopDataManager {
+ 
+     private var insulinOnBoard: InsulinValue?
+ 
++    // Calculate the effectiveBolusApplicationFactor
++    private func calculateEffectiveBolusApplicationFactor(glucose: HKQuantity, correctionRangeSchedule: GlucoseRangeSchedule, settings: LoopSettings) -> Double {
++        // Calculate current glucose and lower bound target
++        let currentGlucose = glucose.doubleValue(for: .milligramsPerDeciliter)
++        let correctionRange = correctionRangeSchedule.quantityRange(at: now())
++        let lowerBoundTarget = correctionRange.lowerBound.doubleValue(for: .milligramsPerDeciliter)
++        // Calculate minimum glucose sliding scale and scaling fraction
++        let minGlucoseSlidingScale = LoopConstants.minGlucoseDeltaSlidingScale + lowerBoundTarget
++        let scalingFraction = (LoopConstants.maxPartialApplicationFactor-LoopConstants.minPartialApplicationFactor) / (LoopConstants.maxGlucoseSlidingScale - minGlucoseSlidingScale)
++        let scalingGlucose = max(currentGlucose - minGlucoseSlidingScale, 0.0)
++        // Calculate effectiveBolusApplicationFactor
++        let effectiveBolusApplicationFactor = min(LoopConstants.minPartialApplicationFactor + scalingGlucose * scalingFraction, LoopConstants.maxPartialApplicationFactor)
++        return effectiveBolusApplicationFactor
++    }
++
+     deinit {
+         for observer in notificationObservers {
+             NotificationCenter.default.removeObserver(observer)
+@@ -1696,7 +1711,26 @@ extension LoopDataManager {
+                     return self.delegate?.roundBolusVolume(units: units) ?? units
+                 }
+ 
+-                let maxAutomaticBolus = min(iobHeadroom, maxBolus! * LoopConstants.bolusPartialApplicationFactor)
++                var effectiveBolusApplicationFactor = LoopConstants.bolusPartialApplicationFactor
++
++                // Modify Bolus Application Factor from patch
++                //   only effective when linear ramp is false
++                let alternatePAFEnabled = UserDefaults.standard.bool(forKey: "alternatePAFEnabled")
++                let alternatePAFSetting = UserDefaults.standard.double(forKey: "alternatePAFSetting")
++                if (alternatePAFEnabled && alternatePAFSetting != 0) {
++                    effectiveBolusApplicationFactor = alternatePAFSetting
++                }
++
++                let flagSlidingScale = settings.applyLinearRampToBolusApplicationFactor
++
++                if flagSlidingScale {
++                    let correctionRangeSchedule = settings.effectiveGlucoseTargetRangeSchedule()
++                    effectiveBolusApplicationFactor = calculateEffectiveBolusApplicationFactor(glucose: glucose.quantity, correctionRangeSchedule: correctionRangeSchedule!, settings: settings)
++                }
++                print(" *** Glucose, effectiveBolusApplicationFactor: ", glucose.quantity, Double(Int(100.0*effectiveBolusApplicationFactor))/100.0)
++
++                // If a user customizes maxPartialApplicationFactor > 1; this respects maxBolus
++                let maxAutomaticBolus = min(iobHeadroom, maxBolus! * min(effectiveBolusApplicationFactor, 1.0))
+ 
+                 dosingRecommendation = predictedGlucose.recommendedAutomaticDose(
+                     to: glucoseTargetRange!,
+@@ -1706,7 +1740,7 @@ extension LoopDataManager {
+                     model: doseStore.insulinModelProvider.model(for: pumpInsulinType),
+                     basalRates: basalRateSchedule!,
+                     maxAutomaticBolus: maxAutomaticBolus,
+-                    partialApplicationFactor: LoopConstants.bolusPartialApplicationFactor * self.timeBasedDoseApplicationFactor,
++                    partialApplicationFactor: effectiveBolusApplicationFactor * self.timeBasedDoseApplicationFactor,
+                     lastTempBasal: lastTempBasal,
+                     volumeRounder: volumeRounder,
+                     rateRounder: rateRounder,
+diff --git a/Loop/Loop/Managers/SettingsManager.swift b/Loop/Loop/Managers/SettingsManager.swift
+index e52cada0..ded3e7fc 100644
+--- a/Loop/Loop/Managers/SettingsManager.swift
++++ b/Loop/Loop/Managers/SettingsManager.swift
+@@ -109,6 +109,7 @@ class SettingsManager {
+                 maximumBolus: latestSettings.maximumBolus,
+                 suspendThreshold: latestSettings.suspendThreshold,
+                 automaticDosingStrategy: latestSettings.automaticDosingStrategy,
++                applyLinearRampToBolusApplicationFactor: latestSettings.applyLinearRampToBolusApplicationFactor,
+                 defaultRapidActingModel: latestSettings.defaultRapidActingModel?.presetForRapidActingInsulin)
+         }
+     }
+@@ -140,7 +141,8 @@ class SettingsManager {
+                               cgmDevice: deviceStatusProvider?.cgmManagerStatus?.device,
+                               pumpDevice: deviceStatusProvider?.pumpManagerStatus?.device,
+                               bloodGlucoseUnit: displayGlucoseUnitObservable?.displayGlucoseUnit,
+-                              automaticDosingStrategy: newLoopSettings.automaticDosingStrategy)
++                              automaticDosingStrategy: newLoopSettings.automaticDosingStrategy,
++                              applyLinearRampToBolusApplicationFactor: newLoopSettings.applyLinearRampToBolusApplicationFactor)
+     }
+ 
+     func storeSettings(newLoopSettings: LoopSettings? = nil, notificationSettings: NotificationSettings? = nil) {
+diff --git a/Loop/Loop/Models/LoopConstants.swift b/Loop/Loop/Models/LoopConstants.swift
+index a62fc138..2dc64f18 100644
+--- a/Loop/Loop/Models/LoopConstants.swift
++++ b/Loop/Loop/Models/LoopConstants.swift
+@@ -75,4 +75,12 @@ enum LoopConstants {
+     static let simpleBolusCalculatorMinGlucoseBolusRecommendation = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 70)
+     static let simpleBolusCalculatorMinGlucoseMealBolusRecommendation = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 55)
+     static let simpleBolusCalculatorGlucoseWarningLimit = HKQuantity(unit: .milligramsPerDeciliter, doubleValue: 70)
++
++    // Dosing Stategy: Automatic Bolus: Sliding Scale
++    static let minPartialApplicationFactor = 0.20 // min fraction of correction when glucose > minGlucoseSlidingScale
++    static let maxPartialApplicationFactor = 0.80 // max fraction of correction when glucose > maxGlucoseSlidingScale
++    // set minGlucoseSlidingScale based on user setting for correction range
++    // use mg/dL for calculations
++    static let minGlucoseDeltaSlidingScale = 10.0 // mg/dL
++    static let maxGlucoseSlidingScale = 200.0 // mg/dL
+ }
+diff --git a/Loop/Loop/View Controllers/StatusTableViewController.swift b/Loop/Loop/View Controllers/StatusTableViewController.swift
+index 904f64ca..221498c0 100644
+--- a/Loop/Loop/View Controllers/StatusTableViewController.swift	
++++ b/Loop/Loop/View Controllers/StatusTableViewController.swift	
+@@ -1464,6 +1464,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
+                                           isClosedLoopAllowed: closedLoopStatus.$isClosedLoopAllowed,
+                                           supportInfoProvider: deviceManager,
+                                           automaticDosingStrategy: deviceManager.loopManager.settings.automaticDosingStrategy,
++                                          applyLinearRampToBolusApplicationFactor: deviceManager.loopManager.settings.applyLinearRampToBolusApplicationFactor,
+                                           availableSupports: supportManager.availableSupports,
+                                           isOnboardingComplete: onboardingManager.isComplete,
+                                           therapySettingsViewModelDelegate: deviceManager,
+@@ -2066,6 +2067,12 @@ extension StatusTableViewController: SettingsViewModelDelegate {
+         }
+     }
+ 
++    func applyLinearRampToBolusApplicationFactorChanged(_ value: Bool) {
++        self.deviceManager.loopManager.mutateSettings { settings in
++            settings.applyLinearRampToBolusApplicationFactor = value
++        }
++    }
++
+     func didTapIssueReport(title: String) {
+         // TODO: this dismiss here is temporary, until we know exactly where
+         // we want this screen to belong in the navigation flow
+diff --git a/Loop/Loop/View Models/SettingsViewModel.swift b/Loop/Loop/View Models/SettingsViewModel.swift
+index 16e58743..c3616289 100644
+--- a/Loop/Loop/View Models/SettingsViewModel.swift	
++++ b/Loop/Loop/View Models/SettingsViewModel.swift	
+@@ -52,6 +52,7 @@ public typealias PumpManagerViewModel = DeviceViewModel<PumpManagerDescriptor>
+ public protocol SettingsViewModelDelegate: AnyObject {
+     func dosingEnabledChanged(_: Bool)
+     func dosingStrategyChanged(_: AutomaticDosingStrategy)
++    func applyLinearRampToBolusApplicationFactorChanged(_: Bool)
+     func didTapIssueReport(title: String)
+     var closedLoopDescriptiveText: String? { get }
+ }
+@@ -94,6 +95,12 @@ public class SettingsViewModel: ObservableObject {
+         }
+     }
+ 
++    @Published var applyLinearRampToBolusApplicationFactor: Bool {
++        didSet {
++            delegate?.applyLinearRampToBolusApplicationFactorChanged(applyLinearRampToBolusApplicationFactor)
++        }
++    }
++
+     var closedLoopPreference: Bool {
+        didSet {
+            delegate?.dosingEnabledChanged(closedLoopPreference)
+@@ -115,6 +122,7 @@ public class SettingsViewModel: ObservableObject {
+                 isClosedLoopAllowed: Published<Bool>.Publisher,
+                 supportInfoProvider: SupportInfoProvider,
+                 automaticDosingStrategy: AutomaticDosingStrategy,
++                applyLinearRampToBolusApplicationFactor: Bool,
+                 availableSupports: [SupportUI],
+                 isOnboardingComplete: Bool,
+                 therapySettingsViewModelDelegate: TherapySettingsViewModelDelegate?,
+@@ -132,6 +140,7 @@ public class SettingsViewModel: ObservableObject {
+         self.closedLoopPreference = initialDosingEnabled
+         self.isClosedLoopAllowed = false
+         self.automaticDosingStrategy = automaticDosingStrategy
++        self.applyLinearRampToBolusApplicationFactor = applyLinearRampToBolusApplicationFactor
+         self.supportInfoProvider = supportInfoProvider
+         self.availableSupports = availableSupports
+         self.isOnboardingComplete = isOnboardingComplete
+@@ -194,6 +203,7 @@ extension SettingsViewModel {
+                                  isClosedLoopAllowed: FakeClosedLoopAllowedPublisher().$mockIsClosedLoopAllowed,
+                                  supportInfoProvider: MockSupportInfoProvider(),
+                                  automaticDosingStrategy: .automaticBolus,
++                                 applyLinearRampToBolusApplicationFactor: false,
+                                  availableSupports: [],
+                                  isOnboardingComplete: false,
+                                  therapySettingsViewModelDelegate: nil,
+diff --git a/Loop/Loop/Views/DosingStrategySelectionView.swift b/Loop/Loop/Views/DosingStrategySelectionView.swift
+index f447b032..5846654a 100644
+--- a/Loop/Loop/Views/DosingStrategySelectionView.swift
++++ b/Loop/Loop/Views/DosingStrategySelectionView.swift
+@@ -14,11 +14,13 @@ import LoopKitUI
+ public struct DosingStrategySelectionView: View {
+     
+     @Binding private var automaticDosingStrategy: AutomaticDosingStrategy
+-    
++    @Binding private var applyLinearRampToBolusApplicationFactor: Bool
++
+     @State private var internalDosingStrategy: AutomaticDosingStrategy
+     
+-    public init(automaticDosingStrategy: Binding<AutomaticDosingStrategy>) {
++    public init(automaticDosingStrategy: Binding<AutomaticDosingStrategy>, applyLinearRampToBolusApplicationFactor: Binding<Bool>) {
+         self._automaticDosingStrategy = automaticDosingStrategy
++        self._applyLinearRampToBolusApplicationFactor = applyLinearRampToBolusApplicationFactor
+         self._internalDosingStrategy = State(initialValue: automaticDosingStrategy.wrappedValue)
+     }
+     
+@@ -45,27 +47,51 @@ public struct DosingStrategySelectionView: View {
+                             self.internalDosingStrategy = strategy // Hack to force update. :(
+                         }
+                     }
+-                )
++                ),
++                trailingView: strategy.isAutomaticBolus ? linearRampVolusApplicationFactorSection : nil
+             )
+             .padding(.vertical, 4)
+         }
+     }
+ }
+ 
++extension DosingStrategySelectionView {
++    var linearRampVolusApplicationFactorSection: AnyView {
++        return AnyView(
++            Toggle(isOn: $applyLinearRampToBolusApplicationFactor) {
++                VStack(alignment: .leading) {
++                    Text("Modify Bolus Percentage", comment: "The title text for the Modify Bolus Percentage toggle")
++                        .padding(.vertical, 0.5)
++                    Text("Modify Automatic Bolus behavior: The percentage of recommended bolus delivered each cycle varies with glucose level: near correction range, use 20% (similar to Temp Basal). Gradually increase to a maximum of 80% at high glucose (200 mg/dL, 11.1 mmol/L).", comment: "Description string for Modify Bolus Percentage toggle")
++                        .font(.footnote)
++                        .foregroundColor(.secondary)
++                        .fixedSize(horizontal: false, vertical: true)
++                        .multilineTextAlignment(.leading)
++                }
++                .fixedSize(horizontal: false, vertical: true)
++            }
++            .disabled(!automaticDosingStrategy.isAutomaticBolus)
++        )
++    }
++}
++
+ extension AutomaticDosingStrategy {
+     var informationalText: String {
+         switch self {
+         case .tempBasalOnly:
+             return NSLocalizedString("Loop will set temporary basal rates to increase and decrease insulin delivery.", comment: "Description string for temp basal only dosing strategy")
+         case .automaticBolus:
+-            return NSLocalizedString("Loop will automatically bolus when insulin needs are above scheduled basal, and will use temporary basal rates when needed to reduce insulin delivery below scheduled basal.", comment: "Description string for automatic bolus dosing strategy")
++            return NSLocalizedString("Loop will automatically bolus 40% of recommended bolus when insulin needs are above scheduled basal, and will use temporary basal rates when needed to reduce insulin delivery below scheduled basal.", comment: "Description string for automatic bolus dosing strategy")
+         }
+     }
+ 
++    var isAutomaticBolus: Bool {
++        return self == .automaticBolus
++    }
+ }
+ 
+ struct DosingStrategySelectionView_Previews: PreviewProvider {
+     static var previews: some View {
+-        DosingStrategySelectionView(automaticDosingStrategy: .constant(.automaticBolus))
++        DosingStrategySelectionView(automaticDosingStrategy: .constant(.automaticBolus), applyLinearRampToBolusApplicationFactor: .constant(false))
+     }
+ }
+diff --git a/Loop/Loop/Views/SettingsView.swift b/Loop/Loop/Views/SettingsView.swift
+index 90859273..a6fdaff1 100644
+--- a/Loop/Loop/Views/SettingsView.swift
++++ b/Loop/Loop/Views/SettingsView.swift
+@@ -125,7 +125,7 @@ extension SettingsView {
+     private var dosingStrategySection: some View {
+         Section(header: SectionHeader(label: NSLocalizedString("Dosing Strategy", comment: "The title of the Dosing Strategy section in settings"))) {
+             
+-            NavigationLink(destination: DosingStrategySelectionView(automaticDosingStrategy: $viewModel.automaticDosingStrategy))
++            NavigationLink(destination: DosingStrategySelectionView(automaticDosingStrategy: $viewModel.automaticDosingStrategy, applyLinearRampToBolusApplicationFactor: $viewModel.applyLinearRampToBolusApplicationFactor))
+             {
+                 HStack {
+                     Text(viewModel.automaticDosingStrategy.title)
+diff --git a/Loop/LoopCore/LoopSettings.swift b/Loop/LoopCore/LoopSettings.swift
+index 63418ad4..9dbbfcca 100644
+--- a/Loop/LoopCore/LoopSettings.swift
++++ b/Loop/LoopCore/LoopSettings.swift
+@@ -73,6 +73,8 @@ public struct LoopSettings: Equatable {
+     
+     public var automaticDosingStrategy: AutomaticDosingStrategy = .tempBasalOnly
+ 
++    public var applyLinearRampToBolusApplicationFactor: Bool = false
++
+     public var defaultRapidActingModel: ExponentialInsulinModelPreset?
+ 
+     public var glucoseUnit: HKUnit? {
+@@ -94,6 +96,7 @@ public struct LoopSettings: Equatable {
+         maximumBolus: Double? = nil,
+         suspendThreshold: GlucoseThreshold? = nil,
+         automaticDosingStrategy: AutomaticDosingStrategy = .tempBasalOnly,
++        applyLinearRampToBolusApplicationFactor: Bool = false,
+         defaultRapidActingModel: ExponentialInsulinModelPreset? = nil
+     ) {
+         self.dosingEnabled = dosingEnabled
+@@ -110,6 +113,7 @@ public struct LoopSettings: Equatable {
+         self.maximumBolus = maximumBolus
+         self.suspendThreshold = suspendThreshold
+         self.automaticDosingStrategy = automaticDosingStrategy
++        self.applyLinearRampToBolusApplicationFactor = applyLinearRampToBolusApplicationFactor
+         self.defaultRapidActingModel = defaultRapidActingModel
+     }
+ }
+@@ -277,13 +281,18 @@ extension LoopSettings: RawRepresentable {
+         {
+             self.automaticDosingStrategy = automaticDosingStrategy
+         }
++
++        if let applyLinearRampToBolusApplicationFactor = rawValue["applyLinearRampToBolusApplicationFactor"] as? Bool {
++            self.applyLinearRampToBolusApplicationFactor = applyLinearRampToBolusApplicationFactor
++        }
+     }
+ 
+     public var rawValue: RawValue {
+         var raw: RawValue = [
+             "version": LoopSettings.version,
+             "dosingEnabled": dosingEnabled,
+-            "overridePresets": overridePresets.map { $0.rawValue }
++            "overridePresets": overridePresets.map { $0.rawValue },
++            "applyLinearRampToBolusApplicationFactor": applyLinearRampToBolusApplicationFactor
+         ]
+ 
+         raw["glucoseTargetRangeSchedule"] = glucoseTargetRangeSchedule?.rawValue
+diff --git a/Loop/LoopUI/Charts/COBChart.swift b/Loop/LoopUI/Charts/COBChart.swift
+index b8fbfd8f..7c956ddd 100644
+--- a/Loop/LoopUI/Charts/COBChart.swift
++++ b/Loop/LoopUI/Charts/COBChart.swift
+@@ -63,6 +63,16 @@ public extension COBChart {
+         // Grid lines
+         let gridLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: guideLinesLayerSettings, axisValuesX: Array(xAxisValues.dropFirst().dropLast()), axisValuesY: yAxisValues)
+ 
++        // read from Settings->Loop, restart required
++        let addNowMarker = UserDefaults.standard.bool(forKey: "addNowMarkerToCharts")
++
++        var currentTimeSettings = ChartGuideLinesLayerSettings(linesColor: UIColor.carbTintColor, linesWidth: 0.0)
++        let currentTimeValue = ChartAxisValueDate(date: Date(),  formatter: { _ in "" })
++        if addNowMarker {
++            currentTimeSettings = ChartGuideLinesLayerSettings(linesColor: UIColor.carbTintColor, linesWidth: 1.0)
++        }
++        let currentTimeLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: currentTimeSettings, axisValuesX: [currentTimeValue], axisValuesY: [])
++
+         if gestureRecognizer != nil {
+             cobChartCache = ChartPointsTouchHighlightLayerViewCache(
+                 xAxisLayer: xAxisLayer,
+@@ -76,6 +86,7 @@ public extension COBChart {
+ 
+         let layers: [ChartLayer?] = [
+             gridLayer,
++            currentTimeLayer,
+             xAxisLayer,
+             yAxisLayer,
+             cobChartCache?.highlightLayer,
+diff --git a/Loop/LoopUI/Charts/DoseChart.swift b/Loop/LoopUI/Charts/DoseChart.swift
+index a2558511..8ddd6191 100644
+--- a/Loop/LoopUI/Charts/DoseChart.swift
++++ b/Loop/LoopUI/Charts/DoseChart.swift
+@@ -106,6 +106,16 @@ public extension DoseChart {
+         // Grid lines
+         let gridLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: guideLinesLayerSettings, axisValuesX: Array(xAxisValues.dropFirst().dropLast()), axisValuesY: yAxisValues)
+ 
++        // read from Settings->Loop, restart required
++        let addNowMarker = UserDefaults.standard.bool(forKey: "addNowMarkerToCharts")
++
++        let currentTimeValue = ChartAxisValueDate(date: Date(), formatter: { _ in "" })
++        var currentTimeSettings = ChartGuideLinesLayerSettings(linesColor: colors.insulinTint, linesWidth: 0.0)
++        if addNowMarker {
++            currentTimeSettings = ChartGuideLinesLayerSettings(linesColor: colors.insulinTint, linesWidth: 1.0)
++        }
++        let currentTimeLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: currentTimeSettings, axisValuesX: [currentTimeValue], axisValuesY: [])
++
+         // 0-line
+         let dummyZeroChartPoint = ChartPoint(x: ChartAxisValueDouble(0), y: ChartAxisValueDouble(0))
+         let zeroGuidelineLayer = ChartPointsViewsLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: [dummyZeroChartPoint], viewGenerator: {(chartPointModel, layer, chart) -> UIView? in
+@@ -130,6 +140,7 @@ public extension DoseChart {
+ 
+         let layers: [ChartLayer?] = [
+             gridLayer,
++            currentTimeLayer,
+             xAxisLayer,
+             yAxisLayer,
+             zeroGuidelineLayer,
+diff --git a/Loop/LoopUI/Charts/IOBChart.swift b/Loop/LoopUI/Charts/IOBChart.swift
+index a78699ea..5d6a44ca 100644
+--- a/Loop/LoopUI/Charts/IOBChart.swift
++++ b/Loop/LoopUI/Charts/IOBChart.swift
+@@ -66,6 +66,16 @@ public extension IOBChart {
+         // Grid lines
+         let gridLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: guideLinesLayerSettings, axisValuesX: Array(xAxisValues.dropFirst().dropLast()), axisValuesY: yAxisValues)
+ 
++        // read from Settings->Loop, restart required
++        let addNowMarker = UserDefaults.standard.bool(forKey: "addNowMarkerToCharts")
++
++        let currentTimeValue = ChartAxisValueDate(date: Date(), formatter: { _ in "" })
++        var currentTimeSettings = ChartGuideLinesLayerSettings(linesColor: colors.insulinTint, linesWidth: 0.0)
++        if addNowMarker {
++            currentTimeSettings = ChartGuideLinesLayerSettings(linesColor: colors.insulinTint, linesWidth: 1.0)
++        }
++        let currentTimeLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: currentTimeSettings, axisValuesX: [currentTimeValue], axisValuesY: [])
++
+         // 0-line
+         let dummyZeroChartPoint = ChartPoint(x: ChartAxisValueDouble(0), y: ChartAxisValueDouble(0))
+         let zeroGuidelineLayer = ChartPointsViewsLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: [dummyZeroChartPoint], viewGenerator: {(chartPointModel, layer, chart) -> UIView? in
+@@ -90,6 +100,7 @@ public extension IOBChart {
+ 
+         let layers: [ChartLayer?] = [
+             gridLayer,
++            currentTimeLayer,
+             xAxisLayer,
+             yAxisLayer,
+             zeroGuidelineLayer,
+diff --git a/Loop/LoopUI/Charts/PredictedGlucoseChart.swift b/Loop/LoopUI/Charts/PredictedGlucoseChart.swift
+index 01a343d0..c77ac0bc 100644
+--- a/Loop/LoopUI/Charts/PredictedGlucoseChart.swift
++++ b/Loop/LoopUI/Charts/PredictedGlucoseChart.swift
+@@ -170,6 +170,16 @@ extension PredictedGlucoseChart {
+         // Grid lines
+         let gridLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: guideLinesLayerSettings, axisValuesX: Array(xAxisValues.dropFirst().dropLast()), axisValuesY: yAxisValues)
+ 
++        // read from Settings->Loop, restart required
++        let addNowMarker = UserDefaults.standard.bool(forKey: "addNowMarkerToCharts")
++
++        let currentTimeValue = ChartAxisValueDate(date: Date(), formatter: { _ in "" })
++        var currentTimeSettings = ChartGuideLinesLayerSettings(linesColor: colors.glucoseTint, linesWidth: 0.0)
++        if addNowMarker {
++            currentTimeSettings = ChartGuideLinesLayerSettings(linesColor: colors.glucoseTint, linesWidth: 1.0)
++        }
++        let currentTimeLayer = ChartGuideLinesForValuesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, settings: currentTimeSettings, axisValuesX: [currentTimeValue], axisValuesY: [])
++
+         let circles = ChartPointsScatterCirclesLayer(xAxis: xAxisLayer.axis, yAxis: yAxisLayer.axis, chartPoints: glucosePoints, displayDelay: 0, itemSize: CGSize(width: 4, height: 4), itemFillColor: colors.glucoseTint, optimized: true)
+ 
+         var alternatePrediction: ChartLayer?
+@@ -208,6 +218,7 @@ extension PredictedGlucoseChart {
+ 
+         let layers: [ChartLayer?] = [
+             gridLayer,
++            currentTimeLayer,
+             targetsLayer,
+             xAxisLayer,
+             yAxisLayer,
+diff --git a/Loop/Settings.bundle/Root.plist b/Loop/Settings.bundle/Root.plist
+new file mode 100644
+index 00000000..a45b9d79
+--- /dev/null
++++ b/Loop/Settings.bundle/Root.plist
+@@ -0,0 +1,197 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
++<plist version="1.0">
++<dict>
++	<key>StringsTable</key>
++	<string>Root</string>
++	<key>PreferenceSpecifiers</key>
++	<array>
++		<dict>
++			<key>Type</key>
++			<string>PSGroupSpecifier</string>
++			<key>Title</key>
++			<string>SWITCHER PATCH REMOVED: USE MODIFY BOLUS PERCENTAGE INSIDE LOOP, SETTINGS, DOSING STRATEGY</string>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSGroupSpecifier</string>
++			<key>Title</key>
++			<string>Add Now Marker, Main Charts</string>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSToggleSwitchSpecifier</string>
++			<key>Title</key>
++			<string>Enabled</string>
++			<key>Key</key>
++			<string>addNowMarkerToCharts</string>
++			<key>DefaultValue</key>
++			<false/>
++			<key>TrueValue</key>
++			<true/>
++			<key>FalseValue</key>
++			<false/>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSGroupSpecifier</string>
++			<key>Title</key>
++			<string>Negative IOB Factor</string>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSMultiValueSpecifier</string>
++			<key>Title</key>
++			<string>Negative IOB Factor</string>
++			<key>Key</key>
++			<string>negativeBasalMultiplier</string>
++			<key>DefaultValue</key>
++			<string>1.0</string>
++			<key>Values</key>
++			<array>
++				<real>0.15</real>
++				<real>0.2</real>
++				<real>0.25</real>
++				<real>0.3</real>
++				<real>0.35</real>
++				<real>0.4</real>
++				<real>0.45</real>
++				<real>0.5</real>
++				<real>0.55</real>
++				<real>0.6</real>
++				<real>0.65</real>
++				<real>0.7</real>
++				<real>0.75</real>
++				<real>0.8</real>
++				<real>0.85</real>
++				<real>0.9</real>
++				<real>0.95</real>
++				<real>1</real>
++			</array>
++			<key>Titles</key>
++			<array>
++				<string>15%</string>
++				<string>20%</string>
++				<string>25%</string>
++				<string>30%</string>
++				<string>35%</string>
++				<string>40%</string>
++				<string>45%</string>
++				<string>50%</string>
++				<string>55%</string>
++				<string>60%</string>
++				<string>65%</string>
++				<string>70%</string>
++				<string>75%</string>
++				<string>80%</string>
++				<string>85%</string>
++				<string>90%</string>
++				<string>95%</string>
++				<string>100%</string>
++			</array>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSGroupSpecifier</string>
++			<key>Title</key>
++			<string>CONSTANT BOLUS PARTIAL APPLICATION FACTOR: WHEN MODIFY BOLUS PERCENTAGE NOT ENABLED</string>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSToggleSwitchSpecifier</string>
++			<key>Title</key>
++			<string>Enabled</string>
++			<key>Key</key>
++			<string>alternatePAFEnabled</string>
++			<key>DefaultValue</key>
++			<false/>
++			<key>TrueValue</key>
++			<true/>
++			<key>FalseValue</key>
++			<false/>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSMultiValueSpecifier</string>
++			<key>Title</key>
++			<string>Alternate Application Factor</string>
++			<key>Key</key>
++			<string>alternatePAFSetting</string>
++			<key>DefaultValue</key>
++			<string>0.4</string>
++			<key>Values</key>
++			<array>
++				<real>0.15</real>
++				<real>0.2</real>
++				<real>0.25</real>
++				<real>0.3</real>
++				<real>0.35</real>
++				<real>0.4</real>
++				<real>0.45</real>
++				<real>0.5</real>
++				<real>0.55</real>
++				<real>0.6</real>
++				<real>0.65</real>
++				<real>0.7</real>
++				<real>0.75</real>
++				<real>0.8</real>
++				<real>0.85</real>
++				<real>0.9</real>
++				<real>0.95</real>
++				<real>1</real>
++			</array>
++			<key>Titles</key>
++			<array>
++				<string>15%</string>
++				<string>20%</string>
++				<string>25%</string>
++				<string>30%</string>
++				<string>35%</string>
++				<string>40%</string>
++				<string>45%</string>
++				<string>50%</string>
++				<string>55%</string>
++				<string>60%</string>
++				<string>65%</string>
++				<string>70%</string>
++				<string>75%</string>
++				<string>80%</string>
++				<string>85%</string>
++				<string>90%</string>
++				<string>95%</string>
++				<string>100%</string>
++			</array>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSGroupSpecifier</string>
++			<key>Title</key>
++			<string>Basal Lock</string>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSToggleSwitchSpecifier</string>
++			<key>Title</key>
++			<string>Enabled</string>
++			<key>Key</key>
++			<string>basalLockEnabled</string>
++			<key>DefaultValue</key>
++			<false/>
++			<key>TrueValue</key>
++			<true/>
++			<key>FalseValue</key>
++			<false/>
++		</dict>
++		<dict>
++			<key>Type</key>
++			<string>PSTextFieldSpecifier</string>
++			<key>Title</key>
++			<string>Basal Lock Threshold</string>
++			<key>Key</key>
++			<string>basalLockThreshold</string>
++			<key>KeyboardType</key>
++			<string>NumbersAndPunctuation</string>
++		</dict>
++	</array>
++</dict>
++</plist>
+Submodule LoopKit contains modified content
+diff --git a/LoopKit/LoopKit/InsulinKit/InsulinMath.swift b/LoopKit/LoopKit/InsulinKit/InsulinMath.swift
+index 29c7053..509e631 100644
+--- a/LoopKit/LoopKit/InsulinKit/InsulinMath.swift
++++ b/LoopKit/LoopKit/InsulinKit/InsulinMath.swift
+@@ -40,10 +40,23 @@ extension DoseEntry {
+         }
+ 
+         // Consider doses within the delta time window as momentary
++        //ken changes
++        //implement user set negative basal multiplier
++        var negativeBasalMultiplier = UserDefaults.standard.double(forKey: "negativeBasalMultiplier")
++        // if user has not modified settings, this value reports as 0 initially
++        // Default shows as 100%, aka, same as unmodified code
++        if negativeBasalMultiplier == 0 {
++            negativeBasalMultiplier = 1
++        }
++        var modifiednetBasalUnits = netBasalUnits
++        if netBasalUnits < 0.0 {
++            modifiednetBasalUnits = netBasalUnits * negativeBasalMultiplier
++        }
++        //this used netBasalUnits as multiplier originally
+         if endDate.timeIntervalSince(startDate) <= 1.05 * delta {
+-            return netBasalUnits * model.percentEffectRemaining(at: time)
++            return modifiednetBasalUnits * model.percentEffectRemaining(at: time)
+         } else {
+-            return netBasalUnits * continuousDeliveryInsulinOnBoard(at: date, model: model, delta: delta)
++            return modifiednetBasalUnits * continuousDeliveryInsulinOnBoard(at: date, model: model, delta: delta)
+         }
+     }
+ 
+@@ -77,11 +90,23 @@ extension DoseEntry {
+         }
+ 
+         // Consider doses within the delta time window as momentary
+-        if endDate.timeIntervalSince(startDate) <= 1.05 * delta {
+-            return netBasalUnits * -insulinSensitivity * (1.0 - model.percentEffectRemaining(at: time))
+-        } else {
+-            return netBasalUnits * -insulinSensitivity * continuousDeliveryGlucoseEffect(at: date, model: model, delta: delta)
+-        }
++        //ken changes
++            //if net basal is negative use a mulitplier (0-1)
++            //modified in user settings
++            var negativeBasalMultiplier = UserDefaults.standard.double(forKey: "negativeBasalMultiplier")
++            if negativeBasalMultiplier == 0 {
++                negativeBasalMultiplier = 1
++            }
++            var modifiednetBasalUnits = netBasalUnits
++            if netBasalUnits < 0.0 {
++                modifiednetBasalUnits = netBasalUnits * negativeBasalMultiplier
++            }
++            //originally used netBasalUnits
++            if endDate.timeIntervalSince(startDate) <= 1.05 * delta {
++                return modifiednetBasalUnits * -insulinSensitivity * (1.0 - model.percentEffectRemaining(at: time))
++            } else {
++                return modifiednetBasalUnits * -insulinSensitivity * continuousDeliveryGlucoseEffect(at: date, model: model, delta: delta)
++            }
+     }
+ 
+     func trimmed(from start: Date? = nil, to end: Date? = nil, syncIdentifier: String? = nil) -> DoseEntry {
+diff --git a/LoopKit/LoopKit/SettingsStore.swift b/LoopKit/LoopKit/SettingsStore.swift
+index afcb9d8..605b26b 100644
+--- a/LoopKit/LoopKit/SettingsStore.swift
++++ b/LoopKit/LoopKit/SettingsStore.swift
+@@ -273,6 +273,7 @@ public struct StoredSettings: Equatable {
+     // This is the user's display preference glucose unit. TODO: Rename?
+     public let bloodGlucoseUnit: HKUnit?
+     public let automaticDosingStrategy: AutomaticDosingStrategy
++    public let applyLinearRampToBolusApplicationFactor: Bool
+     public let syncIdentifier: UUID
+ 
+     public init(date: Date = Date(),
+@@ -299,6 +300,7 @@ public struct StoredSettings: Equatable {
+                 pumpDevice: HKDevice? = nil,
+                 bloodGlucoseUnit: HKUnit? = nil,
+                 automaticDosingStrategy: AutomaticDosingStrategy = .tempBasalOnly,
++                applyLinearRampToBolusApplicationFactor: Bool = false,
+                 syncIdentifier: UUID = UUID()) {
+         self.date = date
+         self.controllerTimeZone = controllerTimeZone
+@@ -324,6 +326,7 @@ public struct StoredSettings: Equatable {
+         self.pumpDevice = pumpDevice
+         self.bloodGlucoseUnit = bloodGlucoseUnit
+         self.automaticDosingStrategy = automaticDosingStrategy
++        self.applyLinearRampToBolusApplicationFactor = applyLinearRampToBolusApplicationFactor
+         self.syncIdentifier = syncIdentifier
+     }
+ }
+@@ -358,6 +361,7 @@ extension StoredSettings: Codable {
+                   pumpDevice: try container.decodeIfPresent(CodableDevice.self, forKey: .pumpDevice)?.device,
+                   bloodGlucoseUnit: bloodGlucoseUnit,
+                   automaticDosingStrategy: try container.decodeIfPresent(AutomaticDosingStrategy.self, forKey: .automaticDosingStrategy) ?? .tempBasalOnly,
++                  applyLinearRampToBolusApplicationFactor: try container.decodeIfPresent(Bool.self, forKey: .applyLinearRampToBolusApplicationFactor) ?? false,
+                   syncIdentifier: try container.decode(UUID.self, forKey: .syncIdentifier))
+     }
+ 
+@@ -388,6 +392,7 @@ extension StoredSettings: Codable {
+         try container.encodeIfPresent(pumpDevice.map { CodableDevice($0) }, forKey: .pumpDevice)
+         try container.encode(bloodGlucoseUnit.unitString, forKey: .bloodGlucoseUnit)
+         try container.encode(automaticDosingStrategy, forKey: .automaticDosingStrategy)
++        try container.encode(applyLinearRampToBolusApplicationFactor, forKey: .applyLinearRampToBolusApplicationFactor)
+         try container.encode(syncIdentifier, forKey: .syncIdentifier)
+     }
+ 
+@@ -432,6 +437,7 @@ extension StoredSettings: Codable {
+         case pumpDevice
+         case bloodGlucoseUnit
+         case automaticDosingStrategy
++        case applyLinearRampToBolusApplicationFactor
+         case syncIdentifier
+     }
+ }
+diff --git a/LoopKit/LoopKitUI/Views/CheckmarkListItem.swift b/LoopKit/LoopKitUI/Views/CheckmarkListItem.swift
+index 2c8b71f..f4aa877 100644
+--- a/LoopKit/LoopKitUI/Views/CheckmarkListItem.swift
++++ b/LoopKit/LoopKitUI/Views/CheckmarkListItem.swift
+@@ -15,13 +15,15 @@ public struct CheckmarkListItem: View {
+     var description: Text
+     @Binding var isSelected: Bool
+     let isEnabled: Bool
++    var trailingView: AnyView? = nil
+ 
+-    public init(title: Text, titleFont: Font = .headline, description: Text, isSelected: Binding<Bool>, isEnabled: Bool = true) {
++    public init(title: Text, titleFont: Font = .headline, description: Text, isSelected: Binding<Bool>, isEnabled: Bool = true, trailingView: AnyView? = nil) {
+         self.title = title
+         self.titleFont = titleFont
+         self.description = description
+         self._isSelected = isSelected
+         self.isEnabled = isEnabled
++        self.trailingView = trailingView
+     }
+ 
+     @ViewBuilder
+@@ -36,23 +38,29 @@ public struct CheckmarkListItem: View {
+     }
+     
+     private var content: some View {
+-        HStack(spacing: 0) {
+-            VStack(alignment: .leading, spacing: 4) {
+-                title
+-                    .font(titleFont)
+-                description
+-                    .font(.footnote)
+-                    .foregroundColor(.secondary)
+-                    .fixedSize(horizontal: false, vertical: true)
+-                    .multilineTextAlignment(.leading)
+-            }
++        VStack(alignment: .leading) {
++            HStack(spacing: 0) {
++                VStack(alignment: .leading, spacing: 4) {
++                    title
++                        .font(titleFont)
++                    description
++                        .font(.footnote)
++                        .foregroundColor(.secondary)
++                        .fixedSize(horizontal: false, vertical: true)
++                        .multilineTextAlignment(.leading)
++                }
+ 
+-            Spacer(minLength: 12)
++                Spacer(minLength: 12)
+ 
+-            selectionIndicator
+-                .accessibility(label: Text(isSelected ? "Selected" : "Unselected"))
++                selectionIndicator
++                    .accessibility(label: Text(isSelected ? "Selected" : "Unselected"))
++            }
++            .animation(nil)
++            if let trailingView = trailingView {
++                trailingView
++                    .padding(.top, 4)
++            }
+         }
+-        .animation(nil)
+     }
+ 
+     @ViewBuilder

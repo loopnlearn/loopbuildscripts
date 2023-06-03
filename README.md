@@ -23,7 +23,7 @@ The `Download and Build Related Apps` option includes Loop Follow, LoopCaregiver
 
 The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
 
-The `Run Customization Utilities` option leads to the Customization Select script and the Profile Feature Customization script.
+The `Run Customization Utilities` option runs the Customization Select script.
 
 In addition to selecting options from the top-menu of **BuildSelectScript.sh**, each of the scripts can be run directly.
 
@@ -55,7 +55,7 @@ Note: the commands in the README are for the main branch of the scripts. If you 
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildSelectScript.sh)"
 ```
 
-3. Hit Enter and follow prompts
+3. Enter and follow prompts
 
 
 ### Individual Scripts
@@ -64,11 +64,25 @@ Each scripts can be run directly with the commands listed below.
 
 1. Open terminal
 2. Copy/Paste selected code into terminal (use copy icon, bottom right):
-3. Hit Enter and follow prompts
+3. Enter and follow prompts
 
 #### Scripts included in BuildSelectScript.sh
 
 Use these commands to run a script directly instead of using the **BuildSelectScript.sh** menu.
+
+#### CustomizationSelect
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/CustomizationSelect.sh)"
+```
+
+#### DeleteOldDownloads
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/DeleteOldDownloads.sh)"
+```
 
 #### BuildLoopReleased
 
@@ -78,6 +92,7 @@ This builds the released version of Loop or Loop with Patches.
 /bin/bash -c "$(curl -fsSL \
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopReleased.sh)"
 ```
+
 #### BuildLoopFollow
 
 ```
@@ -99,30 +114,17 @@ This builds the released version of Loop or Loop with Patches.
   https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildxDrip4iOS.sh)"
 ```
 
-#### DeleteOldDownloads
+#### BuildGlucoseDirect
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/DeleteOldDownloads.sh)"
-```
-
-#### CustomizationSelect
-
-```
-/bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/CustomizationSelect.sh)"
-```
-
-#### ProfileSelect
-
-```
-/bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/ProfileSelect.sh)"
+  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildGlucoseDirect.sh)"
 ```
 
 ### Scripts not included in Build Select Script
 
 These scripts can only be run directly.
+
 
 #### BuildLoopDev
 
@@ -175,11 +177,15 @@ When testing locally, there are other test variables you can configure. Be sure 
 
 ### Inlining Scripts
 
-This project uses a script inlining system to generate executable scripts from source files. The source files for each script are located in the src directory, and the generated scripts are output to the root directory.
+This project uses a script inlining system to generate executable scripts from source files. The source files for each script are located in the src directory, and the generated scripts are output to the root directory. All inline scripts are in the inline_functions folder.
 
-To modify a script, simply edit the corresponding source file in the src directory, and then run the build script (./build.sh) to regenerate the output file. The build script will inline any required files and generate the final executable script.
+To modify a script, simply edit the corresponding source file in the src directory, and then run the build script (./build.sh) to regenerate all the scripts. The build script will inline any required files and generate the final executable scripts. By adding an argument after build.sh, you can limit the rebuild to the indicated script.
 
-For example, if you want to modify the BuildSelectScript.sh script, you would edit the src/BuildSelectScript.sh file, and then run type `./build.sh` in the root directory. The build.sh script will then generate the BuildSelectScript.sh file in the root directory, which can be executed.
+To test a script during development, this command is helpful (example shown is for CustomatizationScript.sh, but works for any script.)
+
+1. Modify src/CustomizationScript.sh
+1. Execute this command to rebuild and execute:
+  * ./build.sh CustomizationScript.sh && ./CustomizationScript.sh
 
 Note that the build system uses special comments to indicate which files should be inlined. Any line in a script that starts with #!inline will be replaced with the contents of the specified file. The build system will inline files up to a maximum depth of 10, to prevent infinite recursion.
 

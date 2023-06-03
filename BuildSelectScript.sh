@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 
-# *** Start of inlined file: src/common.sh ***
+# *** Start of inlined file: inline_functions/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -52,6 +52,9 @@ if [ "$0" != "_" ]; then
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."
         "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
         "DELETE_SELECTED_FOLDERS: Echoes folder names but does not delete them"
+        "PATCH_BRANCH: Indicates the source branch for patches."
+        "PATCH_REPO: Specifies the URL of the patch source repository."
+        "LOCAL_PATCH_FOLDER: Defines a local directory for sourcing patches."
     )
 
     # Flag to check if any variable is set
@@ -79,8 +82,10 @@ if [ "$0" != "_" ]; then
         fi
     done
     if $any_variable_set; then
-        echo -e "\nTo clear the values, close this terminal and start a new one."
-        return_when_ready
+        echo
+        echo "To clear the values, close this terminal and start a new one."
+        echo "Sleeping for 2 sec then continuing"
+        sleep 2
     fi
 fi
 
@@ -147,10 +152,10 @@ function exit_message() {
     section_divider
     exit 0
 }
-# *** End of inlined file: src/common.sh ***
+# *** End of inlined file: inline_functions/common.sh ***
 
 
-# *** Start of inlined file: src/build_warning.sh ***
+# *** Start of inlined file: inline_functions/build_warning.sh ***
 ############################################################
 # warning used by all scripts that build an app
 ############################################################
@@ -200,10 +205,10 @@ function open_source_warning() {
 
     echo -e "${NC}\n\n\n\n"
 }
-# *** End of inlined file: src/build_warning.sh ***
+# *** End of inlined file: inline_functions/build_warning.sh ***
 
 
-# *** Start of inlined file: src/run_script.sh ***
+# *** Start of inlined file: inline_functions/run_script.sh ***
 # The function fetches and executes a script either from LnL GitHub repository
 # or from the current local directory (if LOCAL_SCRIPT is set to "1").
 # The script is executed with "_" as parameter $0, telling the script that it is
@@ -231,7 +236,7 @@ run_script() {
         exit 1
     fi
 }
-# *** End of inlined file: src/run_script.sh ***
+# *** End of inlined file: inline_functions/run_script.sh ***
 
 
 # Set default values only if they haven't been defined as environment variables
@@ -362,29 +367,7 @@ while true; do
         menu_select "${options[@]}" "${actions[@]}"
 
     else
-        section_separator
-        echo -e "${INFO_FONT}Selectable Customizations for:${NC}"
-        echo -e "    Released code: Loop or Loop with Patches"
-        echo -e "    Might work for development branches of Loop"
-        echo -e ""
-        echo -e "Reports status for each customization:"
-        echo -e "    can be or has been applied or is not applicable"
-        echo -e ""
-        echo -e "Automatically finds most recent Loop download unless"
-        echo -e "    terminal is already at the LoopWorkspace folder level"
-        section_divider
-
-        options=(
-            "Loop Customizations"
-            "Profile Feature Customization"
-            "Return to Menu"
-        )
-        actions=(
-            "run_script 'CustomizationSelect.sh'"
-            "run_script 'ProfileSelect.sh'"
-            return
-        )
-        menu_select "${options[@]}" "${actions[@]}"
+        run_script "CustomizationSelect.sh" $CUSTOM_BRANCH
     fi
 done
 # *** End of inlined file: src/BuildSelectScript.sh ***

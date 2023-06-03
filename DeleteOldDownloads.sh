@@ -6,7 +6,7 @@
 # -----------------------------------------------------------------------------
 
 
-# *** Start of inlined file: src/common.sh ***
+# *** Start of inlined file: inline_functions/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -52,6 +52,9 @@ if [ "$0" != "_" ]; then
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."
         "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
         "DELETE_SELECTED_FOLDERS: Echoes folder names but does not delete them"
+        "PATCH_BRANCH: Indicates the source branch for patches."
+        "PATCH_REPO: Specifies the URL of the patch source repository."
+        "LOCAL_PATCH_FOLDER: Defines a local directory for sourcing patches."
     )
 
     # Flag to check if any variable is set
@@ -79,8 +82,10 @@ if [ "$0" != "_" ]; then
         fi
     done
     if $any_variable_set; then
-        echo -e "\nTo clear the values, close this terminal and start a new one."
-        return_when_ready
+        echo
+        echo "To clear the values, close this terminal and start a new one."
+        echo "Sleeping for 2 sec then continuing"
+        sleep 2
     fi
 fi
 
@@ -147,11 +152,11 @@ function exit_message() {
     section_divider
     exit 0
 }
-# *** End of inlined file: src/common.sh ***
+# *** End of inlined file: inline_functions/common.sh ***
 
 
 
-# *** Start of inlined file: src/delete_old_downloads.sh ***
+# *** Start of inlined file: inline_functions/delete_old_downloads.sh ***
 # Flag to skip all deletions
 SKIP_ALL=false
 folder_count=0
@@ -311,7 +316,7 @@ function delete_old_downloads() {
         echo -e "  So folders marked successfully deleted are still there${NC}"
     fi
 }
-# *** End of inlined file: src/delete_old_downloads.sh ***
+# *** End of inlined file: inline_functions/delete_old_downloads.sh ***
 
 
 delete_old_downloads

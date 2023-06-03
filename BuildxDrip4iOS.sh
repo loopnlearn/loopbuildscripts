@@ -23,9 +23,9 @@ ADDED_LINE_FOR_OVERRIDE=("MAIN_APP_DISPLAY_NAME=xDrip4iO5" \
 CLONE_SUB_MODULES="0"
 
 
-# *** Start of inlined file: src/build_functions.sh ***
+# *** Start of inlined file: inline_functions/build_functions.sh ***
 
-# *** Start of inlined file: src/common.sh ***
+# *** Start of inlined file: inline_functions/common.sh ***
 STARTING_DIR="${PWD}"
 
 ############################################################
@@ -71,6 +71,9 @@ if [ "$0" != "_" ]; then
         "CUSTOM_MACOS_VER: Overrides the detected macOS version."
         "CUSTOM_XCODE_VER: Overrides the detected Xcode version."
         "DELETE_SELECTED_FOLDERS: Echoes folder names but does not delete them"
+        "PATCH_BRANCH: Indicates the source branch for patches."
+        "PATCH_REPO: Specifies the URL of the patch source repository."
+        "LOCAL_PATCH_FOLDER: Defines a local directory for sourcing patches."
     )
 
     # Flag to check if any variable is set
@@ -98,8 +101,10 @@ if [ "$0" != "_" ]; then
         fi
     done
     if $any_variable_set; then
-        echo -e "\nTo clear the values, close this terminal and start a new one."
-        return_when_ready
+        echo
+        echo "To clear the values, close this terminal and start a new one."
+        echo "Sleeping for 2 sec then continuing"
+        sleep 2
     fi
 fi
 
@@ -166,7 +171,7 @@ function exit_message() {
     section_divider
     exit 0
 }
-# *** End of inlined file: src/common.sh ***
+# *** End of inlined file: inline_functions/common.sh ***
 
 
 ############################################################
@@ -202,7 +207,7 @@ function exit_message() {
 
 # Accept build_warning before creating folders
 
-# *** Start of inlined file: src/build_warning.sh ***
+# *** Start of inlined file: inline_functions/build_warning.sh ***
 ############################################################
 # warning used by all scripts that build an app
 ############################################################
@@ -252,12 +257,12 @@ function open_source_warning() {
 
     echo -e "${NC}\n\n\n\n"
 }
-# *** End of inlined file: src/build_warning.sh ***
+# *** End of inlined file: inline_functions/build_warning.sh ***
 
 
 # Messages prior to opening xcode
 
-# *** Start of inlined file: src/before_final_return_message.sh ***
+# *** Start of inlined file: inline_functions/before_final_return_message.sh ***
 function before_final_return_message() {
     # Default (no argument) prints watch message
     # An other argument, skips watch message
@@ -282,7 +287,7 @@ function before_final_return_message() {
     echo "    When you see indexing, you can build to phone or simulator"
     echo "  Click on Play button or Command-B or Xcode Menu: Product, Build"
 }
-# *** End of inlined file: src/before_final_return_message.sh ***
+# *** End of inlined file: inline_functions/before_final_return_message.sh ***
 
 
 ############################################################
@@ -324,7 +329,7 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 ############################################################
 
 
-# *** Start of inlined file: src/building_verify_version.sh ***
+# *** Start of inlined file: inline_functions/building_verify_version.sh ***
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
 LATEST_IOS_VER="16.5"
@@ -396,10 +401,10 @@ function check_versions() {
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
     fi
 }
-# *** End of inlined file: src/building_verify_version.sh ***
+# *** End of inlined file: inline_functions/building_verify_version.sh ***
 
 
-# *** Start of inlined file: src/building_config_override.sh ***
+# *** Start of inlined file: inline_functions/building_config_override.sh ***
 function check_config_override_existence_offer_to_configure() {
     section_separator
 
@@ -563,7 +568,7 @@ set_development_team() {
     echo "$DEV_TEAM_SETTING_NAME = $team_id" >> ${OVERRIDE_FULLPATH}
 }
 
-# *** End of inlined file: src/building_config_override.sh ***
+# *** End of inlined file: inline_functions/building_config_override.sh ***
 
 
 function standard_build_train() { 
@@ -723,7 +728,7 @@ function branch_select() {
 # End of functions used by script
 #    - end of build_functions.sh common code
 ############################################################
-# *** End of inlined file: src/build_functions.sh ***
+# *** End of inlined file: inline_functions/build_functions.sh ***
 
 
 
