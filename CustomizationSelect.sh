@@ -188,6 +188,17 @@ function message_about_display() {
     one_time_flag=1
 }
 
+warning_flag=0
+
+function warning_message() {
+    echo -e "${INFO_FONT} *** WARNING ***${NC}"
+    echo -e "${INFO_FONT}Customizations are even more experimental than the released version${NC}"
+    echo -e "${INFO_FONT}of Loop. It is your responsibility to understand the changes${NC}"
+    echo -e "${INFO_FONT}expected when you apply, remove or update one of these customizations${NC}"
+    echo
+    warning_flag=1
+}
+
 customization=()
 folder=()
 message_function=()
@@ -453,6 +464,9 @@ function patch_menu {
 
             if [ $one_time_flag -eq 0 ]; then
                 message_about_display
+            fi
+            if [ $warning_flag -eq 0 ]; then
+                warning_message
             fi
             read -p "Enter your choice: " choice
             if [[ $choice =~ ^[0-9]+$ && $choice -ge 1 && $choice -le $MAX_MENU_ITEM ]]; then
