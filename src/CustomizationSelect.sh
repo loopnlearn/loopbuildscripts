@@ -21,8 +21,9 @@ function message_generic() {
 function message_incompatible() {
     if [ $message_incompatible_count -lt 1 ]; then
         echo
-        echo "  CustomTypeOne LoopPatches (original) and"
-        echo "    Glucose Based Application Factor (PR 1988) are incompatible"
+        echo "  CustomTypeOne LoopPatches (original)"
+        echo "    Incompatible with Glucose Based Application Factor (PR 1988)"
+        echo "        https://www.loopandlearn.org/custom-type-one-loop-patches/"
         ((message_incompatible_count++))
     fi
 }
@@ -30,8 +31,8 @@ function message_incompatible() {
 function message_for_pr1988() {
     echo
     echo "  PR 1988 Glucose Based Application Factor"
+    echo -e "     This experimental feature replaces CustomTypeOne ${INFO_FONT}\"switcher patch\"${NC}"
     echo "        https://github.com/LoopKit/Loop/pull/1988"
-    echo -e "        This experimental feature replaces CustomTypeOne ${INFO_FONT}\"switcher patch\"${NC}"
     message_incompatible
 }
 
@@ -39,6 +40,7 @@ function message_for_pr1988() {
 function message_for_pr2002() {
     echo
     echo "  PR 2002 Profile Switching"
+    echo "     This experimental feature enables save and restore of named profiles"
     echo "        https://github.com/LoopKit/Loop/pull/2002"
 }
 
