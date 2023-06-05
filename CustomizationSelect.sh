@@ -332,10 +332,7 @@ function display_unapplicable_patches() {
             echo "    * ${customization[$index]}"
         fi
     done
-    if [ "$has_unapplicable_patches" = true ]; then
-        message_incompatible
-        echo
-    fi
+    echo
 }
 
 function apply_patch {
@@ -427,6 +424,7 @@ function patch_menu {
             debug_printout
         fi
 
+        message_incompatible
         echo
 
         ### repeating menu start here:
@@ -561,29 +559,42 @@ function message_generic() {
     echo
 }
 
-# this is always used - it is the incompatible patches message - it can be blank
+# this is always used - it is the incompatible intro message - it can be blank
 function message_incompatible() {
-    if [ $message_incompatible_count -lt 1 ]; then
-        echo
-        echo "  CustomTypeOne LoopPatches (original) and"
-        echo "    Glucose Based Application Factor (PR 1988) are incompatible"
-        ((message_incompatible_count++))
-    fi
+    echo
+    echo "  PR 1988 Glucose Based Application Factor and "
+    echo "  PR 2002 Profile Switching must be added together or they are incompatible"
+    echo "  CustomTypeOne LoopPatches (original) cannot be combined with PR 1988"
 }
 
+# these are modified when a PR is added or removed
 function message_for_pr1988() {
     echo
     echo "  PR 1988 Glucose Based Application Factor"
     echo "        https://github.com/LoopKit/Loop/pull/1988"
     echo -e "        This experimental feature replaces CustomTypeOne ${INFO_FONT}\"switcher patch\"${NC}"
-    message_incompatible
+    echo
 }
 
-# these are modified when a PR is added or removed
 function message_for_pr2002() {
     echo
     echo "  PR 2002 Profile Switching"
     echo "        https://github.com/LoopKit/Loop/pull/2002"
+    echo
+}
+
+function message_for_merged_pr1988_pr2002() {
+    echo
+    echo "  If you want both PR 1988 and PR 2002, choose one of these options"
+    echo "  (Switcher Patch Replacement, Ability to Save and Load Profiles)"
+    echo
+}
+
+function message_for_cto_original() {
+    echo
+    echo "  CustomTypeOne LoopPatches (original); cannot combine with PR 1988"
+    echo "    see https://www.loopandlearn.org/custom-type-one-loop-patches/"
+    echo
 }
 
 # list patches in this order with args:
@@ -603,9 +614,11 @@ add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "ov
 add_customization "Libre Users: Limit Loop to 5 minute update" "limit_loop_cycle_time"
 add_customization "Modify Logo with LnL icon" "lnl_icon"
 
-add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches" "message_incompatible"
+add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches" "message_for_cto_original"
+add_customization "Combined PR 1988 and PR 2002" "pr1998_pr2002" "message_for_merged_pr1988_pr2002"
+add_customization "Combined PR 1988 and PR 2002 with modified LoopPatches" "pr1998_pr2002_modified_cto"
 add_customization "Glucose Based Application Factor (PR 1988)" "ab_ramp" "message_for_pr1988"
-add_customization "Glucose Based Application Factor (PR 1988) with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
+add_customization "Glucose Based Application Factor (PR 1988) with modified LoopPatches" "ab_ramp_cto"
 add_customization "Profiles (PR 2002)" "profile" "message_for_pr2002"
 
 patch_menu

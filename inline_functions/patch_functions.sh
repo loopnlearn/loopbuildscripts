@@ -173,10 +173,7 @@ function display_unapplicable_patches() {
             echo "    * ${customization[$index]}"
         fi
     done
-    if [ "$has_unapplicable_patches" = true ]; then
-        message_incompatible
-        echo
-    fi
+    echo
 }
 
 function apply_patch {
@@ -268,6 +265,7 @@ function patch_menu {
             debug_printout
         fi
 
+        message_incompatible
         echo
 
         ### repeating menu start here:
