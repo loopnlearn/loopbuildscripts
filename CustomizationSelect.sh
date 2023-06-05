@@ -566,12 +566,18 @@ function message_incompatible() {
     if [ $message_incompatible_count -lt 1 ]; then
         echo
         echo "  CustomTypeOne LoopPatches (original)"
-        echo "    Incompatible with Glucose Based Application Factor (PR 1988)"
+        echo "  (Incompatible with Glucose Based Application Factor (PR 1988))"
         echo "        https://www.loopandlearn.org/custom-type-one-loop-patches/"
         ((message_incompatible_count++))
     fi
 }
 
+# optional message to go with add_customization line
+function message_for_cto() {
+    message_incompatible
+}
+
+# optional message to go with add_customization line
 function message_for_pr1988() {
     echo
     echo "  PR 1988 Glucose Based Application Factor"
@@ -580,7 +586,7 @@ function message_for_pr1988() {
     message_incompatible
 }
 
-# these are modified when a PR is added or removed
+# optional message to go with add_customization line
 function message_for_pr2002() {
     echo
     echo "  PR 2002 Profile Switching"
@@ -605,7 +611,7 @@ add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "ov
 add_customization "Libre Users: Limit Loop to 5 minute update" "limit_loop_cycle_time"
 add_customization "Modify Logo with LnL icon" "lnl_icon"
 
-add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches" "message_incompatible"
+add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches" "message_for_cto"
 add_customization "Glucose Based Application Factor (PR 1988)" "ab_ramp" "message_for_pr1988"
 add_customization "Glucose Based Application Factor (PR 1988) with Modified CustomTypeOne LoopPatches" "ab_ramp_cto"
 add_customization "Profiles (PR 2002)" "profile" "message_for_pr2002"
