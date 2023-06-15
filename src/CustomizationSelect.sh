@@ -19,35 +19,39 @@ function message_generic() {
 
 # this is always used - it is the incompatible patches message - it can be blank
 function message_incompatible() {
-    if [ $message_incompatible_count -lt 1 ]; then
-        echo
-        echo "  CustomTypeOne LoopPatches (original)"
-        echo "  (Incompatible with Glucose Based Application Factor (PR 1988))"
-        echo "        https://www.loopandlearn.org/custom-type-one-loop-patches/"
-        ((message_incompatible_count++))
-    fi
+    :
 }
 
 # optional message to go with add_customization line
 function message_for_cto() {
-    message_incompatible
+    echo
+    echo "  CustomTypeOne LoopPatches"
+    echo "     Automatically updates if Glucose Based Application Factor selected"
+    echo "        https://www.loopandlearn.org/custom-type-one-loop-patches/"
 }
 
 # optional message to go with add_customization line
 function message_for_pr1988() {
     echo
-    echo "  PR 1988 Glucose Based Application Factor"
-    echo -e "     This experimental feature replaces CustomTypeOne ${INFO_FONT}\"switcher patch\"${NC}"
+    echo "  Glucose Based Application Factor"
+    echo "     This experimental feature gradually increases AB factor with glucose"
+    echo -e "      (replaces ${INFO_FONT}\"switcher patch\"${NC}, CustomTypeOne Loop Patches)"
     echo "        https://github.com/LoopKit/Loop/pull/1988"
-    message_incompatible
 }
 
 # optional message to go with add_customization line
 function message_for_pr2002() {
     echo
-    echo "  PR 2002 Profile Switching"
+    echo "  Profile Switching"
     echo "     This experimental feature enables save and restore of named profiles"
     echo "        https://github.com/LoopKit/Loop/pull/2002"
+}
+
+function message_for_pr2008() {
+    echo
+    echo "  Integral Retrospective Correction"
+    echo "     Helps when glucose is different than Loop predicts for longer times"
+    echo "        https://github.com/LoopKit/Loop/pull/2008"
 }
 
 # list patches in this order with args:
@@ -67,10 +71,11 @@ add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "ov
 add_customization "Libre Users: Limit Loop to 5 minute update" "limit_loop_cycle_time"
 add_customization "Modify Logo with LnL icon" "lnl_icon"
 
-add_customization "CustomTypeOne LoopPatches (original)" "customtypeone_looppatches" "message_for_cto"
+add_customization "Profiles" "profile" "message_for_pr2002"
 
-add_customization "Profiles (PR 2002)" "profile" "message_for_pr2002"
-add_customization "1988" "1988"
-add_customization "2008" "2008"
+add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "message_for_cto"
+add_customization "Glucose Based Application Factor" "1988" "message_for_pr1988"
+add_customization "Integral Retrospective Correction" "2008" "message_for_pr2008"
+
 
 patch_menu
