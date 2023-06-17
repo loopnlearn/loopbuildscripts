@@ -615,7 +615,7 @@ add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "ov
 add_customization "Libre Users: Limit Loop to 5 minute update" "limit_loop_cycle_time"
 add_customization "Modify Logo with LnL icon" "lnl_icon"
 
-add_customization "Profiles" "profile" "message_for_pr2002"
+add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 
 add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "message_for_cto"
 add_customization "Glucose Based Application Factor" "1988" "message_for_pr1988"
