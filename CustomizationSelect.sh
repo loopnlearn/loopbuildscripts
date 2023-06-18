@@ -164,7 +164,7 @@ function exit_message() {
 DEBUG_FLAG=0
 
 : ${PATCH_BRANCH:="main"}
-: ${PATCH_REPO:="https://github.com/bjorkert/patchrepo.git"}
+: ${PATCH_REPO:="https://github.com/loopandlearn/customization.git"}
 
 REPO_NAME=$(basename "${PATCH_REPO}" .git)
 
