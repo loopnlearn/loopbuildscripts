@@ -28,7 +28,7 @@ function first_time_menu() {
     echo "  1 Download and Build Loop"
     echo "  2 Download and Build Related Apps"
     echo "  3 Run Maintenance Utilities"
-    echo "  4 Run Customization Utilities"
+    echo "  4 Run Customization Select"
     echo "  5 Exit Script"
     echo ""
     echo "After completing a given option, you can choose another or exit the script"
@@ -49,7 +49,7 @@ while true; do
         "Build Loop" \
         "Build Related Apps" \
         "Maintenance Utilities" \
-        "Customization Utilities" \
+        "Customization Select" \
         "Exit Script")
     actions=(\
         "WHICH=Loop" \

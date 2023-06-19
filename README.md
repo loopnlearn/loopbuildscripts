@@ -1,4 +1,4 @@
-# loopbuildscripts
+# Loop and Learn: lnl-scripts
 
 ## Introduction
 
@@ -54,7 +54,7 @@ Note: the commands in the README are for the main branch of the scripts. If you 
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildSelectScript.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildSelectScript.sh)"
 ```
 
 3. Enter and follow prompts
@@ -79,14 +79,14 @@ Patches or customizations are even more experimental than the released version o
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/CustomizationSelect.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/CustomizationSelect.sh)"
 ```
 
 #### DeleteOldDownloads
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/DeleteOldDownloads.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/DeleteOldDownloads.sh)"
 ```
 
 #### BuildLoopReleased
@@ -95,35 +95,35 @@ This builds the released version of Loop or Loop with Patches.
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopReleased.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopReleased.sh)"
 ```
 
 #### BuildLoopFollow
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopFollow.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopFollow.sh)"
 ```
 
 #### BuildLoopCaregiver
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopCaregiver.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopCaregiver.sh)"
 ```
 
 #### BuildxDrip4iOS
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildxDrip4iOS.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildxDrip4iOS.sh)"
 ```
 
 #### BuildGlucoseDirect
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildGlucoseDirect.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildGlucoseDirect.sh)"
 ```
 
 ### Scripts not included in Build Select Script
@@ -143,21 +143,21 @@ If you want to build a different branch, for example `branch_name`
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildLoopDev.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopDev.sh)"
 ```
 
 #### BuildFreeAPS
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/BuildFreeAPS.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildFreeAPS.sh)"
 ```
 
 #### Build_iAPS
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopnlearn/loopbuildscripts/main/Build_iAPS.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/Build_iAPS.sh)"
 ```
 
 ## Developer Tips
