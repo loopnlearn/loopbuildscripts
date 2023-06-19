@@ -26,16 +26,16 @@ function message_incompatible() {
 function message_for_cto() {
     echo
     echo "  CustomTypeOne LoopPatches"
-    echo "     Automatically updates if Glucose Based Application Factor selected"
     echo "        https://www.loopandlearn.org/custom-type-one-loop-patches/"
+    echo "        Update automatic when Glucose Based Application Factor also selected"
 }
 
 # optional message to go with add_customization line
 function message_for_pr1988() {
     echo
     echo "  Glucose Based Application Factor"
-    echo "     This experimental feature gradually increases AB factor with glucose"
-    echo -e "      (replaces ${INFO_FONT}\"switcher patch\"${NC}, CustomTypeOne Loop Patches)"
+    echo "     This feature in development gradually increases AB factor with glucose"
+    echo -e "     (replaces ${INFO_FONT}\"switcher patch\"${NC}, CustomTypeOne Loop Patches)"
     echo "        https://github.com/LoopKit/Loop/pull/1988"
 }
 
@@ -43,14 +43,15 @@ function message_for_pr1988() {
 function message_for_pr2002() {
     echo
     echo "  Profile Switching"
-    echo "     This experimental feature enables save and restore of named profiles"
+    echo "     This feature in development enables save and restore of named profiles"
     echo "        https://github.com/LoopKit/Loop/pull/2002"
 }
 
 function message_for_pr2008() {
     echo
     echo "  Integral Retrospective Correction"
-    echo "     Helps when glucose is different than Loop predicts for longer times"
+    echo "     This feature in development modifies retrospective correction."
+    echo "     Helps when glucose is different than Loop predicts for longer times."
     echo "        https://github.com/LoopKit/Loop/pull/2008"
 }
 
@@ -69,7 +70,7 @@ add_customization "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_ca
 add_customization "Disable Authentication Requirement" "no_auth"
 add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens"
 add_customization "Libre Users: Limit Loop to 5 minute update" "limit_loop_cycle_time"
-add_customization "Modify Logo with LnL icon" "lnl_icon"
+add_customization "Modify Logo to include LnL icon" "lnl_icon"
 
 add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "message_for_cto"
 
