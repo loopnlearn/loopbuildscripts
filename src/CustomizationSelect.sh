@@ -11,6 +11,7 @@ BUILD_DIR=~/Downloads/BuildLoop
 message_incompatible_count=0
 
 # this is always used - it is the introductory message - it can be blank
+# it comes before any customizations are presented
 function message_generic() {
     echo "  These Customizations are documented on the Loop and Learn web site"
     echo "        https://www.loopandlearn.org/custom-code/#custom-list"
@@ -22,37 +23,35 @@ function message_incompatible() {
     :
 }
 
+# in order for optional messages to appear after the add_customization line
+# must use printf
 # optional message to go with add_customization line
+function message_to_add_blank_line() {
+    printf "\n"
+}
+
 function message_for_cto() {
-    echo
-    echo "  CustomTypeOne LoopPatches"
-    echo "        https://www.loopandlearn.org/custom-type-one-loop-patches/"
-    echo "        Update automatic when Glucose Based Application Factor also selected"
+    printf "        https://www.loopandlearn.org/custom-type-one-loop-patches/\n"
+    printf "        Update automatic when Glucose Based Application Factor also selected.\n\n"
 }
 
 # optional message to go with add_customization line
 function message_for_pr1988() {
-    echo
-    echo "  Glucose Based Application Factor"
-    echo "     This feature in development gradually increases AB factor with glucose"
-    echo -e "     (replaces ${INFO_FONT}\"switcher patch\"${NC}, CustomTypeOne Loop Patches)"
-    echo "        https://github.com/LoopKit/Loop/pull/1988"
+    printf "      This feature in development gradually increases AB factor with glucose.\n"
+    printf "      Replaces CustomTypeOne LoopPatches ${INFO_FONT}switcher patch${NC}.\n"
+    printf "        https://github.com/LoopKit/Loop/pull/1988\n\n"
 }
 
 # optional message to go with add_customization line
 function message_for_pr2002() {
-    echo
-    echo "  Profile Switching"
-    echo "     This feature in development enables save and restore of named profiles"
-    echo "        https://github.com/LoopKit/Loop/pull/2002"
+    printf "      This feature in development enables save and restore of named profiles.\n"
+    printf "        https://github.com/LoopKit/Loop/pull/2002\n\n"
 }
 
 function message_for_pr2008() {
-    echo
-    echo "  Integral Retrospective Correction"
-    echo "     This feature in development modifies retrospective correction."
-    echo "     Helps when glucose is different than Loop predicts for longer times."
-    echo "        https://github.com/LoopKit/Loop/pull/2008"
+    printf "      This feature in development modifies retrospective correction.\n"
+    printf "      Helps when glucose differs from setting-based predictions.\n"
+    printf "        https://github.com/LoopKit/Loop/pull/2008\n\n"
 }
 
 # list patches in this order with args:
@@ -70,7 +69,7 @@ add_customization "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_ca
 add_customization "Disable Authentication Requirement" "no_auth"
 add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens"
 add_customization "Libre Users: Limit Loop to 5 minute update" "limit_loop_cycle_time"
-add_customization "Modify Logo to include LnL icon" "lnl_icon"
+add_customization "Modify Logo to include LnL icon" "lnl_icon" "message_to_add_blank_line"
 
 add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "message_for_cto"
 

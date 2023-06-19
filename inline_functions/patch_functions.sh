@@ -283,10 +283,10 @@ function patch_menu {
 
             for ((index=0; index<${#customization[@]}; index++)); do
                 if [ ${status[$index]} -eq 0 ]; then
+                    printf "%4d) %s\n" $((index+1)) "${customization[$index]}"
                     if [ -n "${message_function[$index]}" ]; then
                         eval "${message_function[$index]}"
                     fi
-                    printf "%4d) %s\n" $((index+1)) "${customization[$index]}"
                 fi
             done
 
