@@ -599,6 +599,9 @@ function patch_command_line {
     # Verify current folder
     if [ $(basename $PWD) = "LoopWorkspace" ]; then
         download_patches
+        echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
+        echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
+        echo
 
         for arg in "$@"
         do
