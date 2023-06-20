@@ -178,6 +178,15 @@ MAX_MENU_ITEM=$EXIT_OPEN_XCODE_MENU_ITEM
 
 one_time_flag=0
 
+# Determines if the $0 parameter should be used as a customization
+function param_zero_is_customization {
+    if [[ $0 == *CustomizationSelect.sh ]] || [[ $0 == "_" ]] || [[ -z $0 ]]; then
+        return 1  # This means false in bash
+    else
+        return 0  # This means true in bash
+    fi
+}
+
 function message_about_display() {
     echo -e "${INFO_FONT}You may need to scroll up to read everything${NC}"
     echo -e "${INFO_FONT} or drag corner to make terminal taller${NC}"
@@ -296,7 +305,10 @@ function cleanup {
     echo "Deleting temp working directory $mytmpdir"
     rm -rf "$mytmpdir"
     tput cuu1 && tput el
-    exit_script
+
+    if [ $param_zero_result -eq 1 ]; then
+        exit_script
+    fi    
 }
 
 function display_applied_patches() {
@@ -357,6 +369,24 @@ function apply_patch {
     refresh_status
 }
 
+function apply_patch_command_line {
+    local index=$1
+    local patch_file="${patch[$index]}"
+    local customization_name="${customization[$index]}"
+    if [ -f "$patch_file" ]; then
+        if git apply --whitespace=nowarn "$patch_file"; then
+            echo -e "${SUCCESS_FONT}  Customization $customization_name applied successfully${NC}"
+        else
+            echo -e "${ERROR_FONT}  Failed to apply customization $customization_name${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${ERROR_FONT}  Patch file for customization $customization_name not available${NC}"
+        exit 1
+    fi
+    refresh_status
+}
+
 function revert_patch {
     local index=$1
     local patch_file="${patch[$index]}"
@@ -374,6 +404,41 @@ function revert_patch {
         return_when_return
     fi
     refresh_status
+}
+
+function download_patches {
+    echo "Creating temporary folder"
+    workingdir=$PWD
+    mytmpdir=$(mktemp -d)
+
+    # Check if tmp dir was created
+    if [[ ! "$mytmpdir" || ! -d "$mytmpdir" ]]; then
+        echo "Could not create temporary folder"
+        exit 1
+    fi
+    tput cuu1 && tput el
+
+    # Register the cleanup function to be called on the EXIT signal
+    trap cleanup EXIT
+
+    if [ -z "$LOCAL_PATCH_FOLDER" ]; then
+        echo -e "${INFO_FONT}Downloading customizations, please wait  ...  patiently  ...${NC}"
+        cd $mytmpdir
+        git clone --quiet --branch=$PATCH_BRANCH $PATCH_REPO
+        clone_exit_status=$?
+        if [ $clone_exit_status -eq 0 ]; then
+            tput cuu1 && tput el
+            cd $workingdir
+        else
+            echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
+            exit 1
+        fi
+    fi
+
+    refresh_status
+    if [ $DEBUG_FLAG -eq 1 ]; then
+        debug_printout
+    fi
 }
 
 function patch_menu {
@@ -394,39 +459,7 @@ function patch_menu {
 
     # Verify current folder
     if [ $(basename $PWD) = "LoopWorkspace" ]; then
-        echo "Creating temporary folder"
-        workingdir=$PWD
-        mytmpdir=$(mktemp -d)
-
-        # Check if tmp dir was created
-        if [[ ! "$mytmpdir" || ! -d "$mytmpdir" ]]; then
-            echo "Could not create temporary folder"
-            exit 1
-        fi
-        tput cuu1 && tput el
-
-        # Register the cleanup function to be called on the EXIT signal
-        trap cleanup EXIT
-
-        if [ -z "$LOCAL_PATCH_FOLDER" ]; then
-            echo -e "${INFO_FONT}Downloading customizations, please wait  ...  patiently  ...${NC}"
-            cd $mytmpdir
-            git clone --quiet --branch=$PATCH_BRANCH $PATCH_REPO
-            clone_exit_status=$?
-            if [ $clone_exit_status -eq 0 ]; then
-                tput cuu1 && tput el
-                cd $workingdir
-            else
-                echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
-                exit 1
-            fi
-        fi
-
-        refresh_status
-        if [ $DEBUG_FLAG -eq 1 ]; then
-            debug_printout
-        fi
-
+        download_patches
         echo
 
         ### repeating menu start here:
@@ -545,6 +578,43 @@ function patch_menu {
         exit 1
     fi
 }
+
+function patch_command_line {
+    section_separator
+    echo -e "${INFO_FONT}Loop Customization Select Script${NC}"
+
+    cd "$STARTING_DIR"
+
+    if [ "$(basename "$PWD")" != "LoopWorkspace" ]; then
+        target_dir=$(find ${BUILD_DIR/#\~/$HOME} -maxdepth 1 -type d -name "Loop*" -exec [ -d "{}"/LoopWorkspace ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk '{print $2"/LoopWorkspace"}')
+        if [ -z "$target_dir" ]; then
+            echo -e "${ERROR_FONT}Error: No folder containing LoopWorkspace found in${NC}"
+            echo "    $BUILD_DIR"
+            exit 1
+        else
+            cd "$target_dir"
+        fi
+    fi
+
+    # Verify current folder
+    if [ $(basename $PWD) = "LoopWorkspace" ]; then
+        download_patches
+
+        for arg in "$@"
+        do
+            for i in "${!folder[@]}"
+            do
+                if [[ "${folder[$i]}" == "$arg" ]]
+                then
+                    apply_patch_command_line "$i"
+                    break
+                fi
+            done
+        done
+    else
+        exit 1
+    fi
+}
 # *** End of inlined file: inline_functions/patch_functions.sh ***
 
 
@@ -621,7 +691,15 @@ add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 add_customization "Glucose Based Application Factor" "1988" "message_for_pr1988"
 add_customization "Integral Retrospective Correction" "2008" "message_for_pr2008"
 
+param_zero_is_customization
+param_zero_result=$?
 
-patch_menu
+if [ $param_zero_result -eq 0 ]; then
+    patch_command_line $0 "$@"
+elif [ $# -gt 0 ]; then
+    patch_command_line "$@"
+else
+    patch_menu
+fi
 # *** End of inlined file: src/CustomizationSelect.sh ***
 
