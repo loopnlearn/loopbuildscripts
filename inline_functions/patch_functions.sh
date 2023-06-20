@@ -21,7 +21,7 @@ one_time_flag=0
 
 # Determines if the $0 parameter should be used as a customization
 function param_zero_is_customization {
-    if [[ $0 == *CustomizationSelect.sh ]] || [[ $0 == "_" ]] || [[ -z $0 ]]; then
+    if [[ $0 == *CustomizationSelect.sh ]] || [[ $0 == "_" ]] || [[ $0 == "/bin/bash" ]] || [[ -z $0 ]]; then
         return 1  # This means false in bash
     else
         return 0  # This means true in bash
