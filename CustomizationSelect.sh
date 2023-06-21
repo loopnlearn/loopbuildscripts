@@ -605,14 +605,22 @@ function patch_command_line {
 
         for arg in "$@"
         do
+            found=false
             for i in "${!folder[@]}"
             do
                 if [[ "${folder[$i]}" == "$arg" ]]
                 then
                     apply_patch_command_line "$i"
+                    found=true
                     break
                 fi
             done
+
+            if ! $found
+            then
+                echo -e "${ERROR_FONT}  Unknown customization $arg${NC}"
+                exit 1
+            fi
         done
     else
         exit 1
