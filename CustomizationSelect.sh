@@ -156,6 +156,12 @@ function exit_message() {
     section_divider
     exit 0
 }
+
+function erase_previous_line {
+    if [ -n "$TERM" ]; then
+        tput cuu1 && tput el 2>/dev/null || true
+    fi
+}
 # *** End of inlined file: inline_functions/common.sh ***
 
 
@@ -304,7 +310,7 @@ function debug_printout() {
 function cleanup {      
     echo "Deleting temp working directory $mytmpdir"
     rm -rf "$mytmpdir"
-    tput cuu1 && tput el
+    erase_previous_line
 
     if [ $param_zero_result -eq 1 ]; then
         exit_script
@@ -416,7 +422,7 @@ function download_patches {
         echo "Could not create temporary folder"
         exit 1
     fi
-    tput cuu1 && tput el
+    erase_previous_line
 
     # Register the cleanup function to be called on the EXIT signal
     trap cleanup EXIT
@@ -427,7 +433,7 @@ function download_patches {
         git clone --quiet --branch=$PATCH_BRANCH $PATCH_REPO
         clone_exit_status=$?
         if [ $clone_exit_status -eq 0 ]; then
-            tput cuu1 && tput el
+            erase_previous_line
             cd $workingdir
         else
             echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
