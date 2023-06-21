@@ -77,5 +77,13 @@ add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 add_customization "Glucose Based Application Factor" "1988" "message_for_pr1988"
 add_customization "Integral Retrospective Correction" "2008" "message_for_pr2008"
 
+param_zero_is_customization
+param_zero_result=$?
 
-patch_menu
+if [ $param_zero_result -eq 0 ]; then
+    patch_command_line $0 "$@"
+elif [ $# -gt 0 ]; then
+    patch_command_line "$@"
+else
+    patch_menu
+fi

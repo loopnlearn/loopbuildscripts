@@ -143,3 +143,9 @@ function exit_message() {
     section_divider
     exit 0
 }
+
+function erase_previous_line {
+    if [ -n "$TERM" ]; then
+        (tput cuu1 && tput el) 2>/dev/null || true
+    fi
+}
