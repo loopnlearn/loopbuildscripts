@@ -42,7 +42,7 @@ if [ "$0" != "_" ]; then
     # Inform the user about env variables set
     # Variables definition
     variables=(
-        "SCRIPT_BRANCH: Indicates the loopbuildscripts branch in use."
+        "SCRIPT_BRANCH: Indicates the lnl-scripts branch in use."
         "LOCAL_SCRIPT: Set to 1 to run scripts from the local directory."
         "FRESH_CLONE: Lets you use an existing clone (saves time)."
         "CLONE_STATUS: Can be set to 0 for success (default) or 1 for error."
@@ -226,7 +226,7 @@ run_script() {
     echo -e "\n--------------------------------\n"
 
     if [[ ${LOCAL_SCRIPT:-0} -eq 0 ]]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopnlearn/LoopBuildScripts/$SCRIPT_BRANCH/$script_name)" _ "$extra_arg"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopandlearn/lnl-scripts/$SCRIPT_BRANCH/$script_name)" _ "$extra_arg"
     else
         /bin/bash -c "$(cat $script_name)" _ "$extra_arg"
     fi
