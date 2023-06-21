@@ -159,7 +159,7 @@ function exit_message() {
 
 function erase_previous_line {
     if [ -n "$TERM" ]; then
-        tput cuu1 && tput el 2>/dev/null || true
+        (tput cuu1 && tput el) 2>/dev/null || true
     fi
 }
 # *** End of inlined file: inline_functions/common.sh ***
