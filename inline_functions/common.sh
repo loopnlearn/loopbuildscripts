@@ -19,7 +19,7 @@ function section_divider() {
 }
 
 function section_separator() {
-    clear
+    clear 2>/dev/null
     section_divider
 }
 
