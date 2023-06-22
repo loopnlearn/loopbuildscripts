@@ -24,7 +24,7 @@ open_source_warning
 ############################################################
 
 # Stable Dev SHA
-FIXED_SHA="c0241d3"
+FIXED_SHA="6a9aa44"
 FIXED_COMMIT_DATE="2023-Jun-17"
 FLAG_USE_SHA=0
 
