@@ -47,7 +47,7 @@ function section_divider() {
 }
 
 function section_separator() {
-    clear
+    clear 2>/dev/null
     section_divider
 }
 
@@ -170,6 +170,12 @@ function exit_message() {
     echo -e "    and return to repeat script from beginning"
     section_divider
     exit 0
+}
+
+function erase_previous_line {
+    if [ -n "$TERM" ]; then
+        (tput cuu1 && tput el) 2>/dev/null || true
+    fi
 }
 # *** End of inlined file: inline_functions/common.sh ***
 

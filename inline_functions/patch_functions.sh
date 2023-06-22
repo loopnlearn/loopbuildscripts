@@ -142,14 +142,16 @@ function debug_printout() {
 }
 
 # Deletes the temp directory
-function cleanup {      
-    echo "Deleting temp working directory $mytmpdir"
-    rm -rf "$mytmpdir"
-    erase_previous_line
+function cleanup {
+    if [ "$GITHUB_ACTIONS" != "true" ]; then
+        echo "Deleting temp working directory $mytmpdir"
+        rm -rf "$mytmpdir"
+        erase_previous_line
 
-    if [ $param_zero_result -eq 1 ]; then
-        exit_script
-    fi    
+        if [ $param_zero_result -eq 1 ]; then
+            exit_script
+        fi    
+    fi
 }
 
 function display_applied_patches() {
