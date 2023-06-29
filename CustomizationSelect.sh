@@ -722,7 +722,7 @@ add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "messa
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 #add_customization "Glucose Based Application Factor" "1988" "message_for_pr1988"
 #add_customization "Integral Retrospective Correction" "2008" "message_for_pr2008"
-add_customization "Algorithm Experiments" "algorithm_experiments" "message_for_algorithm_experiments"
+add_customization "Algorithm Experiments (main only)" "algorithm_experiments" "message_for_algorithm_experiments"
 
 param_zero_is_customization
 param_zero_result=$?
