@@ -325,7 +325,7 @@ function patch_menu {
                 fi
             done
 
-            echo
+            echo -e "--------------------------------"
 
             if [ "$has_applied_patches" = true ]; then
                 echo "  $REMOVE_CUSTOMIZATION_MENU_ITEM) Remove a customization"
