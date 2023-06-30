@@ -31,15 +31,7 @@ function message_to_add_blank_line() {
 }
 
 function message_for_cto() {
-    printf "        https://www.loopandlearn.org/custom-type-one-loop-patches/\n"
-    printf "        Update automatic when Glucose Based Application Factor also selected.\n\n"
-}
-
-# optional message to go with add_customization line
-function message_for_pr1988() {
-    printf "      This feature in development gradually increases AB factor with glucose.\n"
-    printf "      Replaces CustomTypeOne LoopPatches ${INFO_FONT}switcher patch${NC}.\n"
-    printf "        https://github.com/LoopKit/Loop/pull/1988\n\n"
+    printf "        https://www.loopandlearn.org/custom-type-one-loop-patches/\n\n"
 }
 
 # optional message to go with add_customization line
@@ -48,10 +40,17 @@ function message_for_pr2002() {
     printf "        https://github.com/LoopKit/Loop/pull/2002\n\n"
 }
 
-function message_for_pr2008() {
-    printf "      This feature in development modifies retrospective correction.\n"
-    printf "      Helps when glucose differs from setting-based predictions.\n"
-    printf "        https://github.com/LoopKit/Loop/pull/2008\n\n"
+function message_for_algorithm_experiments() {
+    printf "      Algorithm Experiments were merged into dev on 26-June-2023\n"
+    printf "         (Pull requests 1988 and 2008)\n"
+    printf "      This customization is only valid for main versions of Loop.\n\n"
+    printf "      Glucose Based Application Factor:\n"
+    printf "        Gradually increases AB factor with glucose.\n"
+    printf "        Replaces CustomTypeOne LoopPatches ${INFO_FONT}switcher patch${NC}.\n"
+    printf "        https://www.loopandlearn.org/loop-features-in-development/#pr-1988\n\n"
+    printf "      Integral Retrospective Correction:\n"
+    printf "        Helps when glucose differs from setting-based predictions.\n"
+    printf "        https://www.loopandlearn.org/loop-features-in-development/#pr-2008\n\n"
 }
 
 # list patches in this order with args:
@@ -74,8 +73,7 @@ add_customization "Modify Logo to include LnL icon" "lnl_icon" "message_to_add_b
 add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "message_for_cto"
 
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
-add_customization "Glucose Based Application Factor" "1988" "message_for_pr1988"
-add_customization "Integral Retrospective Correction" "2008" "message_for_pr2008"
+add_customization "Algorithm Experiments (main only)" "algorithm_experiments" "message_for_algorithm_experiments"
 
 param_zero_is_customization
 param_zero_result=$?
