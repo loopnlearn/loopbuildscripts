@@ -686,17 +686,32 @@ function verify_xcode_path() {
                 "Correct xcode-select path")
                     echo -e "You might be prompted for your password."
                     echo -e "  Use the password for logging into your Mac."
-                    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-                    # Check if the path was corrected successfully
-                    xcode_path=$(xcode-select -p)
-                    if [[ "$xcode_path" == *Xcode.app* ]]; then
-                        echo -e "✅ ${SUCCESS_FONT}xcode-select path has been corrected.${NC}"
-                        return_when_ready
-                        break
-                    else
-                        echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
+                    xcode_path=$(mdfind -name Xcode.app)
+                    if [ -z "$xcode_path" ]; then
+                        echo -e "❌ ${ERROR_FONT}Xcode.app not found. Please install Xcode.${NC}"
                         exit_or_return_menu
+                    else
+                        DEVELOPER_DIR_PATH="$xcode_path/Contents/Developer"
+
+                        if [ ! -d "$DEVELOPER_DIR_PATH" ]
+                        then
+                            echo -e "❌ ${ERROR_FONT}Developer directory not found in Xcode.app. Please ensure you have the correct version of Xcode installed..${NC}"
+                            exit_or_return_menu
+                        else
+                            sudo xcode-select -s "$DEVELOPER_DIR_PATH"
+
+                            # Check if the path was corrected successfully
+                            xcode_path=$(xcode-select -p)
+                            if [[ "$xcode_path" == *Xcode.app* ]]; then
+                                echo -e "✅ ${SUCCESS_FONT}xcode-select path has been corrected.${NC}"
+                                return_when_ready
+                                break
+                            else
+                                echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
+                                exit_or_return_menu
+                            fi
+                        fi
                     fi
                     ;;
                 "Skip")
