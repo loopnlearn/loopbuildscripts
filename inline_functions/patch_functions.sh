@@ -82,7 +82,7 @@ function refresh_status() {
         patch[$index]=""
 
         # Check all patches in the current patch folder
-        for patch_file in "$patch_folder"/*.patch; do
+        for patch_file in $(ls "$patch_folder"/*.patch | sort); do
             if [ -f "$patch_file" ]; then
                 # Try to apply the patch
                 if git apply --check "$patch_file" >/dev/null 2>&1; then
