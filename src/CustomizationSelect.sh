@@ -83,5 +83,10 @@ if [ $param_zero_result -eq 0 ]; then
 elif [ $# -gt 0 ] && [ -n "$1" ]; then
     patch_command_line "$@"
 else
-    patch_menu
+    if [ "$GITHUB_ACTIONS" != "true" ]; then
+        patch_menu
+    else
+        echo -e "${ERROR_FONT}  Customization in Browser Build executed without parameters, check that there is no empty line after CustomizationSelect.sh.{NC}"
+        exit 1
+    fi
 fi
