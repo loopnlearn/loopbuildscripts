@@ -46,6 +46,7 @@ if [ "$0" != "_" ]; then
         "PATCH_BRANCH: Indicates the source branch for patches."
         "PATCH_REPO: Specifies the URL of the patch source repository."
         "LOCAL_PATCH_FOLDER: Defines a local directory for sourcing patches."
+        "CUSTOMIZATION_DEBUG: Determines the verbosity of the customization debug output."
     )
 
     # Flag to check if any variable is set

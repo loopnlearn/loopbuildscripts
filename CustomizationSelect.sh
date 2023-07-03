@@ -59,6 +59,7 @@ if [ "$0" != "_" ]; then
         "PATCH_BRANCH: Indicates the source branch for patches."
         "PATCH_REPO: Specifies the URL of the patch source repository."
         "LOCAL_PATCH_FOLDER: Defines a local directory for sourcing patches."
+        "CUSTOMIZATION_DEBUG: Determines the verbosity of the customization debug output."
     )
 
     # Flag to check if any variable is set
@@ -167,7 +168,7 @@ function erase_previous_line {
 
 # set to 1 for debug (verbose output) mode at beginning of script
 # set to 2 for debug (verbose output) mode for every refresh
-: ${DEBUG_FLAG:="0"}
+: ${CUSTOMIZATION_DEBUG:="0"}
 
 : ${PATCH_BRANCH:="main"}
 : ${PATCH_REPO:="https://github.com/loopandlearn/customization.git"}
@@ -279,7 +280,7 @@ function refresh_status() {
             done
         fi
     done
-    if [ $DEBUG_FLAG -eq 2 ]; then
+    if [ $CUSTOMIZATION_DEBUG -eq 2 ]; then
         debug_printout
     fi
 }
@@ -444,7 +445,7 @@ function download_patches {
     fi
 
     refresh_status
-    if [ $DEBUG_FLAG -eq 1 ]; then
+    if [ $CUSTOMIZATION_DEBUG -eq 1 ]; then
         debug_printout
     fi
 }

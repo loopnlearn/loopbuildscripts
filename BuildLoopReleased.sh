@@ -66,6 +66,7 @@ if [ "$0" != "_" ]; then
         "PATCH_BRANCH: Indicates the source branch for patches."
         "PATCH_REPO: Specifies the URL of the patch source repository."
         "LOCAL_PATCH_FOLDER: Defines a local directory for sourcing patches."
+        "CUSTOMIZATION_DEBUG: Determines the verbosity of the customization debug output."
     )
 
     # Flag to check if any variable is set
@@ -654,7 +655,7 @@ function automated_clone_download_error_check() {
         return_when_ready
     else
         echo -e "❌ ${ERROR_FONT}An error occurred during download. Please investigate the issue.${NC}"
-        exit_or_return_menu
+        exit_message
     fi
 }
 
@@ -679,21 +680,23 @@ function verify_xcode_path() {
         do
             case $opt in
                 "Correct xcode-select path")
-                    echo -e "You might be prompted for your password."
-                    echo -e "  Use the password for logging into your Mac."
-
-                    xcode_path=$(mdfind -name Xcode.app)
+                    xcode_path=$(mdfind -name Xcode.app 2>/dev/null)
                     if [ -z "$xcode_path" ]; then
-                        echo -e "❌ ${ERROR_FONT}Xcode.app not found. Please install Xcode.${NC}"
-                        exit_or_return_menu
+                        echo -e "❌ ${ERROR_FONT}Xcode.app not found.${NC}"
+                        echo -e "Please use this guide to set the xcode-select path: https://loopkit.github.io/loopdocs/build/step9/#command-line-tools"
+                        exit_message
                     else
+                        echo -e "Using this location: $xcode_path"
                         DEVELOPER_DIR_PATH="$xcode_path/Contents/Developer"
 
                         if [ ! -d "$DEVELOPER_DIR_PATH" ]
                         then
                             echo -e "❌ ${ERROR_FONT}Developer directory not found in Xcode.app. Please ensure you have the correct version of Xcode installed..${NC}"
-                            exit_or_return_menu
+                            echo -e "Please use this guide to set the xcode-select path: https://loopkit.github.io/loopdocs/build/step9/#command-line-tools"
+                            exit_message
                         else
+                            echo -e "You might be prompted for your password."
+                            echo -e "  Use the password for logging into your Mac."
                             sudo xcode-select -s "$DEVELOPER_DIR_PATH"
 
                             # Check if the path was corrected successfully
@@ -704,7 +707,7 @@ function verify_xcode_path() {
                                 break
                             else
                                 echo -e "❌ ${ERROR_FONT}Failed to set xcode-select path correctly.${NC}"
-                                exit_or_return_menu
+                                exit_message
                             fi
                         fi
                     fi
