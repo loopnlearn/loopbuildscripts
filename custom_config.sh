@@ -17,6 +17,7 @@ unset CUSTOM_XCODE_VER
 unset PATCH_BRANCH
 unset PATCH_REPO
 unset LOCAL_PATCH_FOLDER
+unset CUSTOMIZATION_DEBUG
 
 # To Test Scripts as they exist on github
 # SCRIPT_BRANCH is the branch scripts will be sourced from
@@ -82,3 +83,9 @@ unset LOCAL_PATCH_FOLDER
 #   Uncomment the line and replace with your own local directory if not using the default
 #   The path should be absolute or relative to the current script's directory
 #export LOCAL_PATCH_FOLDER="/path/to/your/local/patch/folder"
+
+# CUSTOMIZATION_DEBUG determines the verbosity of the debug output
+#   Set to 1 to enable debug (verbose output) mode at the beginning of the script
+#   Set to 2 to enable debug (verbose output) mode for every refresh
+#   Uncomment the line and set the value to your preference
+#export CUSTOMIZATION_DEBUG=1
