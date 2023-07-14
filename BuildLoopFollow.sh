@@ -760,7 +760,7 @@ open_source_warning
 # Welcome & Branch Selection
 ############################################################
 
-URL_THIS_SCRIPT="https://github.com/jonfawcett/LoopFollow.git"
+URL_THIS_SCRIPT="https://github.com/loopandlearn/LoopFollow.git"
 
 function choose_main_branch() {
     branch_select ${URL_THIS_SCRIPT} Main
