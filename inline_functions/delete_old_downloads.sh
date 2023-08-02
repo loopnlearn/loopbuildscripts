@@ -119,6 +119,7 @@ function delete_old_downloads() {
         "BuildLoop/Loop_dev-*"
         "BuildLoop/FreeAPS*"
         "BuildLoopFollow/LoopFollow_Main*"
+        "BuildLoopFollow/LoopFollow_main*"
         "BuildLoopFollow/LoopFollow_dev*"
         "BuildxDrip4iOS/xDrip4iOS*"
         "BuildGlucoseDirect/GlucoseDirect*"

@@ -27,7 +27,7 @@ open_source_warning
 URL_THIS_SCRIPT="https://github.com/loopandlearn/LoopFollow.git"
 
 function choose_main_branch() {
-    branch_select ${URL_THIS_SCRIPT} Main
+    branch_select ${URL_THIS_SCRIPT} main
 }
 
 function choose_dev_branch() {
@@ -40,13 +40,13 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  You need Xcode and Xcode command line tools installed"
     echo -e ""
     echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "  Most people should choose Main branch"
+    echo -e "  Most people should choose main branch"
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/loop-follow/"
     section_divider
     
-    options=("Main Branch" "Dev Branch" "$(exit_or_return_menu)")
+    options=("main branch" "dev branch" "$(exit_or_return_menu)")
     actions=("choose_main_branch" "choose_dev_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
