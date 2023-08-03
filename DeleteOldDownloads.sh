@@ -190,9 +190,19 @@ function delete_folders_except_latest() {
     local pattern="$1"
     local total_size=0
     local unsorted_folders=()
+
+    # First loop for case-sensitive matching
     for entry in ~/Downloads/$pattern; do
         [ -d "$entry" ] && unsorted_folders+=("$entry")
     done
+
+    # Second loop for case-insensitive matching, but only if "main" is in the pattern
+    if [[ $pattern == *main* ]]; then
+        for entry in ~/Downloads/${pattern//main/Main}; do
+            [ -d "$entry" ] && unsorted_folders+=("$entry")
+        done
+    fi
+
     # Sort the folders array by date (newest first)
     IFS=$'\n' folders=($(sort -r <<<"${unsorted_folders[*]}"))
     IFS=$' \t\n' # Reset IFS to default value.
@@ -243,9 +253,19 @@ function delete_folders_except_latest() {
 function delete_selected_folders() {
     local pattern="$1"
     local unsorted_folders=()
+
+    # First loop for case-sensitive matching
     for entry in ~/Downloads/$pattern; do
         [ -d "$entry" ] && unsorted_folders+=("$entry")
     done
+
+    # Second loop for case-insensitive matching, but only if "main" is in the pattern
+    if [[ $pattern == *main* ]]; then
+        for entry in ~/Downloads/${pattern//main/Main}; do
+            [ -d "$entry" ] && unsorted_folders+=("$entry")
+        done
+    fi
+
     # Sort the folders array by date (newest first)
     IFS=$'\n' folders=($(sort -r <<<"${unsorted_folders[*]}"))
     IFS=$' \t\n' # Reset IFS to default value.
@@ -284,7 +304,7 @@ function delete_old_downloads() {
         "BuildLoop/LoopWorkspace_*"
         "BuildLoop/Loop_dev-*"
         "BuildLoop/FreeAPS*"
-        "BuildLoopFollow/LoopFollow_Main*"
+        "BuildLoopFollow/LoopFollow_main*"
         "BuildLoopFollow/LoopFollow_dev*"
         "BuildxDrip4iOS/xDrip4iOS*"
         "BuildGlucoseDirect/GlucoseDirect*"
