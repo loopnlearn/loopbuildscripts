@@ -30,10 +30,12 @@ function delete_folders_except_latest() {
         [ -d "$entry" ] && unsorted_folders+=("$entry")
     done
 
-    # Second loop for case-insensitive matching, replacing "main" with "Main"
-    for entry in ~/Downloads/${pattern//main/Main}; do
-        [ -d "$entry" ] && unsorted_folders+=("$entry")
-    done
+    # Second loop for case-insensitive matching, but only if "main" is in the pattern
+    if [[ $pattern == *main* ]]; then
+        for entry in ~/Downloads/${pattern//main/Main}; do
+            [ -d "$entry" ] && unsorted_folders+=("$entry")
+        done
+    fi
 
     # Sort the folders array by date (newest first)
     IFS=$'\n' folders=($(sort -r <<<"${unsorted_folders[*]}"))
