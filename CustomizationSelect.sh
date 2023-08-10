@@ -267,7 +267,8 @@ function refresh_status() {
         done
 
         # If no current patch can be applied or reversed, check archived patches
-        if [ ${status[$index]} -eq 3 ]; then
+        # If the current patch is not applied, there might be a reverable archived patch = upgrade
+        if [ ${status[$index]} -eq 3 ] || [ ${status[$index]} -eq 0 ]; then
             for patch_file in "$archive_folder"/*.patch; do
                 if [ -f "$patch_file" ]; then
                     # Try to reverse the patch
