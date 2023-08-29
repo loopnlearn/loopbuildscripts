@@ -115,18 +115,24 @@ while true; do
         echo -e "     Clears more disk space filled up by using Xcode."
         echo -e "     * Use after uninstalling Xcode prior to new installation"
         echo -e "     * It can free up a substantial amount of disk space"
+        echo -e " 4. Clean Profiles:"
+        echo -e "     Deletes any provisioning profiles on your Mac"
+        echo -e "     * Next time you build, Xcode will generate a new one"
+        echo -e "     * Ensures the next app you build with Xcode will last a year"
         section_divider
 
         options=(
             "Delete Old Downloads"
             "Clean Derived Data"
             "Xcode Cleanup"
+            "Clean Profiles"
             "Return to Menu"
         )
         actions=(
             "run_script 'DeleteOldDownloads.sh'"
             "run_script 'CleanDerived.sh'"
             "run_script 'XcodeClean.sh'"
+            "run_script 'CleanProfiles.sh'"
             return
         )
         menu_select "${options[@]}" "${actions[@]}"
