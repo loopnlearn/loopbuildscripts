@@ -331,17 +331,17 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 # *** Start of inlined file: inline_functions/building_verify_version.sh ***
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
-LATEST_IOS_VER="16.5.1"
+LATEST_IOS_VER="17.0"
 
 #This should be the lowest xcode version required to build to LATEST_IOS_VER
-LOWEST_XCODE_VER="14.3"
+LOWEST_XCODE_VER="15.0"
 
 #This should be the latest known xcode version
 #LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
-LATEST_XCODE_VER="14.3.1"
+LATEST_XCODE_VER="15.0"
 
 #This is the lowest version of macOS required to run LATEST_XCODE_VER
-LOWEST_MACOS_VER="13.0"
+LOWEST_MACOS_VER="13.5"
 
 # The compare_versions function takes two version strings as input arguments,
 # sorts them in ascending order using the sort command with the -V flag (version sorting),
@@ -755,33 +755,25 @@ open_source_warning
 
 
 URL_THIS_SCRIPT="https://github.com/LoopKit/LoopWorkspace.git"
-URL_FOR_LNL="https://github.com/loopnlearn/LoopWorkspace.git"
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     function choose_loop() {
         branch_select ${URL_THIS_SCRIPT} main Loop
-    }
-
-    function choose_loop_with_patches() {
-        branch_select ${URL_FOR_LNL} main_lnl_patches Loop_lnl_patches
     }
     
     section_separator
     echo -e "${INFO_FONT}You should be familiar with the documenation found at:${NC}"
     echo -e "   https://loopdocs.org"
     echo -e ""
-    echo -e "Select which version of Loop to download and build."
+    echo -e "You will be building"
     echo -e "   Loop:"
     echo -e "      This is always the current released version"
     echo -e "      More info at https://github.com/LoopKit/Loop/releases"
-    echo -e "   Loop with Patches:"
-    echo -e "      Adds 2 CGM options, CustomTypeOne LoopPatches, new Logo"
-    echo -e "      More info at https://www.loopandlearn.org/main-lnl-patches"
     echo -e "You need Xcode and Xcode command line tools installed"
     section_divider
 
-    options=("Loop" "Loop with Patches" "$(exit_or_return_menu)")
-    actions=("choose_loop" "choose_loop_with_patches" "exit_script")
+    options=("Loop" "$(exit_or_return_menu)")
+    actions=("choose_loop" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     section_separator
