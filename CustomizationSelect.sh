@@ -693,8 +693,8 @@ function message_for_algorithm_experiments() {
 #   Folder name in the patch repo
 #   (Optional) message function shown prior to option
 
-add_customization "main only - not needed for dev: CAGE: Upload Pod Start to Nightscout" "omnipod_cage"
-add_customization "main only - not needed for dev: SAGE: Upload Dexcom Sensor Start to Nightscout" "dexcom_sage"
+add_customization "CAGE: Upload Pod Start to Nightscout (main only)" "omnipod_cage"
+add_customization "SAGE: Upload Dexcom Sensor Start to Nightscout (main only)" "dexcom_sage"
 add_customization "Change Default to Upload Dexcom Readings" "dexcom_upload_readings"
 add_customization "Increase Future Carbs Limit to 4 hours" "future_carbs_4h"
 add_customization "Modify Carb Warning & Limit: Low Carb to 49 & 99" "low_carb_limit"
@@ -702,13 +702,13 @@ add_customization "Modify Carb Warning & Limit: Low Carb to 49 & 99" "low_carb_l
 add_customization "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_carb_limit"
 add_customization "Disable Authentication Requirement" "no_auth"
 add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens"
-add_customization "main only - not needed for dev: Limit CGM driven Loop Cycle to 5 minutes" "limit_loop_cycle_time"
+add_customization "Limit CGM driven Loop Cycle to 5 minutes (main only)" "limit_loop_cycle_time"
 add_customization "Modify Logo to include LnL icon" "lnl_icon" "message_to_add_blank_line"
 
 add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "message_for_cto"
 
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
-add_customization "main only - not needed for dev: Algorithm Experiments" "algorithm_experiments" "message_for_algorithm_experiments"
+add_customization "Algorithm Experiments (main only)" "algorithm_experiments" "message_for_algorithm_experiments"
 
 param_zero_is_customization
 param_zero_result=$?
