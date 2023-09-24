@@ -58,7 +58,7 @@ function message_for_algorithm_experiments() {
 #   Folder name in the patch repo
 #   (Optional) message function shown prior to option
 
-add_customization "CAGE: Upload Pod Start to Nightscout (main only)" "omnipod_cage"
+add_customization "CAGE: Upload Pod Start to Nightscout (main only, already in dev)" "omnipod_cage"
 add_customization "SAGE: Upload Dexcom Sensor Start to Nightscout (main only)" "dexcom_sage"
 add_customization "Change Default to Upload Dexcom Readings" "dexcom_upload_readings"
 add_customization "Increase Future Carbs Limit to 4 hours" "future_carbs_4h"
