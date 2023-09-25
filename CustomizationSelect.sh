@@ -703,7 +703,8 @@ add_customization "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_ca
 add_customization "Disable Authentication Requirement" "no_auth"
 add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens"
 add_customization "Limit CGM driven Loop Cycle to 5 minutes (main only)" "limit_loop_cycle_time"
-add_customization "Modify Logo to include LnL icon" "lnl_icon" "message_to_add_blank_line"
+add_customization "Modify Logo to include LnL icon" "lnl_icon"
+add_customization "Now marker" "now_marker" "message_to_add_blank_line"
 
 add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "message_for_cto"
 
