@@ -339,17 +339,17 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 # *** Start of inlined file: inline_functions/building_verify_version.sh ***
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
-LATEST_IOS_VER="16.5.1"
+LATEST_IOS_VER="17.0"
 
 #This should be the lowest xcode version required to build to LATEST_IOS_VER
-LOWEST_XCODE_VER="14.3"
+LOWEST_XCODE_VER="15.0"
 
 #This should be the latest known xcode version
 #LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
-LATEST_XCODE_VER="14.3.1"
+LATEST_XCODE_VER="15.0"
 
 #This is the lowest version of macOS required to run LATEST_XCODE_VER
-LOWEST_MACOS_VER="13.0"
+LOWEST_MACOS_VER="13.5"
 
 # The compare_versions function takes two version strings as input arguments,
 # sorts them in ascending order using the sort command with the -V flag (version sorting),
@@ -389,8 +389,8 @@ function check_versions() {
         echo "You have a newer Xcode version ($XCODE_VER) than the latest known by this script ($LATEST_XCODE_VER)."
         echo "Please verify your versions using https://www.loopandlearn.org/version-updates/ and https://developer.apple.com/support/xcode/"
 
-        options=("Continue" "Exit")
-        actions=("return" "exit_or_return_menu")
+        options=("Continue" "$(exit_or_return_menu)")
+        actions=("return" "exit_script")
         menu_select "${options[@]}" "${actions[@]}"
     # Check if Xcode version is less than the lowest required version
     elif [ "$(compare_versions "$XCODE_VER" "$LOWEST_XCODE_VER")" = "$XCODE_VER" ] && [ "$XCODE_VER" != "$LOWEST_XCODE_VER" ]; then
@@ -401,8 +401,8 @@ function check_versions() {
 
         echo "You need to upgrade Xcode to version $LOWEST_XCODE_VER or later to build for iOS $LATEST_IOS_VER."
 
-        options=("Continue with lower iOS version" "Exit")
-        actions=("return" "exit_or_return_menu")
+        options=("Continue with lower iOS version" "$(exit_or_return_menu)")
+        actions=("return" "exit_script")
         menu_select "${options[@]}" "${actions[@]}"
     else 
         echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
