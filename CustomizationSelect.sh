@@ -711,6 +711,8 @@ add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "messa
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 add_customization "Algorithm Experiments (main only)" "algorithm_experiments" "message_for_algorithm_experiments"
 
+add_customization "(Browser Build Only) Alert User of TestFlight Expiration (main only)" "testflight_expiration_warning"
+
 param_zero_is_customization
 param_zero_result=$?
 
