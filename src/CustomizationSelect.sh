@@ -74,10 +74,9 @@ add_customization "Modify Logo to include LnL icon" "lnl_icon" "message_to_add_b
 add_customization "CustomTypeOne LoopPatches" "customtypeone_looppatches" "message_for_cto"
 
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
+add_customization "Algorithm Experiments (main only)" "algorithm_experiments" "message_for_algorithm_experiments"
 
-add_customization "(main ONLY) Alert User of TestFlight Expiration" "testflight_expiration_warning"
-add_customization "(main ONLY) Limit CGM driven Loop Cycle to 5 minutes" "limit_loop_cycle_time"
-add_customization "(main ONLY) Algorithm Experiments" "algorithm_experiments" "message_for_algorithm_experiments"
+add_customization "Alert User of TestFlight Expiration (main ONLY)" "testflight_expiration_warning"
 
 param_zero_is_customization
 param_zero_result=$?
