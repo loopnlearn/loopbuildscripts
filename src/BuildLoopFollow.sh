@@ -30,6 +30,14 @@ function choose_main_branch() {
     branch_select ${URL_THIS_SCRIPT} main
 }
 
+function choose_second() {
+    branch_select "https://github.com/loopandlearn/LoopFollow_Second.git" main
+}
+
+function choose_third() {
+    branch_select "https://github.com/loopandlearn/LoopFollow_Third.git" main
+}
+
 function choose_dev_branch() {
     branch_select ${URL_THIS_SCRIPT} dev
 }
@@ -40,14 +48,22 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  You need Xcode and Xcode command line tools installed"
     echo -e ""
     echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "  Most people should choose main branch"
+    echo -e "  - 'main branch': Use this to build the primary version of Loop Follow."
+    echo -e "  - 'dev branch': Choose this for the latest development version."
+    echo -e "  - 'Second LoopFollow app': Select this to build a secondary instance"
+    echo -e "     of Loop Follow, useful if managing multiple Loopers."
+    echo -e "  - 'Third LoopFollow app': Choose this to build a third instance."
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/loop-follow/"
     section_divider
+
+
+    echo -e "Please select which branch of Loop Follow to download and build."
+    echo -e "  Most people should choose main branch"
     
-    options=("main branch" "dev branch" "$(exit_or_return_menu)")
-    actions=("choose_main_branch" "choose_dev_branch" "exit_script")
+    options=("main branch" "dev branch" "Second LoopFollow app" "Third LoopFollow app" "$(exit_or_return_menu)")
+    actions=("choose_main_branch" "choose_dev_branch" "choose_second" "choose_third" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
