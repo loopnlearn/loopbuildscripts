@@ -794,10 +794,6 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "  https://www.loopandlearn.org/loop-follow/"
     section_divider
 
-
-    echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "  Most people should choose main branch"
-    
     options=("main branch" "dev branch" "Second LoopFollow app" "Third LoopFollow app" "$(exit_or_return_menu)")
     actions=("choose_main_branch" "choose_dev_branch" "choose_second" "choose_third" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
