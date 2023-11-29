@@ -37,7 +37,8 @@ function loop_follow_display_name_config_override() {
     local include_line="#include? \"$target_file\""
 
     # Replace the include line with the new target file
-    sed -i '' "s|#include? \"../..${base_target_file}.*\"|$include_line|" "$config_file"
+    sed -i '' "s|#include\? \"\.\./\.\./${base_target_file}\.xcconfig\"|$include_line|" "$config_file"
+
     cd ..
 }
 
