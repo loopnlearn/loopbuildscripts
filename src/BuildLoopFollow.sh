@@ -11,7 +11,7 @@ DEV_TEAM_SETTING_NAME="LF_DEVELOPMENT_TEAM"
 CLONE_SUB_MODULES="0"
 
 #!inline build_functions.sh
-
+#!inline loopfollow_functions.sh
 
 ############################################################
 # The rest of this is specific to the particular script
@@ -71,6 +71,7 @@ fi
 ############################################################
 
 standard_build_train
+loop_follow_display_name_config_override
 
 
 ############################################################

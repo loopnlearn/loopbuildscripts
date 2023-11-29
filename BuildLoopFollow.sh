@@ -748,6 +748,57 @@ function branch_select() {
 # *** End of inlined file: inline_functions/build_functions.sh ***
 
 
+# *** Start of inlined file: inline_functions/loopfollow_functions.sh ***
+############################################################
+# Special functions used by LoopFollow build script
+############################################################
+
+function loop_follow_display_name_config_override() {
+    cd $REPO_NAME
+    # Define the base file names
+    current_file="LoopFollowDisplayNameConfig.xcconfig"
+    base_target_file="LoopFollowDisplayNameConfig"
+
+    # Check the value of REPO_NAME and set the target_file accordingly
+    case $REPO_NAME in
+        "LoopFollow_Second")
+            target_file="../../${base_target_file}_Second.xcconfig"
+            ;;
+        "LoopFollow_Third")
+            target_file="../../${base_target_file}_Third.xcconfig"
+            ;;
+        *)
+            target_file="../../${base_target_file}.xcconfig"
+            ;;
+    esac
+
+    # Check if the target file exists
+    if [ -f "$target_file" ]; then
+        # If it exists, remove the current file
+        echo "Target file exists. Removing $current_file..."
+        rm -f "$current_file"
+    else
+        # If it doesn't exist, move the current file to the target location
+        echo "Target file does not exist. Moving $current_file to $target_file..."
+        mv "$current_file" "$target_file"
+    fi
+
+    # Update Config.xcconfig
+    local config_file="Config.xcconfig"
+    local include_line="#include? \"$target_file\""
+
+    # Replace the include line with the new target file
+    sed -i '' "s|#include? \"../..${base_target_file}.*\"|$include_line|" "$config_file"
+    echo "Updated $config_file with new include line."
+    cd ..
+}
+
+
+############################################################
+# End of functions used by LoopFollow build script
+############################################################
+# *** End of inlined file: inline_functions/loopfollow_functions.sh ***
+
 
 ############################################################
 # The rest of this is specific to the particular script
@@ -807,6 +858,7 @@ fi
 ############################################################
 
 standard_build_train
+loop_follow_display_name_config_override
 
 
 ############################################################
