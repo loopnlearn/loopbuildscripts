@@ -30,7 +30,7 @@ function loop_follow_display_name_config_override() {
         # If it doesn't exist, move the current file to the target location
         mv "$current_file" "$target_file"
     fi
-    echo "# The original file has been moved to $target_file. Please edit the display name there." > "$current_file"
+    echo "// The original file has been moved to $target_file. Please edit the display name there." > "$current_file"
 
     # Update Config.xcconfig
     local config_file="Config.xcconfig"
