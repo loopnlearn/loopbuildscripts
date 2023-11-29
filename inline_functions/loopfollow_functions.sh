@@ -3,21 +3,22 @@
 ############################################################
 
 function loop_follow_display_name_config_override() {
-    cd $REPO_NAME
+    cd "$REPO_NAME"
     # Define the base file names
-    current_file="LoopFollowDisplayNameConfig.xcconfig"
-    base_target_file="LoopFollowDisplayNameConfig"
+    local current_file="LoopFollowDisplayNameConfig.xcconfig"
+    local base_target_file="LoopFollowDisplayNameConfig"
+    local target_file
 
     # Check the value of REPO_NAME and set the target_file accordingly
     case $REPO_NAME in
         "LoopFollow_Second")
-            target_file="../../${base_target_file}_Second.xcconfig"
+            target_file="${BUILD_DIR}/${base_target_file}_Second.xcconfig"
             ;;
         "LoopFollow_Third")
-            target_file="../../${base_target_file}_Third.xcconfig"
+            target_file="${BUILD_DIR}/${base_target_file}_Third.xcconfig"
             ;;
         *)
-            target_file="../../${base_target_file}.xcconfig"
+            target_file="${BUILD_DIR}/${base_target_file}.xcconfig"
             ;;
     esac
 
@@ -29,6 +30,7 @@ function loop_follow_display_name_config_override() {
         # If it doesn't exist, move the current file to the target location
         mv "$current_file" "$target_file"
     fi
+    echo "# The original file has been moved to $target_file. Please edit the display name there." > "$current_file"
 
     # Update Config.xcconfig
     local config_file="Config.xcconfig"
