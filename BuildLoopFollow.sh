@@ -757,38 +757,66 @@ function loop_follow_display_name_config_override() {
     cd "$REPO_NAME"
     # Define the base file names
     local current_file="LoopFollowDisplayNameConfig.xcconfig"
-    local base_target_file="LoopFollowDisplayNameConfig"
+    local base_target="LoopFollowDisplayNameConfig"
+    local default_display_name="LoopFollow"
     local target_file
+    local base_target_name
 
     # Check the value of REPO_NAME and set the target_file accordingly
     case $REPO_NAME in
         "LoopFollow_Second")
-            target_file="${BUILD_DIR}/${base_target_file}_Second.xcconfig"
+            base_target_name="${base_target}_Second"
+            default_display_name="${default_display_name}_Second"
             ;;
         "LoopFollow_Third")
-            target_file="${BUILD_DIR}/${base_target_file}_Third.xcconfig"
+            base_target_name="${base_target}_Third"
+            default_display_name="${default_display_name}_Third"
             ;;
         *)
-            target_file="${BUILD_DIR}/${base_target_file}.xcconfig"
+            base_target_name="${base_target}"
             ;;
     esac
+    target_file="${BUILD_DIR}/${base_target_name}.xcconfig"
 
+
+    section_divider
     # Check if the target file exists
     if [ -f "$target_file" ]; then
-        # If it exists, remove the current file
-        rm -f "$current_file"
+        # Report current display name
+        echo -e "${INFO_FONT}Display name file exists: ${NC}"
+        tail -1 "$target_file"
+        echo -e "To modify the display name, edit this file:"
+        echo -e "${target_file}"
     else
-        # If it doesn't exist, move the current file to the target location
-        mv "$current_file" "$target_file"
+        # If it doesn't exist, create the target_file
+        cp "$current_file" "$target_file"
+        echo -e "${INFO_FONT}Display name set to default: ${NC}"
+        tail -1 "$target_file"
+        echo -e ""
+        options=("Use Default" "Modify Display Name")
+        select opt in "${options[@]}"
+        do
+            case $opt in
+                "Use Default")
+                    break
+                    ;;
+                "Modify Display Name")
+                    read -p "Enter desired display name to show on Follow app: " looperID
+                    sed -i '' "s|${default_display_name}|${looperID}|"  "$target_file"
+                    break
+                    ;;
+            esac
+        done
     fi
-    echo "// The original file has been moved to $target_file. Please edit the display name there." > "$current_file"
 
+    echo -e ""
     # Update Config.xcconfig
     local config_file="Config.xcconfig"
     local include_line="#include? \"$target_file\""
 
     # Replace the include line with the new target file
-    sed -i '' "s|#include\? \"\.\./\.\./${base_target_file}\.xcconfig\"|$include_line|" "$config_file"
+    # sed -i '' "s|#include\? \"\.\./\.\./${base_target}\.xcconfig\"|$include_line|" "$config_file"
+    sed -i '' "s|\"\.\./\.\./${base_target}|\"\.\./\.\./${base_target_name}|" "$config_file"
 
     cd ..
 }
@@ -833,19 +861,25 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "${INFO_FONT}You are running the script to build Loop Follow${NC}"
     echo -e "  You need Xcode and Xcode command line tools installed"
     echo -e ""
-    echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "  - 'main branch': Use this to build the primary version of Loop Follow."
-    echo -e "  - 'dev branch': Choose this for the latest development version."
-    echo -e "  - 'Second LoopFollow app': Select this to build a secondary instance"
-    echo -e "     of Loop Follow, useful if managing multiple Loopers."
-    echo -e "  - 'Third LoopFollow app': Choose this to build a third instance."
+    echo -e "You can build main or dev branch of Loop Follow with this script"
+    echo -e "For main branch, you can choose multiple instances"
+    echo -e "  - useful if you follow more than one looper"
+    echo -e ""
+    echo -e "You will have an opportunity to use a custom display name"
+    echo -e ""
+    echo -e "These choices build the main branch"
+    echo -e "  - 'main branch': Use this to build the primary version of Loop Follow"
+    echo -e "  - 'Second LoopFollow': Use this for a second looper"
+    echo -e "  - 'Third LoopFollow': Use this for a third looper"
+    echo -e ""
+    echo -e "  - 'dev branch': Choose this if a feature is being tested in dev"
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/loop-follow/"
     section_divider
 
-    options=("main branch" "dev branch" "Second LoopFollow app" "Third LoopFollow app" "$(exit_or_return_menu)")
-    actions=("choose_main_branch" "choose_dev_branch" "choose_second" "choose_third" "exit_script")
+    options=("main branch" "Second LoopFollow app" "Third LoopFollow app" "dev branch" "$(exit_or_return_menu)")
+    actions=("choose_main_branch" "choose_second" "choose_third" "choose_dev_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
