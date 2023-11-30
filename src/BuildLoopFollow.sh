@@ -47,19 +47,25 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "${INFO_FONT}You are running the script to build Loop Follow${NC}"
     echo -e "  You need Xcode and Xcode command line tools installed"
     echo -e ""
-    echo -e "Please select which branch of Loop Follow to download and build."
-    echo -e "  - 'main branch': Use this to build the primary version of Loop Follow."
-    echo -e "  - 'dev branch': Choose this for the latest development version."
-    echo -e "  - 'Second LoopFollow app': Select this to build a secondary instance"
-    echo -e "     of Loop Follow, useful if managing multiple Loopers."
-    echo -e "  - 'Third LoopFollow app': Choose this to build a third instance."
+    echo -e "You can build main or dev branch of Loop Follow with this script"
+    echo -e "For main branch, you can choose multiple instances"
+    echo -e "  - useful if you follow more than one looper"
+    echo -e ""
+    echo -e "You will have an opportunity to use a custom display name"
+    echo -e ""
+    echo -e "These choices build the main branch"
+    echo -e "  - 'main branch': Use this to build the primary version of Loop Follow"
+    echo -e "  - 'Second LoopFollow': Use this for a second looper"
+    echo -e "  - 'Third LoopFollow': Use this for a third looper"
+    echo -e ""
+    echo -e "  - 'dev branch': Choose this if a feature is being tested in dev"
     echo -e ""
     echo -e "Documentation is found at:"
     echo -e "  https://www.loopandlearn.org/loop-follow/"
     section_divider
 
-    options=("main branch" "dev branch" "Second LoopFollow app" "Third LoopFollow app" "$(exit_or_return_menu)")
-    actions=("choose_main_branch" "choose_dev_branch" "choose_second" "choose_third" "exit_script")
+    options=("main branch" "Second LoopFollow app" "Third LoopFollow app" "dev branch" "$(exit_or_return_menu)")
+    actions=("choose_main_branch" "choose_second" "choose_third" "choose_dev_branch" "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
