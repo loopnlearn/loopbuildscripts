@@ -31,14 +31,18 @@ function loop_follow_display_name_config_override() {
     section_divider
     # Check if the target file exists
     if [ -f "$target_file" ]; then
+        # If it exists, remove the current file
+        rm -f "$current_file"
+
         # Report current display name
         echo -e "${INFO_FONT}Display name file exists: ${NC}"
         tail -1 "$target_file"
         echo -e "To modify the display name, edit this file:"
         echo -e "${target_file}"
     else
-        # If it doesn't exist, create the target_file
-        cp "$current_file" "$target_file"
+        # If it doesn't exist, move the current file to the target location
+        mv "$current_file" "$target_file"
+
         echo -e "${INFO_FONT}Display name set to default: ${NC}"
         tail -1 "$target_file"
         echo -e ""
@@ -57,6 +61,7 @@ function loop_follow_display_name_config_override() {
             esac
         done
     fi
+    echo "// The original file has been moved to $target_file. Please edit the display name there." > "$current_file"
 
     echo -e ""
     # Update Config.xcconfig
