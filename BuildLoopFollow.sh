@@ -787,9 +787,6 @@ function loop_follow_display_name_config_override() {
 
         # Report current display name
         echo -e "${INFO_FONT}Display name file exists: ${NC}"
-        tail -1 "$target_file"
-        echo -e "To modify the display name, edit this file:"
-        echo -e "${target_file}"
     else
         # If it doesn't exist, move the current file to the target location
         mv "$current_file" "$target_file"
@@ -822,6 +819,13 @@ function loop_follow_display_name_config_override() {
     # Replace the include line with the new target file
     # sed -i '' "s|#include\? \"\.\./\.\./${base_target}\.xcconfig\"|$include_line|" "$config_file"
     sed -i '' "s|\"\.\./\.\./${base_target}|\"\.\./\.\./${base_target_name}|" "$config_file"
+
+    # report the display name and provide editing instructions
+    tail -1 "$target_file"
+    echo -e "To modify the display_name, edit this file before you continue:"
+    echo -e "${target_file}"
+    echo -e ""
+    return_when_ready
 
     cd ..
 }
