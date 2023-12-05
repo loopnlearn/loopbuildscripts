@@ -2,6 +2,19 @@
 # Special functions used by LoopFollow build script
 ############################################################
 
+function display_name_suggestion() {
+    # Display this message only once per call to BuildLoopFollow.sh
+    if [ "${SKIP_DISPLAY_NAME_INFORMATION}" = "1" ]; then return; fi
+    echo ""
+    echo "The display name replaces the LoopFollow name on the phone and under iOS Settings"
+    echo "  and can be displayed on the home screen of the follow app"
+    echo ""
+    echo "  To assist in finding the renamed app, you might want to use LF as a prefix"
+    echo "  For example: LF George"
+    echo ""
+    SKIP_DISPLAY_NAME_INFORMATION=1
+}
+
 function loop_follow_display_name_config_override() {
     cd "$REPO_NAME"
     # Define the base file names
@@ -41,6 +54,7 @@ function loop_follow_display_name_config_override() {
         mv "$current_file" "$target_file"
 
         echo -e "${INFO_FONT}Display name set to default: ${NC}"
+        echo -e ""
         tail -1 "$target_file"
         echo -e ""
         options=("Use Default" "Modify Display Name")
@@ -51,6 +65,7 @@ function loop_follow_display_name_config_override() {
                     break
                     ;;
                 "Modify Display Name")
+                    display_name_suggestion
                     read -p "Enter desired display name to show on Follow app: " looperID
                     sed -i '' "s|${default_display_name}|${looperID}|"  "$target_file"
                     break
@@ -58,7 +73,9 @@ function loop_follow_display_name_config_override() {
             esac
         done
     fi
-    echo "// The original file has been moved to $target_file. Please edit the display name there." > "$current_file"
+    echo "// The original file has been moved to:" > "$current_file"
+    echo "//   $target_file" >> "$current_file"
+    echo "//   Please edit the display name there." >> "$current_file"
 
     echo -e ""
     # Update Config.xcconfig
@@ -71,9 +88,10 @@ function loop_follow_display_name_config_override() {
 
     # report the display name and provide editing instructions
     tail -1 "$target_file"
+    echo ""
     echo -e "To modify the display_name, edit this file before you continue:"
     echo -e "${target_file}"
-    echo -e ""
+    display_name_suggestion
     return_when_ready
 
     cd ..
