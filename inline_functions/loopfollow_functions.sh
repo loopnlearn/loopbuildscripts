@@ -6,7 +6,7 @@ function display_name_suggestion() {
     # Display this message only once per call to BuildLoopFollow.sh
     echo ""
     if [ "${SKIP_DISPLAY_NAME_INFORMATION}" = "1" ]; then return; fi
-    echo "The display name replaces the LoopFollow name on the phone"
+    echo "The display name replaces the follow app name on the phone"
     echo "  and can be displayed on the home screen of the follow app"
     echo ""
     echo "  To assist in finding the renamed app in iOS Settings,"
@@ -51,16 +51,16 @@ function loop_follow_display_name_config_override() {
         # Report current display name
         echo -e "${INFO_FONT}Display name file exists: ${NC}"
     else
-        # If it doesn't exist, move the current file to the target location
-        mv "$current_file" "$target_file"
         # Ask user for their display_name preference
-        echo -e "${INFO_FONT}Display name set to default: ${NC}"
-        echo -e ""
-        tail -1 "$target_file"
+        echo -e "${INFO_FONT}Display name set to default value of:${NC}"
+        echo -e "${INFO_FONT}    ${default_display_name}${NC}"
         echo -e ""
         options=("Use Default" "Modify Display Name")
         select opt in "${options[@]}"
+        # If user quits out of script, target not created, available for next attempt
+        # Move the current file to the target location
         do
+            mv "$current_file" "$target_file"
             case $opt in
                 "Use Default")
                     break
