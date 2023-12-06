@@ -795,17 +795,17 @@ function loop_follow_display_name_config_override() {
 
 
     section_separator
-    # Check if the target file exists
+    # Check if the target (display_name) file exists
     if [ -f "$target_file" ]; then
-        # If it exists, remove the current file
+        # If it exists, remove the file downloaded from repo
+        # It will be replaced
         rm -f "$current_file"
-
         # Report current display name
         echo -e "${INFO_FONT}Display name file exists: ${NC}"
     else
         # If it doesn't exist, move the current file to the target location
         mv "$current_file" "$target_file"
-
+        # Ask user for their display_name preference
         echo -e "${INFO_FONT}Display name set to default: ${NC}"
         echo -e ""
         tail -1 "$target_file"
@@ -829,14 +829,13 @@ function loop_follow_display_name_config_override() {
     echo "// The original file has been moved to:" > "$current_file"
     echo "//   $target_file" >> "$current_file"
     echo "//   Please edit the display name there." >> "$current_file"
-
     echo -e ""
-    # Update Config.xcconfig
+
+    # Update Config.xcconfig to point to appropriate display_name file
     local config_file="Config.xcconfig"
     local include_line="#include? \"$target_file\""
 
     # Replace the include line with the new target file
-    # sed -i '' "s|#include\? \"\.\./\.\./${base_target}\.xcconfig\"|$include_line|" "$config_file"
     sed -i '' "s|\"\.\./\.\./${base_target}|\"\.\./\.\./${base_target_name}|" "$config_file"
 
     # report the display name and provide editing instructions
