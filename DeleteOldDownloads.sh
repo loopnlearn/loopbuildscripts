@@ -28,7 +28,8 @@ function section_divider() {
 }
 
 function section_separator() {
-    clear 2>/dev/null
+    # Clears the screen without clearing the scrollback buffer, suppressing any error messages
+    echo -e "\033[2J\033[H" 2>/dev/null
     section_divider
 }
 
@@ -305,6 +306,8 @@ function delete_old_downloads() {
         "BuildLoop/Loop_dev-*"
         "BuildLoop/FreeAPS*"
         "BuildLoopFollow/LoopFollow_main*"
+        "BuildLoopFollow/LoopFollow_Second_main*"
+        "BuildLoopFollow/LoopFollow_Third_main*"
         "BuildLoopFollow/LoopFollow_dev*"
         "BuildxDrip4iOS/xDrip4iOS*"
         "BuildGlucoseDirect/GlucoseDirect*"
