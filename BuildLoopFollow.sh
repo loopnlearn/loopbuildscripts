@@ -756,12 +756,13 @@ function branch_select() {
 
 function display_name_suggestion() {
     # Display this message only once per call to BuildLoopFollow.sh
-    if [ "${SKIP_DISPLAY_NAME_INFORMATION}" = "1" ]; then return; fi
     echo ""
-    echo "The display name replaces the LoopFollow name on the phone and under iOS Settings"
+    if [ "${SKIP_DISPLAY_NAME_INFORMATION}" = "1" ]; then return; fi
+    echo "The display name replaces the LoopFollow name on the phone"
     echo "  and can be displayed on the home screen of the follow app"
     echo ""
-    echo "  To assist in finding the renamed app, you might want to use LF as a prefix"
+    echo "  To assist in finding the renamed app in iOS Settings,"
+    echo "    you might want to use LF as a prefix."
     echo "  For example: LF George"
     echo ""
     SKIP_DISPLAY_NAME_INFORMATION=1
@@ -819,7 +820,7 @@ function loop_follow_display_name_config_override() {
                 "Modify Display Name")
                     display_name_suggestion
                     read -p "Enter desired display name to show on Follow app: " looperID
-                    sed -i '' "s|${default_display_name}|${looperID}|"  "$target_file"
+                    sed -i '' "s|display_name = ${default_display_name}|display_name = ${looperID}|"  "$target_file"
                     break
                     ;;
             esac
