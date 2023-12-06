@@ -890,21 +890,24 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     echo -e "${INFO_FONT}You are running the script to build Loop Follow${NC}"
     echo -e "  You need Xcode and Xcode command line tools installed"
     echo -e ""
+    echo -e "${INFO_FONT}STOP - Please read this updated information${NC}"
+    echo -e ""
     echo -e "You can build main or dev branch of Loop Follow with this script"
     echo -e "For main branch, you can choose multiple instances"
     echo -e "  - useful if you follow more than one looper"
     echo -e ""
-    echo -e "You will have an opportunity to use a custom display name"
+    echo -e "${INFO_FONT}You can choose a custom app/display name${NC}"
     echo -e ""
     echo -e "These choices build the main branch"
     echo -e "  - 'main branch': Use this to build the primary version of Loop Follow"
     echo -e "  - 'Second LoopFollow': Use this for a second looper"
     echo -e "  - 'Third LoopFollow': Use this for a third looper"
     echo -e ""
-    echo -e "  - 'dev branch': Choose this if a feature is being tested in dev"
+    echo -e "  - 'dev branch': Choose only when a feature is being tested in dev"
     echo -e ""
-    echo -e "Documentation is found at:"
-    echo -e "  https://www.loopandlearn.org/loop-follow/"
+    echo -e "Documentation: https://www.loopandlearn.org/loop-follow/"
+    echo -e ""
+    return_when_ready
     section_divider
 
     options=("main branch" "Second LoopFollow app" "Third LoopFollow app" "dev branch" "$(exit_or_return_menu)")
