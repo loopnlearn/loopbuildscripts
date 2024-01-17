@@ -264,10 +264,6 @@ function open_source_warning() {
 
 # *** Start of inlined file: inline_functions/before_final_return_message.sh ***
 function before_final_return_message() {
-    # Default (no argument) prints watch message
-    # An other argument, skips watch message
-    local default_watch_flag="include_watch_message"
-    local watch_flag=${1:-$default_watch_flag}
     echo ""
     echo -e "${INFO_FONT}BEFORE you hit return:${NC}"
     echo " *** Unlock your phone and plug it into your computer"

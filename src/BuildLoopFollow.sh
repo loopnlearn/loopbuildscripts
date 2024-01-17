@@ -88,7 +88,7 @@ loop_follow_display_name_config_override
 ############################################################
 
 section_divider
-before_final_return_message "no watch"
+before_final_return_message
 echo -e ""
 return_when_ready
 cd $REPO_NAME
