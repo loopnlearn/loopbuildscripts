@@ -272,14 +272,13 @@ function before_final_return_message() {
     echo -e "${INFO_FONT}BEFORE you hit return:${NC}"
     echo " *** Unlock your phone and plug it into your computer"
     echo "     Trust computer if asked"
-    if [ "$watch_flag" = "$default_watch_flag" ]; then
-        echo -e " *** Optional: For Apple Watch - if you never built app on it"
-        echo -e "               Watch paired to phone and unlocked (on your wrist)"
-        echo -e "               Trust computer if asked"
-    fi
-    ios16_warning
     echo ""
-    echo -e "${INFO_FONT}Xcode will open automatically after you hit return${NC}"
+    echo -e "${INFO_FONT}AFTER you hit return, Xcode will open automatically${NC}"
+    echo "  For new phone or new watch (never used with Xcode),"
+    echo "    review Developer Mode Information:"
+    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
+    echo ""
+    echo "  For phones that have Developer Mode enabled continue with these steps"
     echo "  Upper middle of Xcode:"
     echo "    Confirm your phone or simulator choice is selected"
     echo "  Upper right of Xcode:"
@@ -606,12 +605,6 @@ function ensure_a_year() {
                 ;;
         esac
     done
-}
-
-function ios16_warning() {
-    echo -e "\n${INFO_FONT}If you have iOS 16, you must enable Developer Mode${NC}"
-    echo -e "${INFO_FONT}  Phone Settings->Privacy & Security${NC}"
-    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
 }
 
 function clone_repo() {

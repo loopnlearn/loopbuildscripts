@@ -115,12 +115,6 @@ function ensure_a_year() {
     done
 }
 
-function ios16_warning() {
-    echo -e "\n${INFO_FONT}If you have iOS 16, you must enable Developer Mode${NC}"
-    echo -e "${INFO_FONT}  Phone Settings->Privacy & Security${NC}"
-    echo -e "  https://loopkit.github.io/loopdocs/build/step14/#prepare-your-phone-and-watch"
-}
-
 function clone_repo() {
     section_divider
     if [ "$SUPPRESS_BRANCH" == "true" ]; then
