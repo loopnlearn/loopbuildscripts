@@ -280,8 +280,8 @@ function before_final_return_message() {
     echo "    Confirm your phone or simulator choice is selected"
     echo "  Upper right of Xcode:"
     echo "    Wait for packages to finish being copied or downloaded"
-    echo "    When you see indexing, you can build to phone or simulator"
-    echo "  Click on Play button or Command-B or Xcode Menu: Product, Build"
+    echo "    When you see indexing, you can start the build"
+    echo "  Click on Play button to build and run on the selected device"
 }
 # *** End of inlined file: inline_functions/before_final_return_message.sh ***
 
