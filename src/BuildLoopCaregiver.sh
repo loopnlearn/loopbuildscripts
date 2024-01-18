@@ -60,7 +60,7 @@ standard_build_train
 ############################################################
 
 section_divider
-before_final_return_message "no watch"
+before_final_return_message
 echo -e ""
 return_when_ready
 cd $REPO_NAME
