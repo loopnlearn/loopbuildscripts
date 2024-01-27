@@ -1,6 +1,5 @@
 function ultility_scripts {
     section_separator
-    echo -e "JONAS WAS HERE"
     echo -e "${INFO_FONT}These utility scripts automate several cleanup actions${NC}"
     echo -e ""
     echo -e " 1. Delete Old Downloads:"
