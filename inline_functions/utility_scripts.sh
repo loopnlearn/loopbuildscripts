@@ -1,4 +1,4 @@
-function ultility_scripts {
+function utility_scripts {
     section_separator
     echo -e "${INFO_FONT}These utility scripts automate several cleanup actions${NC}"
     echo -e ""

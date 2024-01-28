@@ -248,7 +248,7 @@ run_script() {
 
 
 # *** Start of inlined file: inline_functions/utility_scripts.sh ***
-function ultility_scripts {
+function utility_scripts {
     section_separator
     echo -e "${INFO_FONT}These utility scripts automate several cleanup actions${NC}"
     echo -e ""
@@ -384,7 +384,7 @@ while true; do
         fi
 
     elif [ "$WHICH" = "UtilityScripts" ]; then
-        ultility_scripts
+        utility_scripts
     else
         run_script "CustomizationSelect.sh" $CUSTOM_BRANCH
     fi

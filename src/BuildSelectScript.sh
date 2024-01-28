@@ -102,7 +102,7 @@ while true; do
         fi
 
     elif [ "$WHICH" = "UtilityScripts" ]; then
-        ultility_scripts
+        utility_scripts
     else
         run_script "CustomizationSelect.sh" $CUSTOM_BRANCH
     fi

@@ -59,7 +59,7 @@ if [ -z "$CUSTOM_BRANCH" ]; then
         echo -e ""
 
         options=("iAPS main" "iAPS dev" "Run Maintenance Utilities" "$(exit_or_return_menu)")
-        actions=("select_iaps_main" "select_iaps_dev" "ultility_scripts" "exit_script")
+        actions=("select_iaps_main" "select_iaps_dev" "utility_scripts" "exit_script")
         menu_select "${options[@]}" "${actions[@]}"
     done
 else
