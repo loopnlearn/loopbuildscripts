@@ -47,15 +47,17 @@ if [ -z "$CUSTOM_BRANCH" ]; then
     while [ -z "$BRANCH" ]; do
         section_separator
         echo -e "\n ${INFO_FONT}You are running the script to build iAPS${NC}"
+        echo -e " ${INFO_FONT}  or run maintenance utilities${NC}"
+        echo -e ""
         echo -e "Before you continue, please ensure"
         echo -e "  you have Xcode and Xcode command line tools installed\n"
         echo -e "Please select which branch of iAPS to download and build."
         echo -e "Most people should choose main branch"
         echo -e ""
-        echo -e "Documentation is found at:"
-        echo -e "  https://github.com/Artificial-Pancreas/iAPS#iaps"
-        echo -e "       and"
-        echo -e "  https://iaps.readthedocs.io/en/latest/"
+        echo -e "Documentation for iAPS:"
+        echo -e "  http://iapsdocs.org"
+        echo -e "Documentation for maintenance utilities:"
+        echo -e "  https://www.loopandlearn.org/build-select/#utilities-disk"
         echo -e ""
 
         options=("iAPS main" "iAPS dev" "Run Maintenance Utilities" "$(exit_or_return_menu)")
