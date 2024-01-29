@@ -283,6 +283,7 @@ function utility_scripts {
         return
     )
     menu_select "${options[@]}" "${actions[@]}"
+    return_when_ready
 }
 # *** End of inlined file: inline_functions/utility_scripts.sh ***
 

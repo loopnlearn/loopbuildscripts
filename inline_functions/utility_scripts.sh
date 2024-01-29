@@ -33,4 +33,5 @@ function utility_scripts {
         return
     )
     menu_select "${options[@]}" "${actions[@]}"
+    return_when_ready
 }
