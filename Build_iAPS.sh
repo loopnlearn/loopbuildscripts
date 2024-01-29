@@ -742,10 +742,83 @@ function branch_select() {
 # *** End of inlined file: inline_functions/build_functions.sh ***
 
 
+# *** Start of inlined file: inline_functions/utility_scripts.sh ***
+function utility_scripts {
+    section_separator
+    echo -e "${INFO_FONT}These utility scripts automate several cleanup actions${NC}"
+    echo -e ""
+    echo -e " 1. Delete Old Downloads:"
+    echo -e "     This will keep the most recent download for each build type"
+    echo -e "     It asks before deleting any folders"
+    echo -e " 2. Clean Derived Data:"
+    echo -e "     Free space on your disk from old Xcode builds."
+    echo -e "     You should quit Xcode before running this script."
+    echo -e " 3. Xcode Cleanup (The Big One):"
+    echo -e "     Clears more disk space filled up by using Xcode."
+    echo -e "     * Use after uninstalling Xcode prior to new installation"
+    echo -e "     * It can free up a substantial amount of disk space"
+    echo -e " 4. Clean Profiles:"
+    echo -e "     Deletes any provisioning profiles on your Mac"
+    echo -e "     * Next time you build, Xcode will generate a new one"
+    echo -e "     * Ensures the next app you build with Xcode will last a year"
+    section_divider
+
+    options=(
+        "Delete Old Downloads"
+        "Clean Derived Data"
+        "Xcode Cleanup"
+        "Clean Profiles"
+        "Return to Menu"
+    )
+    actions=(
+        "run_script 'DeleteOldDownloads.sh'"
+        "run_script 'CleanDerived.sh'"
+        "run_script 'XcodeClean.sh'"
+        "run_script 'CleanProfiles.sh'"
+        return
+    )
+    menu_select "${options[@]}" "${actions[@]}"
+}
+# *** End of inlined file: inline_functions/utility_scripts.sh ***
+
+
+# *** Start of inlined file: inline_functions/run_script.sh ***
+# The function fetches and executes a script either from LnL GitHub repository
+# or from the current local directory (if LOCAL_SCRIPT is set to "1").
+# The script is executed with "_" as parameter $0, telling the script that it is
+# run from within the ecosystem of LnL.
+# run_script accepts two parameters:
+#   1. script_name: The name of the script to be executed.
+#   2. extra_arg (optional): An additional argument to be passed to the script.
+# If the script fails to execute, the function prints an error message and terminates
+# the entire shell script with a non-zero status code.
+run_script() {
+    local script_name=$1
+    local extra_arg=$2
+    echo -e "\n--------------------------------\n"
+    echo -e "Executing Script: $script_name"
+    echo -e "\n--------------------------------\n"
+
+    if [[ ${LOCAL_SCRIPT:-0} -eq 0 ]]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/loopandlearn/lnl-scripts/$SCRIPT_BRANCH/$script_name)" _ "$extra_arg"
+    else
+        /bin/bash -c "$(cat $script_name)" _ "$extra_arg"
+    fi
+
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to execute $script_name"
+        exit 1
+    fi
+}
+# *** End of inlined file: inline_functions/run_script.sh ***
+
 
 ############################################################
 # The rest of this is specific to the particular script
 ############################################################
+
+# Set default values only if they haven't been defined as environment variables
+: ${SCRIPT_BRANCH:="main"}
 
 open_source_warning
 
@@ -766,22 +839,26 @@ function select_iaps_dev() {
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
-    section_separator
-    echo -e "\n ${INFO_FONT}You are running the script to build iAPS${NC}"
-    echo -e "Before you continue, please ensure"
-    echo -e "  you have Xcode and Xcode command line tools installed\n"
-    echo -e "Please select which branch of iAPS to download and build."
-    echo -e "Most people should choose main branch"
-    echo -e ""
-    echo -e "Documentation is found at:"
-    echo -e "  https://github.com/Artificial-Pancreas/iAPS#iaps"
-    echo -e "       and"
-    echo -e "  https://iaps.readthedocs.io/en/latest/"
-    echo -e ""
+    while [ -z "$BRANCH" ]; do
+        section_separator
+        echo -e "\n ${INFO_FONT}You are running the script to build iAPS${NC}"
+        echo -e " ${INFO_FONT}  or run maintenance utilities${NC}"
+        echo -e ""
+        echo -e "Before you continue, please ensure"
+        echo -e "  you have Xcode and Xcode command line tools installed\n"
+        echo -e "Please select which branch of iAPS to download and build."
+        echo -e "Most people should choose main branch"
+        echo -e ""
+        echo -e "Documentation for iAPS:"
+        echo -e "  http://iapsdocs.org"
+        echo -e "Documentation for maintenance utilities:"
+        echo -e "  https://www.loopandlearn.org/build-select/#utilities-disk"
+        echo -e ""
 
-    options=("iAPS main" "iAPS dev" "$(exit_or_return_menu)")
-    actions=("select_iaps_main" "select_iaps_dev" "exit_script")
-    menu_select "${options[@]}" "${actions[@]}"
+        options=("iAPS main" "iAPS dev" "Run Maintenance Utilities" "$(exit_or_return_menu)")
+        actions=("select_iaps_main" "select_iaps_dev" "utility_scripts" "exit_script")
+        menu_select "${options[@]}" "${actions[@]}"
+    done
 else
     branch_select ${URL_THIS_SCRIPT} $CUSTOM_BRANCH
 fi
