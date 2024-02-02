@@ -293,7 +293,7 @@ function after_final_return_message() {
     section_divider
     echo "If you need to find this download in a terminal, copy and paste the next line:"
     echo ""
-    echo "cd ${LOCAL_DIR}/LoopWorkspace"
+    echo "cd ${LOCAL_DIR}/${REPO_NAME}"
 }
 # *** End of inlined file: inline_functions/before_final_return_message.sh ***
 
