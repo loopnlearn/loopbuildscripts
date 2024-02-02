@@ -103,4 +103,5 @@ before_final_return_message
 echo -e ""
 return_when_ready
 xed . 
+after_final_return_message
 exit_script
