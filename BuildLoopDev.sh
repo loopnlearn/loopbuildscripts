@@ -282,6 +282,13 @@ function before_final_return_message() {
     echo "    When you see indexing, you can start the build"
     echo "  Click on Play button to build and run on the selected device"
 }
+
+function after_final_return_message() {
+    section_divider
+    echo "If you need to find this download in a terminal, copy and paste the next line:"
+    echo ""
+    echo "cd ${LOCAL_DIR}/${REPO_NAME}"
+}
 # *** End of inlined file: inline_functions/before_final_return_message.sh ***
 
 
@@ -829,6 +836,7 @@ before_final_return_message
 echo -e ""
 return_when_ready
 xed . 
+after_final_return_message
 exit_script
 # *** End of inlined file: src/BuildLoopDev.sh ***
 
