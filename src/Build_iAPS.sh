@@ -14,6 +14,9 @@ DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
 # sub modules are not required
 CLONE_SUB_MODULES="0"
 
+FLAG_USE_SHA=0  # Initialize FLAG_USE_SHA to 0
+FIXED_SHA=""    # Initialize FIXED_SHA with an empty string
+
 #!inline build_functions.sh
 #!inline utility_scripts.sh
 #!inline run_script.sh
@@ -27,13 +30,11 @@ CLONE_SUB_MODULES="0"
 
 open_source_warning
 
-
 ############################################################
 # Welcome & Branch Selection
 ############################################################
 
 URL_THIS_SCRIPT="https://github.com/Artificial-Pancreas/iAPS.git"
-
 
 function select_iaps_main() {
     branch_select ${URL_THIS_SCRIPT} main
@@ -41,6 +42,12 @@ function select_iaps_main() {
 
 function select_iaps_dev() {
     branch_select ${URL_THIS_SCRIPT} dev
+}
+
+function select_iaps_tested_main() {
+    FLAG_USE_SHA=1
+    FIXED_SHA="f404fc4"
+    branch_select ${URL_THIS_SCRIPT} dev iAPS_main_${FIXED_SHA}
 }
 
 if [ -z "$CUSTOM_BRANCH" ]; then
@@ -60,8 +67,8 @@ if [ -z "$CUSTOM_BRANCH" ]; then
         echo -e "  https://www.loopandlearn.org/build-select/#utilities-disk"
         echo -e ""
 
-        options=("iAPS main" "iAPS dev" "Run Maintenance Utilities" "$(exit_or_return_menu)")
-        actions=("select_iaps_main" "select_iaps_dev" "utility_scripts" "exit_script")
+        options=("iAPS 2.3.3 tested main" "iAPS main" "iAPS dev" "Run Maintenance Utilities" "$(exit_or_return_menu)")
+        actions=("select_iaps_tested_main" "select_iaps_main" "select_iaps_dev" "utility_scripts" "exit_script")
         menu_select "${options[@]}" "${actions[@]}"
     done
 else
@@ -72,8 +79,26 @@ fi
 # Standard Build train
 ############################################################
 
-standard_build_train
+verify_xcode_path
+clone_repo
+automated_clone_download_error_check
 
+# special build train for lightly tested commit
+cd $REPO_NAME
+
+this_dir="$(pwd)"
+echo -e "In ${this_dir}"
+if [ ${FLAG_USE_SHA} == 1 ]; then
+    echo -e "  Checking out commit ${FIXED_SHA}\n"
+    git checkout ${FIXED_SHA} --recurse-submodules --quiet
+    git describe --tags --exact-match
+    git rev-parse HEAD
+    echo -e "Continue if no errors reported"
+    return_when_ready
+fi
+
+check_config_override_existence_offer_to_configure
+ensure_a_year
 
 ############################################################
 # Open Xcode
@@ -83,7 +108,6 @@ section_divider
 before_final_return_message
 echo -e ""
 return_when_ready
-cd $REPO_NAME
 xed . 
 after_final_return_message
 exit_script
