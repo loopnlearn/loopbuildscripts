@@ -24,8 +24,8 @@ open_source_warning
 ############################################################
 
 # Stable Dev SHA
-FIXED_SHA="7340d55"
-FIXED_COMMIT_DATE="2024-Jan-3"
+FIXED_SHA="b58fb45"
+FIXED_COMMIT_DATE="2024-Feb-14"
 FLAG_USE_SHA=0
 
 URL_THIS_SCRIPT="https://github.com/LoopKit/LoopWorkspace.git"
