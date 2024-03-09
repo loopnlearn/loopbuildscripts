@@ -345,7 +345,7 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 LATEST_IOS_VER="17.4"
 
 #This should be the lowest xcode version required to build to LATEST_IOS_VER
-LOWEST_XCODE_VER="15.2"
+LOWEST_XCODE_VER="15.1"
 
 #This should be the latest known xcode version
 #LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
