@@ -1,13 +1,13 @@
 #This should be the latest iOS version
 #This is the version we expect users to have on their iPhones
-LATEST_IOS_VER="17.2.1"
+LATEST_IOS_VER="17.4"
 
 #This should be the lowest xcode version required to build to LATEST_IOS_VER
-LOWEST_XCODE_VER="15.0"
+LOWEST_XCODE_VER="15.1"
 
 #This should be the latest known xcode version
 #LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
-LATEST_XCODE_VER="15.2"
+LATEST_XCODE_VER="15.3"
 
 #This is the lowest version of macOS required to run LATEST_XCODE_VER
 LOWEST_MACOS_VER="13.5"
