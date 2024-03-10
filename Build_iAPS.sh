@@ -883,6 +883,7 @@ fi
 ############################################################
 
 verify_xcode_path
+check_versions
 clone_repo
 automated_clone_download_error_check
 
