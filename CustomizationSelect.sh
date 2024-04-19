@@ -697,7 +697,6 @@ function message_for_algorithm_experiments() {
 add_customization "CAGE: Upload Pod Start to Nightscout (main only, already in dev)" "omnipod_cage"
 add_customization "SAGE: Upload Dexcom Sensor Start to Nightscout (main only)" "dexcom_sage"
 add_customization "Change Default to Upload Dexcom Readings" "dexcom_upload_readings"
-add_customization "Support for Dexom ONE+" "dexcom_one_plus"
 add_customization "Increase Future Carbs Limit to 4 hours" "future_carbs_4h"
 add_customization "Modify Carb Warning & Limit: Low Carb to 49 & 99" "low_carb_limit"
 
@@ -714,6 +713,8 @@ add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 add_customization "Algorithm Experiments (main only)" "algorithm_experiments" "message_for_algorithm_experiments"
 
 add_customization "(Browser Build Only) Alert User of TestFlight Expiration (main only)" "testflight_expiration_warning"
+
+add_customization "Support for Dexom ONE+" "dexcom_one_plus"
 
 param_zero_is_customization
 param_zero_result=$?
