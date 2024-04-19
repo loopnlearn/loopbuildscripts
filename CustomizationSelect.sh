@@ -714,6 +714,8 @@ add_customization "Algorithm Experiments (main only)" "algorithm_experiments" "m
 
 add_customization "(Browser Build Only) Alert User of TestFlight Expiration (main only)" "testflight_expiration_warning"
 
+add_customization "Support for Dexom ONE+" "dexcom_one_plus"
+
 param_zero_is_customization
 param_zero_result=$?
 
