@@ -22,7 +22,6 @@ if [ $# -eq 0 ]; then
       "BuildLoopFollow.sh"
       "BuildLoopCaregiver.sh"
       "CustomizationSelect.sh"
-      "BuildFreeAPS.sh"
       "BuildLoopDev.sh"
       "BuildxDrip4iOS.sh"
       "BuildGlucoseDirect.sh"
