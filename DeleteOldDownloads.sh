@@ -314,6 +314,8 @@ function delete_old_downloads() {
         "Build_iAPS/iAPS_main_*"
         "Build_iAPS/iAPS_main-*"
         "Build_iAPS/iAPS_dev*"
+        "BuildTrio/Trio_main*"
+        "BuildTrio/Trio_dev*"
     )
 
     list_build_folders_when_testing
