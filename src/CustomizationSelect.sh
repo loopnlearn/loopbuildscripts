@@ -2,6 +2,10 @@
 
 BUILD_DIR=~/Downloads/BuildLoop
 
+# Customization parameters for Loop
+app_name="Loop"
+app_folder_name="LoopWorkspace"
+
 #!inline patch_functions.sh
 
 ############################################################
