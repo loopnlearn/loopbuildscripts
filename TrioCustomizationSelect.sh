@@ -684,7 +684,8 @@ function message_to_add_blank_line() {
 #   (Optional) message function shown prior to option
 
 add_customization "Change Default to Upload Dexcom Readings" "dexcom_upload_readings"
-add_customization "Disable Authentication Requirement" "no_auth"
+# Trio has its own unlock manager - this doesn't do anything
+# add_customization "Disable Authentication Requirement" "no_auth"
 
 param_zero_is_customization
 param_zero_result=$?
