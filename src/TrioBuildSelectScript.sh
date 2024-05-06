@@ -1,4 +1,4 @@
-#!/bin/bash # script OiBuildSelectScript.sh
+#!/bin/bash # script TrioBuildSelectScript.sh
 
 #!inline common.sh
 #!inline build_warning.sh
@@ -59,7 +59,7 @@ while true; do
         "WHICH=${app_name}" \
         "WHICH=OtherApps" \
         "WHICH=UtilityScripts" \
-        "WHICH=OiCustomizationScripts" \
+        "WHICH=TrioCustomizationScripts" \
         "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 
@@ -103,6 +103,6 @@ while true; do
     elif [ "$WHICH" = "UtilityScripts" ]; then
         utility_scripts
     else
-        run_script "OiCustomizationSelect.sh" $CUSTOM_BRANCH
+        run_script "TrioCustomizationSelect.sh" $CUSTOM_BRANCH
     fi
 done
