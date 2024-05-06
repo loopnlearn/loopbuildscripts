@@ -1,5 +1,11 @@
 #!inline common.sh
 
+# Check if both app_name and app_folder_name are set
+if [ -z "$app_name" ] || [ -z "$app_folder_name" ]; then
+    echo "Error: Both app_name and app_folder_name need to be set."
+    exit 1
+fi
+
 # set to 1 for debug (verbose output) mode at beginning of script
 # set to 2 for debug (verbose output) mode for every refresh
 : ${CUSTOMIZATION_DEBUG:="0"}
@@ -43,7 +49,7 @@ warning_flag=0
 function warning_message() {
     echo -e "${INFO_FONT} *** WARNING ***${NC}"
     echo -e "${INFO_FONT}Customizations are even more experimental than the released version${NC}"
-    echo -e "${INFO_FONT}of Loop. It is your responsibility to understand the changes${NC}"
+    echo -e "${INFO_FONT}of ${app_name}. It is your responsibility to understand the changes${NC}"
     echo -e "${INFO_FONT}expected when you apply, remove or update one of these customizations${NC}"
     echo
     warning_flag=1
@@ -287,14 +293,14 @@ function download_patches {
 
 function patch_menu {
     section_separator
-    echo -e "${INFO_FONT}Loop Customization Select Script${NC}"
+    echo -e "${INFO_FONT}${app_name} Customization Select Script${NC}"
 
     cd "$STARTING_DIR"
 
-    if [ "$(basename "$PWD")" != "LoopWorkspace" ]; then
-        target_dir=$(find ${BUILD_DIR/#\~/$HOME} -maxdepth 1 -type d -name "Loop*" -exec [ -d "{}"/LoopWorkspace ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk '{print $2"/LoopWorkspace"}')
+    if [ "$(basename "$PWD")" != "${app_folder_name}" ]; then
+        target_dir=$(find ${BUILD_DIR/#\~/$HOME} -maxdepth 1 -type d -name "${app_name}*" -exec [ -d "{}"/${app_folder_name} ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk -v app_folder="${app_folder_name}" '{print $2"/"app_folder}')
         if [ -z "$target_dir" ]; then
-            echo -e "${ERROR_FONT}Error: No folder containing LoopWorkspace found in${NC}"
+            echo -e "${ERROR_FONT}Error: No folder containing ${app_folder_name} found in${NC}"
             echo "    $BUILD_DIR"
         else
             cd "$target_dir"
@@ -302,7 +308,7 @@ function patch_menu {
     fi
 
     # Verify current folder
-    if [ $(basename $PWD) = "LoopWorkspace" ]; then
+    if [ "$(basename "$PWD")" = "${app_folder_name}" ]; then
         download_patches
         echo
 
@@ -425,14 +431,14 @@ function patch_menu {
 
 function patch_command_line {
     section_separator
-    echo -e "${INFO_FONT}Loop Customization Select Script${NC}"
+    echo -e "${INFO_FONT}${app_name} Customization Select Script${NC}"
 
     cd "$STARTING_DIR"
 
-    if [ "$(basename "$PWD")" != "LoopWorkspace" ]; then
-        target_dir=$(find ${BUILD_DIR/#\~/$HOME} -maxdepth 1 -type d -name "Loop*" -exec [ -d "{}"/LoopWorkspace ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk '{print $2"/LoopWorkspace"}')
+    if [ "$(basename "$PWD")" != "${app_folder_name}" ]; then
+        target_dir=$(find ${BUILD_DIR/#\~/$HOME} -maxdepth 1 -type d -name "${app_name}*" -exec [ -d "{}"/${app_folder_name} ] \; -print 2>/dev/null | xargs -I {} stat -f "%m %N" {} | sort -rn | head -n 1 | awk '{print $2"/${app_folder_name}"}')
         if [ -z "$target_dir" ]; then
-            echo -e "${ERROR_FONT}Error: No folder containing LoopWorkspace found in${NC}"
+            echo -e "${ERROR_FONT}Error: No folder containing ${app_folder_name} found in${NC}"
             echo "    $BUILD_DIR"
             exit 1
         else
@@ -441,7 +447,7 @@ function patch_command_line {
     fi
 
     # Verify current folder
-    if [ $(basename $PWD) = "LoopWorkspace" ]; then
+    if [ "$(basename "$PWD")" = "${app_folder_name}" ]; then
         download_patches
         echo -e "${INFO_FONT}Directory where customizations will be applied:${NC}"
         echo -e "${INFO_FONT}  ${workingdir/$HOME/~}${NC}"
