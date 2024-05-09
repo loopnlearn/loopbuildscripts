@@ -770,8 +770,9 @@ open_source_warning
 
 # when public:
 URL_THIS_SCRIPT="https://github.com/nightscout/Trio.git"
-# TODO - update later
-URL_FOR_DOCS="https://openiapsdocs.org/en/latest/"
+URL_FOR_DOCS_PR="https://github.com/nightscout/trio-docs"
+URL_FOR_DOCS="https://docs.diy-trio.org/en/latest/"
+URL_FOR_DISCORD="https://discord.gg/zcY7cjkv"
 
 # Keep this for when we need a special branch name
 # If not used, make this empty string and comment out the menu option
@@ -796,14 +797,16 @@ if [ -z "$CUSTOM_BRANCH" ]; then
         echo -e ""
         echo -e "  ${INFO_FONT}WARNING: Beta Testers ONLY${NC}"
         echo -e "    You should be a member of the ${app_name} discord server"
-        echo -e "      https://discord.gg/KepAG6RdYZ"
+        echo -e "      ${URL_FOR_DISCORD}"
         echo -e ""
         #echo -e "To build ${app_name}, you will select which branch:"
         #echo -e "   most people should choose main branch"
         echo -e "  During beta testing, use the dev branch"
         echo -e ""
-        echo -e "  Documentation for ${app_name}:"
+        echo -e "  Draft documentation for ${app_name}:"
         echo -e "    ${URL_FOR_DOCS}"
+        echo -e "  PR for docs should be directed to dev branch of"
+        echo -e "    ${URL_FOR_DOCS_PR}"
         echo -e ""
         echo -e "Before you continue, please ensure"
         echo -e "  you have Xcode and Xcode command line tools installed\n"
