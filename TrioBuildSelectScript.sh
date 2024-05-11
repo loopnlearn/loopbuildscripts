@@ -315,8 +315,7 @@ function first_time_menu() {
     echo "  1 Download and Build ${app_name}"
     echo "  2 Download and Build Related Apps"
     echo "  3 Run Maintenance Utilities"
-    echo "  4 Customize ${app_name}"
-    echo "  5 Exit Script"
+    echo "  4 Exit Script"
     echo ""
     echo "After completing a given option, you can choose another or exit the script"
     FIRST_TIME="0"
@@ -336,13 +335,11 @@ while true; do
         "Build ${app_name}" \
         "Build Related Apps" \
         "Run Maintenance Utilities" \
-        "Customize ${app_name}" \
         "Exit Script")
     actions=(\
         "WHICH=${app_name}" \
         "WHICH=OtherApps" \
         "WHICH=UtilityScripts" \
-        "WHICH=TrioCustomizationScripts" \
         "exit_script")
     menu_select "${options[@]}" "${actions[@]}"
 
@@ -385,8 +382,6 @@ while true; do
 
     elif [ "$WHICH" = "UtilityScripts" ]; then
         utility_scripts
-    else
-        run_script "TrioCustomizationSelect.sh" $CUSTOM_BRANCH
     fi
 done
 # *** End of inlined file: src/TrioBuildSelectScript.sh ***

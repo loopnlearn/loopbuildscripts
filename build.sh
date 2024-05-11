@@ -32,7 +32,6 @@ if [ $# -eq 0 ]; then
       "XcodeClean.sh"
       "BuildTrio.sh"
       "TrioBuildSelectScript.sh"
-      "TrioCustomizationSelect.sh"
     )
 else
     # If arguments were provided, use them as the list of scripts
