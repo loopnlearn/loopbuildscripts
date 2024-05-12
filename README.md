@@ -146,18 +146,20 @@ If you want to build a different branch, for example `branch_name`
   https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopDev.sh)"
 ```
 
-#### BuildFreeAPS
+### Scripts for the Trio app
+
+Script similar to the Loop BuildSelectScript, but associated with the Trio app.
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildFreeAPS.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/TrioBuildSelectScript.sh)"
 ```
 
-#### Build_iAPS
+Script to directly built the Trio app without using the select script above.
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/Build_iAPS.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildTrio.sh)"
 ```
 
 ## Developer Tips

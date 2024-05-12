@@ -30,6 +30,8 @@ if [ $# -eq 0 ]; then
       "CleanDerived.sh"
       "DeleteOldDownloads.sh"
       "XcodeClean.sh"
+      "BuildTrio.sh"
+      "TrioBuildSelectScript.sh"
     )
 else
     # If arguments were provided, use them as the list of scripts
