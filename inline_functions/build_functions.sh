@@ -120,7 +120,7 @@ function clone_repo() {
     if [ "$SUPPRESS_BRANCH" == "true" ]; then
         LOCAL_DIR="${BUILD_DIR}/${APP_NAME}-${DOWNLOAD_DATE}"
     else
-        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}_${BRANCH}-${DOWNLOAD_DATE}"
+        LOCAL_DIR="${BUILD_DIR}/${APP_NAME}_${BRANCH//\//-}-${DOWNLOAD_DATE}"
     fi
     if [ ${FRESH_CLONE} == 1 ]; then
         mkdir "${LOCAL_DIR}"
