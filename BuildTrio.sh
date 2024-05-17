@@ -772,7 +772,10 @@ open_source_warning
 URL_THIS_SCRIPT="https://github.com/nightscout/Trio.git"
 URL_FOR_DOCS_PR="https://github.com/nightscout/trio-docs"
 URL_FOR_DOCS="https://docs.diy-trio.org/en/latest/"
-URL_FOR_DISCORD="https://discord.gg/FnwFEFUwXE"
+# use next while in beta testing - takes user to Beta-Testing-Welcome
+URL_FOR_DISCORD=https://discord.gg/6zveBrBq
+# after release, use the following - takes user to the rules channels
+# URL_FOR_DISCORD="https://discord.gg/FnwFEFUwXE"
 
 # Keep this for when we need a special branch name
 # If not used, make this empty string and comment out the menu option
