@@ -17,12 +17,14 @@ function utility_scripts {
     echo -e "     * Next time you build, Xcode will generate a new one"
     echo -e "     * Ensures the next app you build with Xcode will last a year"
     section_divider
+    echo -e "${INFO_FONT}Pay attention - quit Xcode before selecting some options${NC}"
+    section_divider
 
     options=(
         "Delete Old Downloads"
-        "Clean Derived Data"
-        "Xcode Cleanup"
-        "Clean Profiles"
+        "Clean Derived Data (Quit Xcode)"
+        "Xcode Cleanup (Quit Xcode)"
+        "Clean Profiles (Quit Xcode)"
         "Return to Menu"
     )
     actions=(
