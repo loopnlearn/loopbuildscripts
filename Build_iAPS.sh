@@ -760,17 +760,18 @@ function utility_scripts {
     echo -e " 1. Delete Old Downloads:"
     echo -e "     This will keep the most recent download for each build type"
     echo -e "     It asks before deleting any folders"
-    echo -e " 2. Clean Derived Data:"
+    echo -e " 2. Clean Derived Data (Quit Xcode):"
     echo -e "     Free space on your disk from old Xcode builds."
     echo -e "     You should quit Xcode before running this script."
-    echo -e " 3. Xcode Cleanup (The Big One):"
+    echo -e " 3. Xcode Cleanup (The Big One) (Quit Xcode):"
     echo -e "     Clears more disk space filled up by using Xcode."
     echo -e "     * Use after uninstalling Xcode prior to new installation"
     echo -e "     * It can free up a substantial amount of disk space"
-    echo -e " 4. Clean Profiles:"
     echo -e "     Deletes any provisioning profiles on your Mac"
     echo -e "     * Next time you build, Xcode will generate a new one"
     echo -e "     * Ensures the next app you build with Xcode will last a year"
+    echo -e ""
+    echo -e "${INFO_FONT}Pay attention - quit Xcode before selecting some options${NC}"
     section_divider
 
     options=(
