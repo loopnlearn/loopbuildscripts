@@ -230,6 +230,9 @@ function delete_folders_except_latest() {
     echo
 
     echo "Download Folder(s) that can be deleted:"
+    echo -e "  If Xcode is open in a folder you plan to delete,"
+    echo -e "    ${INFO_FONT}Quit Xcode${NC} before deleting"
+
     for folder in "${folders[@]:1}"; do
         echo "  ${folder/#$HOME/~}"
         total_size=$(($total_size + $(du -s "$folder" | awk '{print $1}')))
