@@ -5,7 +5,7 @@ function utility_scripts {
     echo -e " 1. Delete Old Downloads:"
     echo -e "     This will keep the most recent download for each build type"
     echo -e "     It asks before deleting any folders"
-    echo -e "     (It is unlikely, but quit Xcode if it is open in a folder you plan to delete)
+    echo -e "     (It is unlikely, but quit Xcode if it is open in a folder you plan to delete)"
     echo -e " 2. Clean Derived Data (Quit Xcode):"
     echo -e "     Free space on your disk from old Xcode builds."
     echo -e "     You should quit Xcode before running this script."
