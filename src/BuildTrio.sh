@@ -40,7 +40,7 @@ URL_THIS_SCRIPT="https://github.com/nightscout/Trio.git"
 URL_FOR_DOCS_PR="https://github.com/nightscout/trio-docs"
 URL_FOR_DOCS="https://docs.diy-trio.org/en/latest/"
 # use next while in beta testing - takes user to Beta-Testing-Welcome
-URL_FOR_DISCORD=https://discord.gg/6zveBrBq
+URL_FOR_DISCORD=https://discord.gg/kyjG4333Wb
 # after release, use the following - takes user to the rules channels
 # URL_FOR_DISCORD="https://discord.gg/FnwFEFUwXE"
 
