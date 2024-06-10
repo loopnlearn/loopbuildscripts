@@ -347,15 +347,19 @@ while true; do
 
     if [ "$WHICH" = "Loop" ]; then
 
-        section_separator
+        # Issue Warning if not done previously
+        open_source_warning
 
-        echo -e "Until the current dev branch is released as 3.4, this script"
-        echo -e "  has options for the released code (3.2.3) or dev (3.3.0)"
+        section_separator
+        echo -e "${INFO_FONT}Until the current dev branch is released as 3.4, this script"
+        echo -e "  has options for released (3.2.3) or dev (3.3.0) version${NC}"
         echo -e
-        echo -e "      For info on main: see https://github.com/LoopKit/Loop/releases"
-        echo -e "      For info on dev: see https://loopkit.github.io/loopdocs/version/development/#updates-in-dev"
+        echo -e "  Each option has additional information once you make your choice"
         echo -e
-        echo -e "If you choose dev, please Choose dev lightly tested"
+        echo -e "If choosing dev, please select the ${INFO_FONT}lightly tested${NC} option"
+        echo -e
+
+        return_when_ready
 
         options=(\
             "Build Loop 3.2.3" \
@@ -368,12 +372,8 @@ while true; do
         menu_select "${options[@]}" "${actions[@]}"
 
         if [ "$WHICH" = "LoopReleased" ]; then
-            # Issue Warning if not done previously
-            open_source_warning
             run_script "BuildLoopReleased.sh" $CUSTOM_BRANCH
         elif  [ "$WHICH" = "LoopDev" ]; then
-            # Issue Warning if not done previously
-            open_source_warning
             run_script "BuildLoopDev.sh" $CUSTOM_BRANCH
         fi
 
