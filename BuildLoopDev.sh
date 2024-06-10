@@ -775,6 +775,8 @@ function choose_fixed_dev_branch() {
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "${INFO_FONT}You are running the script for the development version for Loop${NC}"
+    echo -e "${INFO_FONT}You should be familiar with the documenation found at:${NC}"
+    echo -e "   https://loopdocs.org"
     echo
     echo "  You should be following zulipchat and have read LoopDocs:"
     echo
