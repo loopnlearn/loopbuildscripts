@@ -362,8 +362,8 @@ while true; do
         return_when_ready
 
         options=(\
-            "Build Loop 3.2.3" \
-            "Build Loop dev" \
+            "Build Loop main (3.2.3)" \
+            "Build Loop dev  (3.3.0)" \
             "Return to Menu")
         actions=(\
             "WHICH=LoopReleased" \
