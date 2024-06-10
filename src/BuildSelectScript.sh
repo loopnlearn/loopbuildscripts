@@ -83,8 +83,12 @@ while true; do
         menu_select "${options[@]}" "${actions[@]}"
 
         if [ "$WHICH" = "LoopReleased" ]; then
+            # Issue Warning if not done previously
+            open_source_warning
             run_script "BuildLoopReleased.sh" $CUSTOM_BRANCH
         elif  [ "$WHICH" = "LoopDev" ]; then
+            # Issue Warning if not done previously
+            open_source_warning
             run_script "BuildLoopDev.sh" $CUSTOM_BRANCH
         fi
 
