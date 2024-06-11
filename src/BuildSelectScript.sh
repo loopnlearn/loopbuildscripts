@@ -65,7 +65,32 @@ while true; do
         # Issue Warning if not done previously
         open_source_warning
 
-        run_script "BuildLoopReleased.sh" $CUSTOM_BRANCH
+        section_separator
+        echo -e "${INFO_FONT}Until the current dev branch is released as 3.4, this script"
+        echo -e "  has options for released (3.2.3) or dev (3.3.0) version${NC}"
+        echo -e
+        echo -e "  Each option has additional information once you make your choice"
+        echo -e
+        echo -e "If choosing dev, please select the ${INFO_FONT}lightly tested${NC} option"
+        echo -e
+
+        return_when_ready
+
+        options=(\
+            "Build Loop main (3.2.3)" \
+            "Build Loop dev  (3.3.0)" \
+            "Return to Menu")
+        actions=(\
+            "WHICH=LoopReleased" \
+            "WHICH=LoopDev" \
+            return)
+        menu_select "${options[@]}" "${actions[@]}"
+
+        if [ "$WHICH" = "LoopReleased" ]; then
+            run_script "BuildLoopReleased.sh" $CUSTOM_BRANCH
+        elif  [ "$WHICH" = "LoopDev" ]; then
+            run_script "BuildLoopDev.sh" $CUSTOM_BRANCH
+        fi
 
 
     elif [ "$WHICH" = "OtherApps" ]; then

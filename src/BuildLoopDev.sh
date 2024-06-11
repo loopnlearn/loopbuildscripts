@@ -24,8 +24,8 @@ open_source_warning
 ############################################################
 
 # Stable Dev SHA
-FIXED_SHA="ce74cf4"
-FIXED_COMMIT_DATE="2024-Feb-21"
+FIXED_SHA="c4b4588"
+FIXED_COMMIT_DATE="2024-May-19"
 FLAG_USE_SHA=0
 
 URL_THIS_SCRIPT="https://github.com/LoopKit/LoopWorkspace.git"
@@ -42,6 +42,8 @@ function choose_fixed_dev_branch() {
 if [ -z "$CUSTOM_BRANCH" ]; then
     section_separator
     echo -e "${INFO_FONT}You are running the script for the development version for Loop${NC}"
+    echo -e "${INFO_FONT}You should be familiar with the documenation found at:${NC}"
+    echo -e "   https://loopdocs.org"
     echo
     echo "  You should be following zulipchat and have read LoopDocs:"
     echo
