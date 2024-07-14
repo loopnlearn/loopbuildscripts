@@ -207,6 +207,7 @@ function apply_patch {
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn "$patch_file"; then
             echo -e "${SUCCESS_FONT}  Customization $customization_name applied successfully${NC}"
+            xcodebuild -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean
             sleep $SLEEP_TIME_AFTER_SUCCESS
         else
             echo -e "${ERROR_FONT}  Failed to apply customization $customization_name${NC}"
@@ -244,6 +245,7 @@ function revert_patch {
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn --reverse "$patch_file"; then
             echo -e "${SUCCESS_FONT}  Customization $customization_name reverted successfully${NC}"
+            xcodebuild -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean
             sleep $SLEEP_TIME_AFTER_SUCCESS
         else
             echo -e "${ERROR_FONT}  Failed to revert customization $customization_name${NC}"
