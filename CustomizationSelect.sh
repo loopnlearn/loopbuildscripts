@@ -231,11 +231,28 @@ folder=()
 message_function=()
 status=()
 patch=()
+clean_build=()
 
-function add_customization() {    
-    customization+=("$1")
-    folder+=("$2")
-    message_function+=("$3")
+function add_customization() {
+    local custom="$1"
+    local fold="$2"
+    local msg_func="$3"
+    local build="$4"
+
+    customization+=("$custom")
+    folder+=("$fold")
+    
+    if [[ -n "$msg_func" ]]; then
+        message_function+=("$msg_func")
+    else
+        message_function+=("")
+    fi
+
+    if [[ -n "$build" ]]; then
+        clean_build+=("$build")
+    else
+        clean_build+=("")
+    fi
 }
 
 function refresh_status() {
@@ -375,11 +392,14 @@ function apply_patch {
     local index=$1
     local patch_file="${patch[$index]}"
     local customization_name="${customization[$index]}"
+    
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn "$patch_file"; then
             echo -e "${SUCCESS_FONT}  Customization $customization_name applied successfully${NC}"
-            echo -e "${INFO_FONT}  Cleaning build folder, please wait  ...  patiently  ...${NC}"
-            xcodebuild -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean
+            if [ "${clean_build[$index]}" == "1" ]; then
+                echo -e "${INFO_FONT}  Cleaning build folder, please wait  ...  patiently  ...${NC}"
+                xcodebuild -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean
+            fi
             sleep $SLEEP_TIME_AFTER_SUCCESS
         else
             echo -e "${ERROR_FONT}  Failed to apply customization $customization_name${NC}"
@@ -417,8 +437,10 @@ function revert_patch {
     if [ -f "$patch_file" ]; then
         if git apply --whitespace=nowarn --reverse "$patch_file"; then
             echo -e "${SUCCESS_FONT}  Customization $customization_name reverted successfully${NC}"
-            echo -e "${INFO_FONT}  Cleaning build folder, please wait  ...  patiently  ...${NC}"
-            xcodebuild -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean
+            if [ "${clean_build[$index]}" == "1" ]; then
+                echo -e "${INFO_FONT}  Cleaning build folder, please wait  ...  patiently  ...${NC}"
+                xcodebuild -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean
+            fi            
             sleep $SLEEP_TIME_AFTER_SUCCESS
         else
             echo -e "${ERROR_FONT}  Failed to revert customization $customization_name${NC}"
@@ -703,7 +725,7 @@ add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "ov
 add_customization "Add now line to charts" "now_line"
 add_customization "Modify Logo to include LnL icon" "lnl_icon" "message_to_add_blank_line"
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
-add_customization "Basal Lock" "basal_lock"
+add_customization "Basal Lock" "basal_lock" "" "1"
 
 param_zero_is_customization
 param_zero_result=$?
