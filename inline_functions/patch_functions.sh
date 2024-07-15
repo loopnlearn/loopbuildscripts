@@ -63,25 +63,10 @@ patch=()
 clean_build=()
 
 function add_customization() {
-    local custom="$1"
-    local fold="$2"
-    local msg_func="$3"
-    local build="$4"
-
-    customization+=("$custom")
-    folder+=("$fold")
-    
-    if [[ -n "$msg_func" ]]; then
-        message_function+=("$msg_func")
-    else
-        message_function+=("")
-    fi
-
-    if [[ -n "$build" ]]; then
-        clean_build+=("$build")
-    else
-        clean_build+=("")
-    fi
+    customization+=("$1")
+    folder+=("$2")
+    message_function+=("$3")
+    clean_build+=("$4")
 }
 
 function refresh_status() {
@@ -227,7 +212,7 @@ function apply_patch {
             echo -e "${SUCCESS_FONT}  Customization $customization_name applied successfully${NC}"
             if [ "${clean_build[$index]}" == "1" ]; then
                 echo -e "${INFO_FONT}  Cleaning build folder, please wait  ...  patiently  ...${NC}"
-                xcodebuild -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean
+                xcodebuild -quiet -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean 2>/dev/null
             fi
             sleep $SLEEP_TIME_AFTER_SUCCESS
         else
@@ -268,7 +253,7 @@ function revert_patch {
             echo -e "${SUCCESS_FONT}  Customization $customization_name reverted successfully${NC}"
             if [ "${clean_build[$index]}" == "1" ]; then
                 echo -e "${INFO_FONT}  Cleaning build folder, please wait  ...  patiently  ...${NC}"
-                xcodebuild -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean
+                xcodebuild -quiet -workspace "${workingdir}/LoopWorkspace.xcworkspace" -scheme LoopWorkspace clean 2>/dev/null
             fi            
             sleep $SLEEP_TIME_AFTER_SUCCESS
         else
