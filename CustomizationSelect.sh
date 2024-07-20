@@ -711,6 +711,7 @@ add_customization "Add now line to charts" "now_line"
 add_customization "Modify Logo to include LnL icon" "lnl_icon" "message_to_add_blank_line"
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 add_customization "Basal Lock" "basal_lock" "" "1"
+add_customization "Remove Loop Title on Watch App" "watch_title"
 
 param_zero_is_customization
 param_zero_result=$?
