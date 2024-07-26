@@ -673,7 +673,7 @@ function message_generic() {
     echo "  These Customizations are documented on the Loop and Learn web site"
     echo "        https://www.loopandlearn.org/custom-code/#custom-list"
     echo
-    echo "  With the release of Loop 3.4, expect some rapid changes to options"
+    echo "  New customizations are available with the release of Loop 3.4.x"
     echo
 }
 
@@ -691,8 +691,14 @@ function message_to_add_blank_line() {
 
 # optional message to go with add_customization line
 function message_for_pr2002() {
-    printf "      This feature in development enables save and restore of named profiles.\n"
-    printf "        https://github.com/LoopKit/Loop/pull/2002\n\n"
+    printf "        This feature enables save and restore of named profiles\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development/#pr-2002\n\n"
+}
+
+# optional message to go with add_customization line
+function message_for_basal_lock() {
+    printf "        This feature enables override of Loop behavior for high glucose\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development/#basal-lock\n\n"
 }
 
 # list patches in this order with args:
@@ -704,15 +710,18 @@ add_customization "Change Default to Upload Dexcom Readings" "dexcom_upload_read
 add_customization "Increase Future Carbs Limit to 4 hours" "future_carbs_4h"
 add_customization "Modify Carb Warning & Limit: Low Carb to 49 & 99" "low_carb_limit"
 add_customization "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_carb_limit"
-add_customization "Disable Authentication Requirement" "no_auth"
+add_customization "Disable Authentication Requirement" "no_auth" "message_to_add_blank_line"
 
 add_customization "Override Insulin Needs Picker (50% to 200%, steps of 5%)" "override_sens"
 add_customization "Add now line to charts" "now_line"
-add_customization "Modify Logo to include LnL icon" "lnl_icon" "message_to_add_blank_line"
-add_customization "Profile Save & Load" "2002" "message_for_pr2002"
-add_customization "Basal Lock" "basal_lock" "" "1"
+add_customization "Modify Logo to include LnL icon" "lnl_icon"
 add_customization "Remove Loop Title on Watch App" "watch_title"
-add_customization "2 hour Absorption Time for Lollipop" "2hlollipop"
+add_customization "2 hour Absorption Time for Lollipop" "2hlollipop" "message_to_add_blank_line"
+
+add_customization "Display a Week of Meal History" "meal_week"
+
+add_customization "Profile Save & Load" "2002" "message_for_pr2002"
+add_customization "Basal Lock" "basal_lock" "message_for_basal_lock" "1"
 
 param_zero_is_customization
 param_zero_result=$?
