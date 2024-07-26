@@ -726,6 +726,7 @@ add_customization "Modify Logo to include LnL icon" "lnl_icon"
 add_customization "Remove Loop Title on Watch App" "watch_title"
 add_customization "2 hour Absorption Time for Lollipop" "2hlollipop" "message_to_add_blank_line"
 
+add_customization "Display a Week of Meal History" "meal_week"
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 add_customization "Basal Lock" "basal_lock" "message_for_basal_lock" "1"
 add_customization "Live Activity/Dynamic Island (close Xcode to add/remove)" "live_activity" "message_for_live_activity" "1"
