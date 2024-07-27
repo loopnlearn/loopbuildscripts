@@ -209,13 +209,14 @@ function apply_patch {
     local patch_file="${patch[$index]}"
     local customization_name="${customization[$index]}"
     local final_message_text="${final_message[$index]}"
-    
+
     if [ -f "$patch_file" ]; then
         if [ -n "$final_message_text" ]; then
+            section_divider
             echo -e "${final_message_text}"
             return_when_ready
         fi
-        
+    
         if git apply --whitespace=nowarn "$patch_file"; then
             echo -e "${SUCCESS_FONT}  Customization $customization_name applied successfully${NC}"
             if [ "${clean_build[$index]}" == "1" ]; then
@@ -260,6 +261,7 @@ function revert_patch {
     
     if [ -f "$patch_file" ]; then
         if [ -n "$final_message_text" ]; then
+            section_divider
             echo -e "$final_message_text"
             return_when_ready
         fi
