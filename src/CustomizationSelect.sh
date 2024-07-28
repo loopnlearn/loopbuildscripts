@@ -48,6 +48,14 @@ function message_for_basal_lock() {
     printf "          https://www.loopandlearn.org/loop-features-in-development/#basal-lock\n\n"
 }
 
+# optional message to go with add_customization line
+function message_for_live_activity() {
+    printf "        ${INFO_FONT}Xcode MUST be closed${NC}\n"
+    printf "        This feature adds Live Activity and Dynamic Island\n"
+    printf "          Requires iPhone 14 or newer; iOS 16.2 or newer\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development/#live-activity\n\n"
+}
+
 # list patches in this order with args:
 #   User facing information for option
 #   Folder name in the patch repo
@@ -69,6 +77,7 @@ add_customization "Display a Week of Meal History" "meal_week"
 
 add_customization "Profile Save & Load" "2002" "message_for_pr2002"
 add_customization "Basal Lock" "basal_lock" "message_for_basal_lock" "1"
+add_customization "Live Activity/Dynamic Island" "live_activity" "message_for_live_activity" "1" "Verify that Xcode is closed before continuing!"
 
 param_zero_is_customization
 param_zero_result=$?
