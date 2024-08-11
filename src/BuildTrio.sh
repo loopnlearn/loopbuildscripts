@@ -52,7 +52,7 @@ special_branch_name=""
 
 function select_main() {
     #branch_select ${URL_THIS_SCRIPT} main
-    branch_select ${URL_THIS_SCRIPT} crowdin-i18n
+    branch_select ${URL_THIS_SCRIPT} main
 }
 
 function select_dev() {
