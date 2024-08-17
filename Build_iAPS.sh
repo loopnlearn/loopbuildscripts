@@ -866,9 +866,9 @@ echo -e "  suggest you build ${INFO_FONT}Trio${NC} instead."
 echo -e ""
 echo -e "Please read about this alternative here:"
 echo -e ""
-echo -e "  Trio Website is at:        ${URL_FOR_TRIO_WEBSITE}"
-echo -e "  Trio Facebook Group is at: ${URL_FOR_TRIO_FACEBOOK}"
-echo -e "  Trio Discors is at:        ${URL_FOR_TRIO_DISCORD}"
+echo -e "  Trio Website  link: ${URL_FOR_TRIO_WEBSITE}"
+echo -e "  Trio Facebook link: ${URL_FOR_TRIO_FACEBOOK}"
+echo -e "  Trio Discord  link: ${URL_FOR_TRIO_DISCORD}"
 echo -e ""
 section_divider
 
