@@ -28,13 +28,18 @@ FIXED_SHA=""    # Initialize FIXED_SHA with an empty string
 # Set default values only if they haven't been defined as environment variables
 : ${SCRIPT_BRANCH:="main"}
 
-open_source_warning
 
 ############################################################
 # Welcome & Branch Selection
 ############################################################
 
 URL_THIS_SCRIPT="https://github.com/Artificial-Pancreas/iAPS.git"
+
+# Trio information
+URL_FOR_TRIO_DISCORD="discord.gg/FnwFEFUwXE"
+URL_FOR_TRIO_FACEBOOK="facebook.com/groups/diytrio"
+URL_FOR_TRIO_WEBSITE="diy-trio.org"
+URL_FOR_TRIO_DOCS="triodocs.org"
 
 function select_iaps_main() {
     branch_select ${URL_THIS_SCRIPT} main
@@ -44,11 +49,40 @@ function select_iaps_dev() {
     branch_select ${URL_THIS_SCRIPT} dev
 }
 
-function select_iaps_tested_main() {
-    FLAG_USE_SHA=1
-    FIXED_SHA="f404fc4"
-    branch_select ${URL_THIS_SCRIPT} dev iAPS_main_${FIXED_SHA}
-}
+section_separator
+
+echo -e "\n ${INFO_FONT}You are running the Build_iAPS script${NC}"
+echo -e ""
+echo -e "Access to this script is available as a courtesy;"
+echo -e "  it might be removed without notice."
+echo -e ""
+echo -e "The Loop and Learn team that created this script"
+echo -e "  suggest you build ${INFO_FONT}Trio${NC} instead."
+echo -e ""
+echo -e "Please read about this alternative here:"
+echo -e ""
+echo -e "  Trio Website  link: ${URL_FOR_TRIO_WEBSITE}"
+echo -e "  Trio Facebook link: ${URL_FOR_TRIO_FACEBOOK}"
+echo -e "  Trio Discord  link: ${URL_FOR_TRIO_DISCORD}"
+echo -e ""
+section_divider
+
+options=(\
+    "Switch to the TrioBuildSelectScript for Trio (New App, New App Group)" \
+    "Continue with the iAPS script" \
+    "Exit the script")
+actions=(\
+    "WHICH=Trio" \
+    "WHICH=iAPS" \
+    "exit_script")
+menu_select "${options[@]}" "${actions[@]}"
+
+if [ "$WHICH" = "Trio" ]; then
+    run_script "TrioBuildSelectScript.sh"
+    exit_script
+fi
+
+open_source_warning
 
 if [ -z "$CUSTOM_BRANCH" ]; then
     while [ -z "$BRANCH" ]; do
@@ -59,10 +93,9 @@ if [ -z "$CUSTOM_BRANCH" ]; then
         echo -e "Before you continue, please ensure"
         echo -e "  you have Xcode and Xcode command line tools installed\n"
         echo -e "Please select which branch of iAPS to download and build."
-        echo -e "Most people should choose main branch"
         echo -e ""
         echo -e "Documentation for iAPS:"
-        echo -e "  http://iapsdocs.org"
+        echo -e "  https://iaps.readthedocs.io/en/main/"
         echo -e "Documentation for maintenance utilities:"
         echo -e "  https://www.loopandlearn.org/build-select/#utilities-disk"
         echo -e ""
