@@ -71,6 +71,25 @@ function add_customization() {
     final_message+=("$5")
 }
 
+folder_translation_from=()
+folder_translation_to=()
+
+function add_translation() {
+    folder_translation_from+=("$1")
+    folder_translation_to+=("$2")
+}
+
+function translate_folder() {
+    local folder_name="$1"
+    for i in "${!folder_translation_from[@]}"; do
+        if [[ "$folder_name" == "${folder_translation_from[$i]}" ]]; then
+            echo "${folder_translation_to[$i]}"
+            return
+        fi
+    done
+    echo "$folder_name"
+}
+
 function refresh_status() {
     # Status documentation
     # 0 Patch not applied (a current version of the patch is possible to apply)
@@ -483,6 +502,8 @@ function patch_command_line {
 
         for arg in "$@"
         do
+            arg=$(translate_folder "$arg")
+
             found=false
             for i in "${!folder[@]}"
             do
