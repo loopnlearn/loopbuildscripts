@@ -598,9 +598,7 @@ function ensure_a_year() {
     do
         case $opt in
             "Ensure a Year")
-                rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
-                echo -e "✅ ${SUCCESS_FONT}Profiles were cleaned${NC}"
-                echo -e "   Next app you build with Xcode will last a year"
+                clean_profiles
                 break
                 ;;
             "Skip")
