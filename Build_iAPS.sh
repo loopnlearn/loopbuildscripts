@@ -303,13 +303,20 @@ function after_final_return_message() {
 # clean provisioning profiles saved on disk
 
 # *** Start of inlined file: inline_functions/clean_profiles.sh ***
+############################################################
+# clean_profiles function
+#   Action: deletes saved mobileprovisions from Mac
+#   Information:
+#     If Xcode is open, *.mobileprovisions are deleted and new ones generated
+#     The path changed between Xcode 15 and Xcode 16, delete both folders
+############################################################
+
 clean_profiles() {
-    echo -e "\n✅ Cleaning Profiles"
-    echo -e "     This ensures the next app you build with Xcode will last a year."
-    # The path changed between Xcode 15 and Xcode 16, delete both locations
     xcode15_path=${HOME}/Library/MobileDevice/Provisioning\ Profiles
     xcode16_path=${HOME}/Library/Developer/Xcode/UserData/Provisioning\ Profiles
 
+    echo -e "\n✅ Cleaning Profiles"
+    echo -e "     This ensures the next app you build with Xcode will last a year."
     if [[ -d "$xcode15_path" ]]; then
         rm -rf "$xcode15_path"
     fi
@@ -799,7 +806,7 @@ function utility_scripts {
     echo -e "     * It can free up a substantial amount of disk space"
     echo -e " 4. Clean Profiles:"
     echo -e "     Deletes any provisioning profiles on your Mac"
-    echo -e "     * Next time you build, Xcode will generate a new one"
+    echo -e "     * Xcode will generate new ones"
     echo -e "     * Ensures the next app you build with Xcode will last a year"
     section_divider
     echo -e "${INFO_FONT}Pay attention - quit Xcode before selecting some options${NC}"
@@ -809,7 +816,7 @@ function utility_scripts {
         "Delete Old Downloads"
         "Clean Derived Data (Quit Xcode)"
         "Xcode Cleanup (Quit Xcode)"
-        "Clean Profiles (Quit Xcode)"
+        "Clean Profiles"
         "Return to Menu"
     )
     actions=(
