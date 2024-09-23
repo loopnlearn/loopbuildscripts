@@ -262,6 +262,7 @@ function utility_scripts {
     echo -e "     Clears more disk space filled up by using Xcode."
     echo -e "     * Use after uninstalling Xcode prior to new installation"
     echo -e "     * It can free up a substantial amount of disk space"
+    echo -e "     You should quit Xcode before running this script."
     echo -e " 4. Clean Profiles:"
     echo -e "     Deletes any provisioning profiles on your Mac"
     echo -e "     * Xcode will generate new ones"
