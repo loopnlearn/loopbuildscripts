@@ -300,6 +300,34 @@ function after_final_return_message() {
 # *** End of inlined file: inline_functions/before_final_return_message.sh ***
 
 
+# clean provisioning profiles saved on disk
+
+# *** Start of inlined file: inline_functions/clean_profiles.sh ***
+############################################################
+# clean_profiles function
+#   Action: deletes saved mobileprovisions from Mac
+#   Information:
+#     If Xcode is open, *.mobileprovisions are deleted and new ones generated
+#     The path changed between Xcode 15 and Xcode 16, delete both folders
+############################################################
+
+clean_profiles() {
+    xcode15_path=${HOME}/Library/MobileDevice/Provisioning\ Profiles
+    xcode16_path=${HOME}/Library/Developer/Xcode/UserData/Provisioning\ Profiles
+
+    echo -e "\n✅ Cleaning Profiles"
+    echo -e "     This ensures the next app you build with Xcode will last a year."
+    if [[ -d "$xcode15_path" ]]; then
+        rm -rf "$xcode15_path"
+    fi
+    if [[ -d "$xcode16_path" ]]; then
+        rm -rf "$xcode16_path"
+    fi
+    echo -e "✅ Profiles are cleaned."
+}
+# *** End of inlined file: inline_functions/clean_profiles.sh ***
+
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
@@ -341,18 +369,18 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 
 # *** Start of inlined file: inline_functions/building_verify_version.sh ***
 #This should be the latest iOS version
-#This is the version we expect users to have on their iPhones
-LATEST_IOS_VER="17.5"
+#This is the highest version we expect users to have on their iPhones
+LATEST_IOS_VER="18.0"
 
 #This should be the lowest xcode version required to build to LATEST_IOS_VER
-LOWEST_XCODE_VER="15.3"
+LOWEST_XCODE_VER="15.4"
 
 #This should be the latest known xcode version
 #LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
-LATEST_XCODE_VER="15.4"
+LATEST_XCODE_VER="16.0"
 
-#This is the lowest version of macOS required to run LATEST_XCODE_VER
-LOWEST_MACOS_VER="14"
+#This is the lowest version of macOS required to run LOWEST_XCODE_VER
+LOWEST_MACOS_VER="14.6"
 
 # The compare_versions function takes two version strings as input arguments,
 # sorts them in ascending order using the sort command with the -V flag (version sorting),
@@ -369,7 +397,7 @@ function check_versions() {
     echo "Verifying Xcode and macOS versions..."
 
     if ! command -v xcodebuild >/dev/null; then
-        echo "Xcode not found. Please install Xcode and try again."
+        echo "  Xcode not found. Please install Xcode and try again."
         exit_or_return_menu
     fi
 
@@ -385,12 +413,15 @@ function check_versions() {
         MACOS_VER=$(sw_vers -productVersion)
     fi
 
-    echo "Xcode found: Version $XCODE_VER"
+    echo "  Xcode found: Version $XCODE_VER"
 
     # Check if Xcode version is greater than the latest known version
     if [ "$(compare_versions "$XCODE_VER" "$LATEST_XCODE_VER")" = "$LATEST_XCODE_VER" ] && [ "$XCODE_VER" != "$LATEST_XCODE_VER" ]; then
-        echo "You have a newer Xcode version ($XCODE_VER) than the latest known by this script ($LATEST_XCODE_VER)."
-        echo "Please verify your versions using https://www.loopandlearn.org/version-updates/ and https://developer.apple.com/support/xcode/"
+        echo ""
+        echo "You have a newer Xcode version ($XCODE_VER) than"
+        echo "  the latest released version known by this script ($LATEST_XCODE_VER)."
+        echo "You can probably continue; but if you have problems, refer to"
+        echo "    https://developer.apple.com/support/xcode/"
 
         options=("Continue" "$(exit_or_return_menu)")
         actions=("return" "exit_script")
@@ -398,17 +429,25 @@ function check_versions() {
     # Check if Xcode version is less than the lowest required version
     elif [ "$(compare_versions "$XCODE_VER" "$LOWEST_XCODE_VER")" = "$XCODE_VER" ] && [ "$XCODE_VER" != "$LOWEST_XCODE_VER" ]; then
         if [ "$(compare_versions "$MACOS_VER" "$LOWEST_MACOS_VER")" != "$LOWEST_MACOS_VER" ]; then
-            echo "Your macOS version ($MACOS_VER) is lower than $LOWEST_MACOS_VER. Please update macOS to version $LOWEST_MACOS_VER or later."
-            echo "If you can't update, follow the GitHub build option here: https://loopkit.github.io/loopdocs/gh-actions/gh-overview/"
+            echo ""
+            echo "Your macOS version ($MACOS_VER) is lower than $LOWEST_MACOS_VER"
+            echo "  required to build for iOS $LATEST_IOS_VER."
+            echo "Please update macOS to version $LOWEST_MACOS_VER or later."
+            echo ""
+            echo "If you can't update, follow the GitHub build option here:"
+            echo "  https://loopkit.github.io/loopdocs/gh-actions/gh-overview/"
         fi
 
+        echo ""
         echo "You need to upgrade Xcode to version $LOWEST_XCODE_VER or later to build for iOS $LATEST_IOS_VER."
+        echo "If your iOS is at a lower version, refer to the compatibility table in LoopDocs"
+        echo "  https://loopkit.github.io/loopdocs/build/xcode-version/#compatible-versions"
 
         options=("Continue with lower iOS version" "$(exit_or_return_menu)")
         actions=("return" "exit_script")
         menu_select "${options[@]}" "${actions[@]}"
     else 
-        echo "You have a Xcode version ($XCODE_VER) which can build for iOS $LATEST_IOS_VER."
+        echo "Your Xcode version can build up to iOS $LATEST_IOS_VER."
     fi
 }
 # *** End of inlined file: inline_functions/building_verify_version.sh ***
@@ -600,9 +639,7 @@ function ensure_a_year() {
     do
         case $opt in
             "Ensure a Year")
-                rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
-                echo -e "✅ ${SUCCESS_FONT}Profiles were cleaned${NC}"
-                echo -e "   Next app you build with Xcode will last a year"
+                clean_profiles
                 break
                 ;;
             "Skip")

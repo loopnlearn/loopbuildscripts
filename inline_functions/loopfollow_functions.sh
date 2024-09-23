@@ -42,7 +42,7 @@ function loop_follow_display_name_config_override() {
     target_file="${BUILD_DIR}/${base_target_name}.xcconfig"
 
 
-    section_separator
+    section_divider
     # Check if the target (display_name) file exists
     if [ -f "$target_file" ]; then
         # If it exists, remove the file downloaded from repo

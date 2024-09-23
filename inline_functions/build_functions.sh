@@ -37,6 +37,9 @@
 # Messages prior to opening xcode
 #!inline before_final_return_message.sh
 
+# clean provisioning profiles saved on disk
+#!inline clean_profiles.sh
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
@@ -97,9 +100,7 @@ function ensure_a_year() {
     do
         case $opt in
             "Ensure a Year")
-                rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
-                echo -e "✅ ${SUCCESS_FONT}Profiles were cleaned${NC}"
-                echo -e "   Next app you build with Xcode will last a year"
+                clean_profiles
                 break
                 ;;
             "Skip")
