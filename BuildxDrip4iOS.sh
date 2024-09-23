@@ -300,6 +300,27 @@ function after_final_return_message() {
 # *** End of inlined file: inline_functions/before_final_return_message.sh ***
 
 
+# clean provisioning profiles saved on disk
+
+# *** Start of inlined file: inline_functions/clean_profiles.sh ***
+clean_profiles() {
+    echo -e "\n✅ Cleaning Profiles"
+    echo -e "     This ensures the next app you build with Xcode will last a year."
+    # The path changed between Xcode 15 and Xcode 16, delete both locations
+    xcode15_path=${HOME}/Library/MobileDevice/Provisioning\ Profiles
+    xcode16_path=${HOME}/Library/Developer/Xcode/UserData/Provisioning\ Profiles
+
+    if [[ -d "$xcode15_path" ]]; then
+        rm -rf "$xcode15_path"
+    fi
+    if [[ -d "$xcode16_path" ]]; then
+        rm -rf "$xcode16_path"
+    fi
+    echo -e "✅ Profiles are cleaned."
+}
+# *** End of inlined file: inline_functions/clean_profiles.sh ***
+
+
 ############################################################
 # Common functions used by multiple build scripts
 #    - Start of build_functions.sh common code
