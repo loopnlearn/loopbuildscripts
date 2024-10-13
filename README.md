@@ -1,51 +1,75 @@
-# Loop and Learn: lnl-scripts
+# `Loop and Learn`: lnl-scripts
 
 ## Introduction
 
-These scripts simplify some tasks for building Loop and other DIY code from the GitHub repositories.
+These scripts simplify some tasks for building *Loop*, Trio and other DIY code from the GitHub repositories.
 
 The downloaded code that these scripts help you build or modify, are provided open source and it is your responsibility to review the code. Open source code is experimental for testing, research, and education and is not approved for therapy. Patches or customizations are even more experimental. You take full responsibility for building and running this system and do so at your own risk.
 
-Most users should use the BuildSelectScript.sh script, otherwise known as the **Build Select Script**. This script has a menu for users to choose the option they want.
+* [*Loop* Users](#loop-users)
+* [Trio Users](#trio-users)
+* [Developer Tips](#developer-tips)
+* [Other Apps?](#other-apps)
 
-* Menu options are updated and expanded
+### *Loop* Users
+
+Users of the *Loop* app should use the BuildSelectScript.sh script, otherwise known as the [Build Select Script](#loop-build-select-script). This script has a menu for users to choose the option they want.
+
 * Script returns to top-menu after each option completes
 * All Build scripts include automatic signing
 
 The **Build Select Script** will help you to:
 
-1. Download and Build Loop
+1. Download and Build *Loop*
 2. Download and Build Related Apps
 3. Run Maintenance Utilities
 4. Run Customization Utilities
 
-The `Download and Build Loop` option offers the released version of Loop and a released version with some commonly requested patches added (Loop with Patches).
+The `Download and Build Loop` option offers the released version of *Loop*.
 
-The `Download and Build Related Apps` option includes Loop Follow, LoopCaregiver, xDrip4iOS and GlucoseDirect.
+The `Download and Build Related Apps` option includes *LoopFollow*, *LoopCaregiver* and *xDrip4iOS*.
 
 The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
 
-The `Run Customization Utilities` option runs the Customization Select script.
+The `Run Customization Utilities` option runs the Customization Select script - this is used to customize the *Loop* app.
 
-In addition to selecting options from the top-menu of **BuildSelectScript.sh**, each of the scripts can be run directly.
+In addition to selecting options from the top-menu of **BuildSelectScript.sh**, each of the [individual scripts can be run directly](#individual-scripts).
 
-There are several build scripts for specific code not included in **BuildSelectScript.sh**. These are:
+### Trio Users
 
-* [BuildLoopDev.sh](#buildloopdev)
-* [BuildFreeAPS.sh](#buildfreeaps)
-* [Build_iAPS.sh](#build_iaps)
+Users of the *Trio* app should use the TrioBuildSelectScript.sh script, otherwise known as the [Trio Build Select Script](#trio-build-select-script). This script has a menu for users to choose the option they want.
 
+* Script returns to top-menu after each option completes
+* All Build scripts include automatic signing
 
-### Build Select Script
+The **Trio Build Select Script** will help you to:
 
-This is documented in
+1. Download and Build Trio
+2. Download and Build Related Apps
+3. Run Maintenance Utilities
+
+The `Download and Build Trio` option offers your choice of the released (main) or development (dev) version of Trio.
+
+The `Download and Build Related Apps` option includes *LoopFollow* and *xDrip4iOS*.
+
+The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
+
+In addition to selecting options from the top-menu of **TrioBuildSelectScript.sh**, each of the [individual scripts can be run directly](#individual-scripts).
+
+### Other scripts
+
+There are several scripts for specific code not included in one of the Build Select Scripts. See [Scripts Not Included in Build Select](#scripts-not-included-in-loop-or-trio-build-select-script).
+
+### main branch
+
+Note: the commands in the README are for the main branch of the scripts. If you are a developer or tester using a different branch, please read [Developer Tips](#developer-tips).
+
+## *Loop* Build Select Script
+
+This script is documented in
 
 * [LnL: Build Select Script](https://www.loopandlearn.org/build-select)
 * [LoopDocs: Build Select Script](https://loopkit.github.io/loopdocs/build/step14/#download-loop)
-
-#### main branch
-
-Note: the commands in the README are for the main branch of the scripts. If you are a developer or tester using a different branch, please read [Developer Tips](#developer-tips).
 
 ### Command to Execute Build Select Script
 
@@ -59,39 +83,39 @@ Note: the commands in the README are for the main branch of the scripts. If you 
 
 3. Enter and follow prompts
 
+## Trio Build Select Script
+
+This script is documented in
+
+* [TrioDocs: Build Trio with Script](https://docs.diy-trio.org/en/latest/operate/build.html#build-trio-with-script)
+
+### Command to Execute Build Select Script
+
+1. Open terminal
+2. Copy/Paste this code into terminal (use copy icon, bottom right): 
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/TrioBuildSelectScript.sh)"
+```
+
+3. Enter and follow prompts
 
 ### Individual Scripts
 
-Each scripts can be run directly with the commands listed below.
+Individual scripts can be run directly with the commands listed below.
 
 1. Open terminal
 2. Copy/Paste selected code into terminal (use copy icon, bottom right):
 3. Enter and follow prompts
 
-#### Scripts included in BuildSelectScript.sh
+#### Scripts included in BuildSelectScript.sh or TrioBuildSelectScript.sh
 
-Use these commands to run a script directly instead of using the **BuildSelectScript.sh** menu.
-
-#### CustomizationSelect
-
-Patches or customizations are even more experimental than the released version of Loop. It is your responsibility to understand the changes made to the Loop code when you apply, remove or update one of these customizations. Review the documentation: [CustomizationSelect](https://www.loopandlearn.org/build-select/#customization-select).
-
-
-```
-/bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/CustomizationSelect.sh)"
-```
-
-#### DeleteOldDownloads
-
-```
-/bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/DeleteOldDownloads.sh)"
-```
+Use these commands to run a script directly instead of using the one of the Select Scripts.
 
 #### BuildLoopReleased
 
-This builds the released version of Loop or Loop with Patches.
+This builds the released version of *Loop*.
 
 ```
 /bin/bash -c "$(curl -fsSL \
@@ -112,6 +136,13 @@ This builds the released version of Loop or Loop with Patches.
   https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopCaregiver.sh)"
 ```
 
+#### BuildTrio
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildTrio.sh)"
+```
+
 #### BuildxDrip4iOS
 
 ```
@@ -119,21 +150,30 @@ This builds the released version of Loop or Loop with Patches.
   https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildxDrip4iOS.sh)"
 ```
 
-#### BuildGlucoseDirect
+#### CustomizationSelect
+
+Patches or customizations are even more experimental than the released version of *Loop*. It is your responsibility to understand the changes made to the *Loop* code when you apply, remove or update one of these customizations. Review the documentation: [CustomizationSelect](https://www.loopandlearn.org/build-select/#customization-select).
+
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildGlucoseDirect.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/CustomizationSelect.sh)"
 ```
 
-### Scripts not included in Build Select Script
+#### DeleteOldDownloads
+
+```
+/bin/bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/DeleteOldDownloads.sh)"
+```
+
+### Scripts not included in *Loop* or Trio Build Select Script
 
 These scripts can only be run directly.
 
-
 #### BuildLoopDev
 
-This script enables building the Loop dev branch. The menu provides the choice of dev or a lightly tested version (specific commit) of the dev branch.
+This script enables building the *Loop* dev branch. The menu provides the choice of dev or a lightly tested version (specific commit) of the dev branch.
 
 If you want to build a different branch, for example `branch_name`
 
@@ -146,27 +186,7 @@ If you want to build a different branch, for example `branch_name`
   https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopDev.sh)"
 ```
 
-### Scripts for the Trio app
-
-Script similar to the Loop BuildSelectScript, but associated with the Trio app.
-
-```
-/bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/TrioBuildSelectScript.sh)"
-```
-
-Script to directly built the Trio app without using the select script above.
-
-```
-/bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildTrio.sh)"
-```
-
 ## Developer Tips
-
-As of 20-May-2023, the **BuildSelectScript.sh** replaces the old BuildLoop.sh. If anyone executes the old BuildLoop script, they are given the correct command to run the BuildSelectScript.sh.
-
-The scripts are now significantly easier to create and maintain.
 
 When these scripts are being modified and tested, the developers will be working in a feature or development (dev) branch. In addition, they can use some special flags to simplify and speed up testing.
 
@@ -206,3 +226,16 @@ Once you use an export command, that environment variable stays set in that term
 
 * You can use the unset command to stay in the same terminal
 * You can use CMD-N while in any terminal window to open a new terminal window, then switch to the new window
+
+## Other Apps?
+
+Several apps are no longer found in lnl-scripts.
+
+* The GlucoseDirect CGM app owner is no longer providing updates
+    * Trio has removed GlucoseDirect as a CGM option
+    * `Loop and Learn` provides customization support to add other CGM to the *Loop* app and GlucoseDirect is no longer provided as an option
+    
+* *iAPS*
+    * The script to build *iAPS* is still found in lnl-scripts but will be removed soon
+    * The *iAPS* app should only be used by folks who are involved in keeping up with the app and willing and able to build frequently without build-script support
+    * The `Loop and Learn` Team suggest that Trio be used instead for most users
