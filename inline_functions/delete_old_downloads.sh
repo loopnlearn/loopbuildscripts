@@ -148,7 +148,6 @@ function delete_old_downloads() {
         "BuildLoopFollow/LoopFollow_Third_main*"
         "BuildLoopFollow/LoopFollow_dev*"
         "BuildxDrip4iOS/xDrip4iOS*"
-        "BuildGlucoseDirect/GlucoseDirect*"
         "Build_iAPS/iAPS_main_*"
         "Build_iAPS/iAPS_main-*"
         "Build_iAPS/iAPS_dev*"

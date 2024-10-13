@@ -82,13 +82,11 @@ while true; do
             "Build Loop Follow" \
             "Build LoopCaregiver" \
             "Build xDrip4iOS" \
-            "Build Glucose Direct" \
             "Return to Menu")
         actions=(\
             "WHICH=LoopFollow" \
             "WHICH=LoopCaregiver" \
             "WHICH=xDrip4iOS" \
-            "WHICH=GlucoseDirect" \
             return)
         menu_select "${options[@]}" "${actions[@]}"
         if [ "$WHICH" = "LoopFollow" ]; then
@@ -97,8 +95,6 @@ while true; do
             run_script "BuildLoopCaregiver.sh" $CUSTOM_BRANCH
         elif [ "$WHICH" = "xDrip4iOS" ]; then
             run_script "BuildxDrip4iOS.sh" $CUSTOM_BRANCH
-        elif [ "$WHICH" = "GlucoseDirect" ]; then
-            run_script "BuildGlucoseDirect.sh" $CUSTOM_BRANCH
         fi
 
     elif [ "$WHICH" = "UtilityScripts" ]; then
