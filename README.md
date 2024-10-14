@@ -20,18 +20,18 @@ Users of the *Loop* app should use the [Build Select Script](#loop-build-select-
 
 The **Build Select Script** will help you to:
 
-1. Download and Build *Loop*
-2. Download and Build Related Apps
-3. Run Maintenance Utilities
-4. Run Customization Utilities
+1. Build *Loop*
+2. Build Related Apps
+3. Maintenance Utilities
+4. Customization Select
 
-The `Download and Build Loop` option offers the released version of *Loop*.
+The `Build Loop` option offers the latest released version of *Loop*, the `main` branch.
 
-The `Download and Build Related Apps` option includes *LoopFollow*, *LoopCaregiver* and *xDrip4iOS*.
+The `Build Related Apps` option includes *LoopFollow*, *LoopCaregiver* and *xDrip4iOS*.
 
-The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
+The `Maintenance Utilities` option includes `Delete Old Downloads` as well as other Xcode clean-up options.
 
-The `Run Customization Utilities` option runs the Customization Select script - this is used to customize the *Loop* app.
+The `Customization Select` option runs the Customization Select script, which is used to customize the *Loop* app.
 
 In addition to selecting options from the top-menu of **BuildSelectScript**, each of the [individual scripts can be run directly](#individual-scripts).
 
@@ -44,23 +44,23 @@ Users of the *Trio* app should use the [*Trio* Build Select Script](#trio-build-
 
 The **Trio Build Select Script** will help you to:
 
-1. Download and Build *Trio*
-2. Download and Build Related Apps
-3. Run Maintenance Utilities
+1. Build *Trio*
+2. Build Related Apps
+3. Maintenance Utilities
 
-The `Download and Build Trio` option offers your choice of the released (main) or development (dev) version of *Trio*.
+The `Build Trio` option offers your choice of the released (main) or development (dev) version of *Trio*.
 
-The `Download and Build Related Apps` option includes *LoopFollow* and *xDrip4iOS*.
+The `Build Related Apps` option includes *LoopFollow* and *xDrip4iOS*.
 
-The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
+The `Maintenance Utilities` option includes `Delete Old Downloads` as well as other Xcode clean-up options.
 
 In addition to selecting options from the top-menu of **TrioBuildSelectScript**, each of the [individual scripts can be run directly](#individual-scripts).
 
-### Other scripts
+### Other Scripts
 
 There are several scripts for specific code not included in one of the Build Select Scripts. See [Scripts Not Included in Build Select](#scripts-not-included-in-loop-or-trio-build-select-script).
 
-### main branch
+### `main` Branch
 
 Note: the commands in the README are for the main branch of the scripts. If you are a developer or tester using a different branch, please read [Developer Tips](#developer-tips).
 
