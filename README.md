@@ -4,7 +4,7 @@
 
 These scripts simplify some tasks for building *Loop*, *Trio* and other DIY code from the GitHub repositories.
 
-The downloaded code that these scripts help you build or modify, are provided open source and it is your responsibility to review the code. Open source code is experimental for testing, research, and education and is not approved for therapy. Patches or customizations are even more experimental. You take full responsibility for building and running this system and do so at your own risk.
+The downloaded code that these scripts help you build or modify is provided as open source, and it is your responsibility to review the code. Open source code is experimental and intended for testing, research, and educational purposes; it is not approved for therapy. Patches or customizations are even more experimental. You take full responsibility for building and running this system, and you do so at your own risk.
 
 * [*Loop* Users](#loop-users)
 * [*Trio* Users](#trio-users)
@@ -13,7 +13,7 @@ The downloaded code that these scripts help you build or modify, are provided op
 
 ### *Loop* Users
 
-Users of the *Loop* app should use the BuildSelectScript.sh script, otherwise known as the [Build Select Script](#loop-build-select-script). This script has a menu for users to choose the option they want.
+Users of the *Loop* app should use the [Build Select Script](#loop-build-select-script). This script has a menu for users to choose the option they want.
 
 * Script returns to top-menu after each option completes
 * All Build scripts include automatic signing
@@ -33,11 +33,11 @@ The `Run Maintenance Utilities` option includes Delete Old Downloads as well as 
 
 The `Run Customization Utilities` option runs the Customization Select script - this is used to customize the *Loop* app.
 
-In addition to selecting options from the top-menu of **BuildSelectScript.sh**, each of the [individual scripts can be run directly](#individual-scripts).
+In addition to selecting options from the top-menu of **BuildSelectScript**, each of the [individual scripts can be run directly](#individual-scripts).
 
 ### *Trio* Users
 
-Users of the *Trio* app should use the TrioBuildSelectScript.sh script, otherwise known as the [*Trio* Build Select Script](#trio-build-select-script). This script has a menu for users to choose the option they want.
+Users of the *Trio* app should use the [*Trio* Build Select Script](#trio-build-select-script). This script has a menu for users to choose the option they want.
 
 * Script returns to top-menu after each option completes
 * All Build scripts include automatic signing
@@ -54,7 +54,7 @@ The `Download and Build Related Apps` option includes *LoopFollow* and *xDrip4iO
 
 The `Run Maintenance Utilities` option includes Delete Old Downloads as well as other Xcode clean-up options.
 
-In addition to selecting options from the top-menu of **TrioBuildSelectScript.sh**, each of the [individual scripts can be run directly](#individual-scripts).
+In addition to selecting options from the top-menu of **TrioBuildSelectScript**, each of the [individual scripts can be run directly](#individual-scripts).
 
 ### Other scripts
 
@@ -109,7 +109,7 @@ Individual scripts can be run directly with the commands listed below.
 2. Copy/Paste selected code into Terminal (use copy icon, bottom right):
 3. Enter and follow prompts
 
-#### Scripts included in BuildSelectScript.sh or TrioBuildSelectScript.sh
+#### Scripts included in BuildSelectScript or TrioBuildSelectScript
 
 Use these commands to run a script directly instead of using the one of the Select Scripts.
 
@@ -199,24 +199,24 @@ export SCRIPT_BRANCH=dev
 Then for all commands found earlier in this README, replace the word main with $SCRIPT_BRANCH.
 
 When testing locally, there are other test variables you can configure. Be sure to read these two files:
-* custom_config.sh
-* clear_custom_config.sh
+* `custom_config.sh`
+* `clear_custom_config.sh`
 
 ### Inlining Scripts
 
 This project uses a script inlining system to generate executable scripts from source files. The source files for each script are located in the src directory, and the generated scripts are output to the root directory. All inline scripts are in the inline_functions folder.
 
-To modify a script, simply edit the corresponding source file in the src directory, and then run the build script (./build.sh) to regenerate all the scripts. The build script will inline any required files and generate the final executable scripts. By adding an argument after build.sh, you can limit the rebuild to the indicated script.
+To modify a script, simply edit the corresponding source file in the src directory, and then run the build script (`./build.sh`) to regenerate all the scripts. The build script will inline any required files and generate the final executable scripts. By adding an argument after `./build.sh`, you can limit the rebuild to the indicated script.
 
-To test a script during development, this command is helpful (example shown is for CustomatizationScript.sh, but works for any script.)
+To test a script during development, this command is helpful (example shown is for CustomatizationScript, but works for any script.)
 
-1. Modify src/CustomizationScript.sh
+1. Modify `src/CustomizationScript.sh`
 1. Execute this command to rebuild and execute:
-  * ./build.sh CustomizationScript.sh && ./CustomizationScript.sh
+  * `./build.sh CustomizationScript.sh && ./CustomizationScript.sh`
 
 Note that the build system uses special comments to indicate which files should be inlined. Any line in a script that starts with #!inline will be replaced with the contents of the specified file. The build system will inline files up to a maximum depth of 10, to prevent infinite recursion.
 
-To learn more about the inlining process and how it works, please see the comments in the build.sh script.
+To learn more about the inlining process and how it works, please see the comments in the `build.sh` script.
 
 ### Environment Variable
 
@@ -231,9 +231,9 @@ Once you use an export command, that environment variable stays set in that Term
 
 Several apps are no longer found in lnl-scripts.
 
-* The GlucoseDirect CGM app owner is no longer providing updates
-    * *Trio* has removed GlucoseDirect as a CGM option
-    * `Loop and Learn` provides customization support to add other CGM to the *Loop* app and GlucoseDirect is no longer provided as an option
+* The *GlucoseDirect* CGM app owner is no longer providing updates
+    * *Trio* has removed *GlucoseDirect* as a CGM option
+    * `Loop and Learn` provides customization support to add other CGM to the *Loop* app and *GlucoseDirect* is no longer provided as an option
     
 * *iAPS*
     * The script to build *iAPS* is still found in lnl-scripts but will be removed soon
