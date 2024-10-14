@@ -337,7 +337,7 @@ while true; do
     options=(\
         "Build ${app_name}" \
         "Build Related Apps" \
-        "Run Maintenance Utilities" \
+        "Maintenance Utilities" \
         "Exit Script")
     actions=(\
         "WHICH=${app_name}" \
@@ -367,20 +367,16 @@ while true; do
         options=(\
             "Build Loop Follow" \
             "Build xDrip4iOS" \
-            "Build Glucose Direct" \
             "Return to Menu")
         actions=(\
             "WHICH=LoopFollow" \
             "WHICH=xDrip4iOS" \
-            "WHICH=GlucoseDirect" \
             return)
         menu_select "${options[@]}" "${actions[@]}"
         if [ "$WHICH" = "LoopFollow" ]; then
             run_script "BuildLoopFollow.sh" $CUSTOM_BRANCH
         elif [ "$WHICH" = "xDrip4iOS" ]; then
             run_script "BuildxDrip4iOS.sh" $CUSTOM_BRANCH
-        elif [ "$WHICH" = "GlucoseDirect" ]; then
-            run_script "BuildGlucoseDirect.sh" $CUSTOM_BRANCH
         fi
 
     elif [ "$WHICH" = "UtilityScripts" ]; then

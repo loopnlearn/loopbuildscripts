@@ -24,7 +24,6 @@ if [ $# -eq 0 ]; then
       "CustomizationSelect.sh"
       "BuildLoopDev.sh"
       "BuildxDrip4iOS.sh"
-      "BuildGlucoseDirect.sh"
       "Build_iAPS.sh"
       "CleanProfiles.sh"
       "CleanDerived.sh"
