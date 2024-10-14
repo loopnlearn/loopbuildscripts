@@ -51,7 +51,7 @@ while true; do
     options=(\
         "Build ${app_name}" \
         "Build Related Apps" \
-        "Run Maintenance Utilities" \
+        "Maintenance Utilities" \
         "Exit Script")
     actions=(\
         "WHICH=${app_name}" \
