@@ -4,7 +4,7 @@
 
 These scripts simplify some tasks for building *Loop*, *Trio* and other DIY code from the GitHub repositories.
 
-The downloaded code that these scripts help you build or modify is provided as open source, and it is your responsibility to review the code. Open source code is experimental and intended for testing, research, and educational purposes; it is not approved for therapy. Patches or customizations are even more experimental. You take full responsibility for building and running this system, and you do so at your own risk.
+The code that these scripts help you download, build or modify is provided as open source (OS), and it is your responsibility to review the code and understand how each app works. This code is experimental and intended for testing, research, and educational purposes; it is not approved for therapy. Patches or customizations are even more experimental. You take full responsibility for building and running an OS app, and you do so at your own risk.
 
 * [*Loop* Users](#loop-users)
 * [*Trio* Users](#trio-users)
@@ -18,7 +18,7 @@ Users of the *Loop* app should use the [Build Select Script](#loop-build-select-
 * Script returns to top-menu after each option completes
 * All Build scripts include automatic signing
 
-The **Build Select Script** will help you to:
+The **Build Select Script** provides these options:
 
 1. Build *Loop*
 2. Build Related Apps
@@ -42,7 +42,7 @@ Users of the *Trio* app should use the [*Trio* Build Select Script](#trio-build-
 * Script returns to top-menu after each option completes
 * All Build scripts include automatic signing
 
-The **Trio Build Select Script** will help you to:
+The **Trio Build Select Script** provides these options:
 
 1. Build *Trio*
 2. Build Related Apps
@@ -111,11 +111,11 @@ Individual scripts can be run directly with the commands listed below.
 
 #### Scripts included in BuildSelectScript or TrioBuildSelectScript
 
-Use these commands to run a script directly instead of using the one of the Select Scripts.
+Use these commands to run a script directly instead of selecting it using the menu options in the Build Select Script.
 
 #### BuildLoopReleased
 
-This builds the released version of *Loop*.
+This builds the released version of *Loop*; from the `main` branch.
 
 ```
 /bin/bash -c "$(curl -fsSL \
