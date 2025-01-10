@@ -363,14 +363,14 @@ CUSTOM_BRANCH=${1:-$CUSTOM_BRANCH}
 # *** Start of inlined file: inline_functions/building_verify_version.sh ***
 #This should be the latest iOS version
 #This is the highest version we expect users to have on their iPhones
-LATEST_IOS_VER="18.0"
+LATEST_IOS_VER="18.2"
 
 #This should be the lowest xcode version required to build to LATEST_IOS_VER
-LOWEST_XCODE_VER="15.4"
+LOWEST_XCODE_VER="16.1"
 
 #This should be the latest known xcode version
 #LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
-LATEST_XCODE_VER="16.0"
+LATEST_XCODE_VER="16.2"
 
 #This is the lowest version of macOS required to run LOWEST_XCODE_VER
 LOWEST_MACOS_VER="14.6"
