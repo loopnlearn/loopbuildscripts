@@ -20,7 +20,7 @@ function message_generic() {
     echo "  These Customizations are documented on the Loop and Learn web site"
     echo "        https://www.loopandlearn.org/custom-code/#custom-list"
     echo
-    echo "  New customizations are available with the release of Loop 3.4.x"
+    echo "  These customizations are only for Loop 3.4.4"
     echo
 }
 
@@ -29,31 +29,39 @@ function message_incompatible() {
     :
 }
 
-# in order for optional messages to appear after the add_customization line
-# must use printf
-# optional message to go with add_customization line
+# This section contains optional messages used for some of the customization lines
+#   In order for optional messages to appear when added to the add_customization line
+#   must use printf
+
 function message_to_add_blank_line() {
     printf "\n"
 }
 
-# optional message to go with add_customization line
 function message_for_profiles() {
     printf "        This feature enables save and restore of named profiles\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development/#pr-2002\n\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development/#pr-2002\n"
 }
 
-# optional message to go with add_customization line
 function message_for_basal_lock() {
     printf "        This feature enables override of Loop behavior for high glucose\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development/#basal-lock\n\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development/#basal-lock\n"
 }
 
-# optional message to go with add_customization line
 function message_for_live_activity() {
     printf "        ${INFO_FONT}Xcode MUST be closed${NC}\n"
     printf "        This feature adds Live Activity and Dynamic Island\n"
     printf "          Requires iPhone 14 or newer; iOS 16.2 or newer\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development/#live-activity\n\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development/#live-activity\n"
+}
+
+function message_for_negative_insulin() {
+    printf "        This adds a new model that mitigates accumulated negative insulin\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development/#negative-insulin\n"
+}
+
+function message_for_bolus_display() {
+    printf "        This fixes a display bug where bolus progress might report a stale value\n"
+    printf "          https://github.com/LoopKit/Loop/pull/2264\n\n"
 }
 
 # list patches in this order with args:
@@ -74,11 +82,15 @@ add_customization "Remove Loop Title on Watch App" "watch_title"
 add_customization "2 hour Absorption Time for Lollipop" "2hlollipop" "message_to_add_blank_line"
 
 add_customization "Display 2 Days of Meal History" "meal_days"
-add_customization "Display a Week of Meal History (Slow after Restart)" "meal_week"
+add_customization "Display a Week of Meal History (Slow after Restart)" "meal_week" "message_to_add_blank_line"
 
 add_customization "Profile Save & Load" "profiles" "message_for_profiles"
 add_customization "Basal Lock" "basal_lock" "message_for_basal_lock" "1"
+# live_activity changes the minimum iOS allowed and therefore requires xcode to be closed
 add_customization "Live Activity/Dynamic Island" "live_activity" "message_for_live_activity" "1" "Verify that Xcode is closed before continuing!"
+add_customization "Negative Insulin Damper" "negative_insulin" "message_for_negative_insulin"
+
+add_customization "Bolus Progress Display Fix" "bolus_display" "message_for_bolus_display"
 
 add_translation "2002" "profiles"
 
