@@ -709,7 +709,7 @@ message_incompatible_count=0
 # it comes before any customizations are presented
 function message_generic() {
     echo "  These Customizations are documented on the Loop and Learn web site"
-    echo "        https://www.loopandlearn.org/custom-code/#custom-list"
+    echo "        https://www.loopandlearn.org/custom-code#custom-list"
     echo
     echo "  These customizations are only for Loop 3.4.4"
     echo
@@ -730,24 +730,24 @@ function message_to_add_blank_line() {
 
 function message_for_profiles() {
     printf "        This feature enables save and restore of named profiles\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development/#pr-2002\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development#profiles\n"
 }
 
 function message_for_basal_lock() {
     printf "        This feature enables override of Loop behavior for high glucose\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development/#basal-lock\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development#basal-lock\n"
 }
 
 function message_for_live_activity() {
     printf "        ${INFO_FONT}Xcode MUST be closed${NC}\n"
     printf "        This feature adds Live Activity and Dynamic Island\n"
     printf "          Requires iPhone 14 or newer; iOS 16.2 or newer\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development/#live-activity\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development#live-activity\n"
 }
 
 function message_for_negative_insulin() {
     printf "        This adds a new model that mitigates accumulated negative insulin\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development/#negative-insulin\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development#negative-insulin\n"
 }
 
 function message_for_bolus_display() {
