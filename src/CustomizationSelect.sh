@@ -64,6 +64,10 @@ function message_for_bolus_display() {
     printf "          https://github.com/LoopKit/Loop/pull/2264\n\n"
 }
 
+function message_for_g7_scan() {
+    printf "        This is a potential improvement for issue when Loop misses G7 glucose readings\n\n"
+}
+
 # list patches in this order with args:
 #   User facing information for option
 #   Folder name in the patch repo
@@ -91,6 +95,7 @@ add_customization "Live Activity/Dynamic Island" "live_activity" "message_for_li
 add_customization "Negative Insulin Damper" "negative_insulin" "message_for_negative_insulin"
 
 add_customization "Bolus Progress Display Fix" "bolus_display" "message_for_bolus_display"
+add_customization "G7 Missed Readings" "g7_scan" "message_for_g7_scan"
 
 add_translation "2002" "profiles"
 
