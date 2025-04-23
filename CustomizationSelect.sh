@@ -711,7 +711,7 @@ function message_generic() {
     echo "  These Customizations are documented on the Loop and Learn web site"
     echo "        https://www.loopandlearn.org/custom-code#custom-list"
     echo
-    echo "  These customizations are only for Loop 3.4.4"
+    echo "  These customizations are valid for Loop 3.6"
     echo
 }
 
@@ -750,15 +750,6 @@ function message_for_negative_insulin() {
     printf "          https://www.loopandlearn.org/loop-features-in-development#negative-insulin\n"
 }
 
-function message_for_bolus_display() {
-    printf "        This fixes a display bug where bolus progress might report a stale value\n"
-    printf "          https://github.com/LoopKit/Loop/pull/2264\n\n"
-}
-
-function message_for_g7_scan() {
-    printf "        This is a potential improvement for issue when Loop misses G7 glucose readings\n\n"
-}
-
 # list patches in this order with args:
 #   User facing information for option
 #   Folder name in the patch repo
@@ -784,9 +775,6 @@ add_customization "Basal Lock" "basal_lock" "message_for_basal_lock" "1"
 # live_activity changes the minimum iOS allowed and therefore requires xcode to be closed
 add_customization "Live Activity/Dynamic Island" "live_activity" "message_for_live_activity" "1" "Verify that Xcode is closed before continuing!"
 add_customization "Negative Insulin Damper" "negative_insulin" "message_for_negative_insulin"
-
-add_customization "Bolus Progress Display Fix" "bolus_display" "message_for_bolus_display"
-add_customization "G7 Missed Readings" "g7_scan" "message_for_g7_scan"
 
 add_translation "2002" "profiles"
 
