@@ -734,20 +734,25 @@ function message_for_profiles() {
 }
 
 function message_for_basal_lock() {
-    printf "        This feature enables override of Loop behavior for high glucose\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development#basal-lock\n"
+    printf "        Enables override of Loop behavior for high glucose\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development#basal-lock\n\n"
 }
 
 function message_for_live_activity() {
     printf "        ${INFO_FONT}Xcode MUST be closed${NC}\n"
-    printf "        This feature adds Live Activity and Dynamic Island\n"
+    printf "        Add Live Activity and Dynamic Island\n"
     printf "          Requires iPhone 14 or newer; iOS 16.2 or newer\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development#live-activity\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development#live-activity\n\n"
 }
 
 function message_for_negative_insulin() {
-    printf "        This adds a new model that mitigates accumulated negative insulin\n"
-    printf "          https://www.loopandlearn.org/loop-features-in-development#negative-insulin\n"
+    printf "        Add a new model that mitigates accumulated negative insulin\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development#negative-insulin\n\n"
+}
+
+function message_for_remote_window() {
+    printf "       Increase the time-out for LoopCaregiver remote command OTP to 15 minutes\n"
+    printf "          https://www.loopandlearn.org/loop-features-in-development#remote-window\n\n"
 }
 
 # list patches in this order with args:
@@ -775,6 +780,8 @@ add_customization "Basal Lock" "basal_lock" "message_for_basal_lock" "1"
 # live_activity changes the minimum iOS allowed and therefore requires xcode to be closed
 add_customization "Live Activity/Dynamic Island" "live_activity" "message_for_live_activity" "1" "Verify that Xcode is closed before continuing!"
 add_customization "Negative Insulin Damper" "negative_insulin" "message_for_negative_insulin"
+
+add_customization "Increase Remote Window to 15 minutes" "remote_window" "message_for_remote_window"
 
 add_translation "2002" "profiles"
 
