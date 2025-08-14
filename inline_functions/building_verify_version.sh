@@ -1,6 +1,6 @@
 #This should be the latest iOS version
 #This is the highest version we expect users to have on their iPhones
-LATEST_IOS_VER="18.5.x"
+LATEST_IOS_VER="18.6.x"
 
 #This should be the lowest xcode version required to build to LATEST_IOS_VER
 LOWEST_XCODE_VER="16.1"
