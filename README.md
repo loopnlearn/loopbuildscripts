@@ -87,7 +87,11 @@ This script is documented in
 
 This script is documented in
 
-* [*TrioDocs*: Build *Trio* with Script](https://docs.diy-trio.org/operate/build/#build-trio-with-script)
+* [*TrioDocs*](https://triodocs.org)
+
+The direct link (subject to change) is:
+
+* [*TrioDocs*: Build *Trio* with Script](https://triodocs.org/install/build/mac/build/)
 
 ### Command to Execute Build Select Script
 
