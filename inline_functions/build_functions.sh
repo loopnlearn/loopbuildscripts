@@ -9,7 +9,7 @@
 #
 # Required: BUILD_DIR
 #    it is where the download folder will be created
-#    For example: BUILD_DIR=~/Downloads/BuildLoop
+#    For example: BUILD_DIR=~/Downloads/Build{app_name}
 #
 # Required: OVERRIDE_FILE
 #    name of the automatic signing file
