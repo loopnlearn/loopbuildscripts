@@ -1,6 +1,6 @@
 #!/bin/bash # script BuildLoopReleased.sh
 
-script_name="BuildLoopDev.sh"
+script_name="BuildLoopReleased.sh"
 
 # remove and add special font
 NC='\033[0m'

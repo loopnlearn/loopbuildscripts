@@ -5,7 +5,7 @@
 # directory and then run the build script to regenerate this output file.
 # -----------------------------------------------------------------------------
 
-script_name="BuildLoopDev.sh"
+script_name="BuildLoopReleased.sh"
 
 # remove and add special font
 NC='\033[0m'
