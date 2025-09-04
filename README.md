@@ -8,6 +8,8 @@ The code that these scripts help you download, build or modify is provided as op
 
 * [*Loop* Users](#loop-users)
 * [*Trio* Users](#trio-users)
+* [Individual Scripts](#individual-scripts)
+* [Build a Custom Branch](#build-a-custom-branch)
 * [Developer Tips](#developer-tips)
 * [Other Apps?](#other-apps)
 
@@ -25,7 +27,7 @@ The **Build Select Script** provides these options:
 3. Maintenance Utilities
 4. Customization Select
 
-The `Build Loop` option offers the latest released version of *Loop*, the `main` branch.
+The `Build Loop` option offers your choice of the released (main) or development (dev) version of the *Loop* app.
 
 The `Build Related Apps` option includes *LoopFollow*, *LoopCaregiver* and *xDrip4iOS*.
 
@@ -55,10 +57,6 @@ The `Build Related Apps` option includes *LoopFollow* and *xDrip4iOS*.
 The `Maintenance Utilities` option includes `Delete Old Downloads` as well as other Xcode clean-up options.
 
 In addition to selecting options from the top-menu of **TrioBuildSelectScript**, each of the [individual scripts can be run directly](#individual-scripts).
-
-### Other Scripts
-
-There are several scripts for specific code not included in one of the Build Select Scripts. See [Scripts Not Included in Build Select](#scripts-not-included-in-loop-or-trio-build-select-script).
 
 ### `main` Branch
 
@@ -105,7 +103,7 @@ The direct link (subject to change) is:
 
 3. Enter and follow prompts
 
-### Individual Scripts
+## Individual Scripts
 
 Individual scripts can be run directly with the commands listed below.
 
@@ -117,13 +115,13 @@ Individual scripts can be run directly with the commands listed below.
 
 Use these commands to run a script directly instead of selecting it using the menu options in the Build Select Script.
 
-#### BuildLoopReleased
+#### BuildLoop
 
-This builds the released version of *Loop*; from the `main` branch.
+This builds the released or development version of *Loop*; you can choose the `main` or `dev` branch.
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopReleased.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoop.sh)"
 ```
 
 #### BuildLoopFollow
@@ -171,23 +169,21 @@ Patches or customizations are even more experimental than the released version o
   https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/DeleteOldDownloads.sh)"
 ```
 
-### Scripts not included in *Loop* or *Trio* Build Select Script
+## Build a Custom Branch
 
-These scripts can only be run directly.
+In addition to building a particular app with one or more options for the branch to be used, all the `Build` scripts will build a custom branch when called with a particular syntax.
 
-#### BuildLoopDev
-
-This script enables building the *Loop* dev branch. The menu provides the choice of dev or a lightly tested version (specific commit) of the dev branch.
-
-If you want to build a different branch, for example `branch_name`
+**Instructions for a custom branch:**
 
 * Add ` - branch_name` to the end of the command below
 * There must be a space after the ending quote followed by hyphen, another space and then the branch name
-* This bypasses the menu and downloads the desired branch from LoopKit/LoopWorkspace
+* This bypasses the menu and downloads the desired branch from for the app 
+
+The example below is for `BuildLoop` but the same method works for all the `Build` scripts. You cannot just copy and paste this command. You must edit it first.
 
 ```
 /bin/bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoopDev.sh)"
+  https://raw.githubusercontent.com/loopandlearn/lnl-scripts/main/BuildLoop.sh)" - put_desired_branch_name_here
 ```
 
 ## Developer Tips
@@ -240,6 +236,6 @@ Several apps are no longer found in lnl-scripts.
     * `Loop and Learn` provides customization support to add other CGM to the *Loop* app and *GlucoseDirect* is no longer provided as an option
     
 * *iAPS*
-    * The script to build *iAPS* is still found in lnl-scripts but will be removed soon
+    * The script to build *iAPS* is still found in lnl-scripts but may be removed without notice
     * The *iAPS* app should only be used by folks who are involved in keeping up with the app and willing and able to build frequently without build-script support
     * The `Loop and Learn` Team suggest that *Trio* be used instead for most users

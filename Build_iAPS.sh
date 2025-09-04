@@ -191,7 +191,7 @@ function erase_previous_line {
 #
 # Required: BUILD_DIR
 #    it is where the download folder will be created
-#    For example: BUILD_DIR=~/Downloads/BuildLoop
+#    For example: BUILD_DIR=~/Downloads/Build{app_name}
 #
 # Required: OVERRIDE_FILE
 #    name of the automatic signing file
@@ -943,8 +943,8 @@ if [ -z "$CUSTOM_BRANCH" ]; then
         echo -e "  https://www.loopandlearn.org/build-select/#utilities-disk"
         echo -e ""
 
-        options=("iAPS 2.3.3 tested main" "iAPS main" "iAPS dev" "Run Maintenance Utilities" "$(exit_or_return_menu)")
-        actions=("select_iaps_tested_main" "select_iaps_main" "select_iaps_dev" "utility_scripts" "exit_script")
+        options=("iAPS main" "iAPS dev" "Run Maintenance Utilities" "$(exit_or_return_menu)")
+        actions=("select_iaps_main" "select_iaps_dev" "utility_scripts" "exit_script")
         menu_select "${options[@]}" "${actions[@]}"
     done
 else

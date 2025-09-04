@@ -351,7 +351,7 @@ while true; do
         # Issue Warning if not done previously
         open_source_warning
 
-        run_script "BuildLoopReleased.sh" $CUSTOM_BRANCH
+        run_script "BuildLoop.sh" $CUSTOM_BRANCH
 
 
     elif [ "$WHICH" = "OtherApps" ]; then
