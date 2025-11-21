@@ -7,7 +7,7 @@ LOWEST_XCODE_VER="16.4"
 
 #This should be the latest known xcode version
 #LOWEST_XCODE_VER and LATEST_XCODE_VER will probably be equal but we should have suport for a span of these
-LATEST_XCODE_VER="16.4"
+LATEST_XCODE_VER="26.1.1"
 
 #This is the lowest version of macOS required to run LOWEST_XCODE_VER
 LOWEST_MACOS_VER="15.3"
