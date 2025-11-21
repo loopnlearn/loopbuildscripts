@@ -37,14 +37,9 @@ open_source_warning
 
 # when public:
 URL_THIS_SCRIPT="https://github.com/nightscout/Trio.git"
-# use next while in beta testing - takes user to Beta-Testing-Welcome
-# URL_FOR_DISCORD=https://discord.gg/kyjG4333Wb
-# after release, use the following - takes user to the rules channels
-URL_FOR_DISCORD="discord.gg/FnwFEFUwXE"
-URL_FOR_FACEBOOK="facebook.com/groups/diytrio"
-URL_FOR_WEBSITE="diy-trio.org"
+URL_FOR_DISCORD="discord.triodocs.org"
+URL_FOR_FACEBOOK="facebook.triodocs.org"
 URL_FOR_DOCS="triodocs.org"
-URL_FOR_DOCS_PR="github.com/nightscout/trio-docs"
 
 # Keep this for when we need a special branch name
 # If not used, make this empty string and comment out the menu option
@@ -71,21 +66,25 @@ if [ -z "$CUSTOM_BRANCH" ]; then
         echo -e "  ${INFO_FONT}Welcome: You can get help for ${app_name} at:${NC}"
         echo -e "       Facebook      : ${URL_FOR_FACEBOOK}"
         echo -e "       Discord       : ${URL_FOR_DISCORD}"
-        echo -e "       Website       : ${URL_FOR_WEBSITE}"
         echo -e "       Documentation : ${URL_FOR_DOCS}"
         echo -e ""
-        echo -e "  ${INFO_FONT}Option 1: Trio main is recommended${NC}"
+        echo -e "  ${INFO_FONT}Trio dev is recommended${NC}"
+        echo -e "  ${INFO_FONT}* Check the settings screen frequently${NC}"
+        echo -e "  ${INFO_FONT}* Download/rebuild when latest dev is at a higher version${NC}"
+        echo -e ""
+        echo -e "  If you insist on building Trio main, you can no longer use this script."
+        echo -e "  Ask a mentor for help."
         echo -e ""
         echo -e "Before you continue, please ensure"
         echo -e "  you have Xcode and Xcode command line tools installed\n"
 
         options=(\
-            "${app_name} main" \
+            #"${app_name} main" \
             "${app_name} dev" \
             # "${app_name} ${special_branch_name}" \
             "$(exit_or_return_menu)")
         actions=(\
-            "select_main" \
+            #"select_main" \
             "select_dev" \
             # "select_special_branch" \
             "exit_script")
