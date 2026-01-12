@@ -20,8 +20,6 @@ function message_generic() {
     echo "  These Customizations are documented on the Loop and Learn web site"
     echo "        https://www.loopandlearn.org/custom-code#custom-list"
     echo
-    echo "  These customizations are valid for Loop 3.6"
-    echo
 }
 
 # this is always used - it is the incompatible patches message - it can be blank
