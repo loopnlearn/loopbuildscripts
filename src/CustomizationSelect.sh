@@ -69,7 +69,7 @@ function message_for_remote_window() {
 #   Folder name in the patch repo
 #   (Optional) message function shown prior to option
 
-add_customization "Change Default to Upload Dexcom Readings" "dexcom_upload_readings"
+add_customization "(Included in 3.10.0) Change Default to Upload Dexcom Readings" "dexcom_upload_readings"
 add_customization "Increase Future Carbs Limit to 4 hours" "future_carbs_4h"
 add_customization "Modify Carb Warning & Limit: Low Carb to 49 & 99" "low_carb_limit"
 add_customization "Modify Carb Warning & Limit: High Carb to 201 & 300" "high_carb_limit"
@@ -87,7 +87,7 @@ add_customization "Display a Week of Meal History (Slow after Restart)" "meal_we
 add_customization "Profile Save & Load" "profiles" "message_for_profiles"
 add_customization "Basal Lock" "basal_lock" "message_for_basal_lock" "1"
 # live_activity changes the minimum iOS allowed and therefore requires xcode to be closed
-add_customization "Live Activity/Dynamic Island" "live_activity" "message_for_live_activity" "1" "Verify that Xcode is closed before continuing!"
+add_customization "(Included in 3.10.0) Live Activity/Dynamic Island" "live_activity" "message_for_live_activity" "1" "Verify that Xcode is closed before continuing!"
 add_customization "Negative Insulin Damper" "negative_insulin" "message_for_negative_insulin"
 
 add_customization "Increase Remote Window to 15 minutes" "remote_window" "message_for_remote_window"
