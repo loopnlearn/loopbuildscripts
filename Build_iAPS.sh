@@ -16,8 +16,8 @@ USE_OVERRIDE_IN_REPO="1"
 OVERRIDE_FILE="ConfigOverride.xcconfig"
 DEV_TEAM_SETTING_NAME="DEVELOPER_TEAM"
 
-# sub modules are not required
-CLONE_SUB_MODULES="0"
+# sub modules are required
+CLONE_SUB_MODULES="1"
 
 FLAG_USE_SHA=0  # Initialize FLAG_USE_SHA to 0
 FIXED_SHA=""    # Initialize FIXED_SHA with an empty string
@@ -209,7 +209,7 @@ function erase_previous_line {
 : ${USE_OVERRIDE_IN_REPO:="0"}
 
 # Default: some projects use submodules (and need --recurse-submodule)
-# Some, like iAPS and LoopFollow, do not use submodules
+# Some, like LoopFollow, do not use submodules
 #    in that case, set CLONE_SUB_MODULES to 0 in the src/Build script
 : ${CLONE_SUB_MODULES:="1"}
 
