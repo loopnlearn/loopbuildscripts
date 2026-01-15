@@ -227,6 +227,16 @@ Once you use an export command, that environment variable stays set in that Term
 * You can use the unset command to stay in the same Terminal
 * You can use CMD-N while in any Terminal window to open a new Terminal window, then switch to the new window
 
+### Old Repository
+
+Initially, these scripts were developed under a personal GitHub account: `loopnlearn`.
+
+Later, we configured the GitHub organization account `loopandlearn`.
+
+All new development happens in the [loopandlearn](https://github.com/loopandlearn) organization.
+
+As a courtesy to folks who find old links that refer to loopnlearn loopbuildscripts, that repository is kept up to date with the [loopandlearn lnl-scripts](https://github.com/loopandlearn/lnl-scripts) repository.
+
 ## Other Apps?
 
 Several apps are no longer found in lnl-scripts.
