@@ -231,11 +231,10 @@ Once you use an export command, that environment variable stays set in that Term
 
 Initially, these scripts were developed under a personal GitHub account: `loopnlearn`.
 
-Later, we configured the GitHub organization account `loopandlearn`.
+In 2022, we configured the GitHub organization account `loopandlearn`.
 
-All new development happens in the [loopandlearn](https://github.com/loopandlearn) organization.
-
-As a courtesy to folks who find old links that refer to loopnlearn loopbuildscripts, that repository is kept up to date with the [loopandlearn lnl-scripts](https://github.com/loopandlearn/lnl-scripts) repository.
+* All new development happens in the [loopandlearn](https://github.com/loopandlearn) organization
+* As a courtesy to folks who find old links that refer to loopnlearn loopbuildscripts, that repository is kept up to date with the [loopandlearn lnl-scripts](https://github.com/loopandlearn/lnl-scripts) repository
 
 ## Other Apps?
 
@@ -246,6 +245,4 @@ Several apps are no longer found in lnl-scripts.
     * `Loop and Learn` provides customization support to add other CGM to the *Loop* app and *GlucoseDirect* is no longer provided as an option
     
 * *iAPS*
-    * The script to build *iAPS* is still found in lnl-scripts but may be removed without notice
-    * The *iAPS* app should only be used by folks who are involved in keeping up with the app and willing and able to build frequently without build-script support
-    * The `Loop and Learn` Team suggest that *Trio* be used instead for most users
+    * The script to build *iAPS* has been removed because that app is not among those supported by the Loop and Learn team
