@@ -199,7 +199,7 @@ function erase_previous_line {
 #    Trio uses: "DEVELOPER_TEAM"
 
 # Default: some projects create or use the override file in the BUILD_DIR
-# Some, use a file in the downloaded clone itself
+# Some use a file in the downloaded clone itself
 #    in that case, set USE_OVERRIDE_IN_REPO to 1 in the src/Build script
 : ${USE_OVERRIDE_IN_REPO:="0"}
 
